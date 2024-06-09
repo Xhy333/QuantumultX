@@ -18,36 +18,21 @@
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Tmkk.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Midea.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yht.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/bgps.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/xmApp.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/ydyp.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/jsb.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/netflixgc.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Zmhy.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/heytea.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/zbs.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/zgrb.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Wzyd.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/mxbc.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/rbxj.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/picc.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/yhss.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Michelin.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Hldc.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Midea.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Kbj.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Hxek.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Bnmdhg.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Ysf.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Cqxhsd.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/qtx.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Quark.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Switch.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Stlxz.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Hax.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/missevan.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/naixue.png" style="border-radius: 5px;" width="40px">
-&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dmzj.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Quark.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wyyyy.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Missevan.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mxbc.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wph.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Nfsq.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dlm.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Iqiyi.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ysf.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Banuhg.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hsay.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Aoliao.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Switch.png" style="border-radius: 5px;" width="40px">
 
 
 
@@ -56,21 +41,11 @@
 
 
 
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Quark.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wyyyy.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Missevan.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mxbc.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wph.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Nfsq.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dlm.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Iqiyi.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ysf.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Banuhg.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hsay.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Aoliao.png
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Switch.png
+
+
+
+
+
 
 
 
