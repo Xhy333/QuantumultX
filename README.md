@@ -8,7 +8,12 @@
 
 [任务仓库订阅](https://gist.githubusercontent.com/Sliverkiss/a7496bd073820942b44a9b36874aaf4c/raw/sliverkiss.gallery.json)｜[boxjs订阅](https://gist.githubusercontent.com/Sliverkiss/18bd01be356360a8065a21ea71685ad3/raw/sliverkiss.boxjs.json)｜[icon图标集](https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/sliverkiss.icons.json)
 
-### 脚本列表(兼容NE/Node环境)
+
+
+### 已有图标列表
+[自用icon图标集](https://github.com/Xhy333/QuantumultX/blob/main/Files.icons.json)
+
+
 
 #### 🌟已有图标
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bwcj.png" style="border-radius: 5px;" width="40px">
