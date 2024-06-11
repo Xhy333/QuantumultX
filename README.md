@@ -28,6 +28,7 @@
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10001.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zgtycp.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zgflcp.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jrhj.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Pgsh.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dlm.png" style="border-radius: 5px;" width="40px">
