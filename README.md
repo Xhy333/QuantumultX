@@ -67,6 +67,7 @@
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Txsp.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Missevan.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jlqc.png" style="border-radius: 5px;" width="40px">
 
 
 
