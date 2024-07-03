@@ -3,6 +3,10 @@
   "description": "收集一些自己脚本用到的图标",
   "icons": [
     {
+      "name": "Xsy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xsy.png"
+    },
+    {
       "name": "Bilibili-1.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bilibili-1.png"
     },
