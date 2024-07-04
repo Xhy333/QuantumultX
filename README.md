@@ -77,6 +77,8 @@
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xsy.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xstl-1.png" style="border-radius: 5px;" width="40px">
 &nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xjb-1.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zswy.png" style="border-radius: 5px;" width="40px">
+&nbsp;&nbsp;<img src="https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sangeli.png" style="border-radius: 5px;" width="40px">
 
 
 
