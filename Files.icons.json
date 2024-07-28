@@ -3,312 +3,316 @@
   "description": "收集一些自己脚本用到的图标",
   "icons": [
     {
-      "name": "Jlqc.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jlqc.png"
-    },
-    {
-      "name": "Xcbwc.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xcbwc.png"
-    },
-    {
-      "name": "Qdxw.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdxw.png"
-    },
-    {
-      "name": "Hn.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hn.png"
-    },
-    {
-      "name": "Gjjj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gjjj.png"
-    },
-    {
-      "name": "Xsy.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xsy.png"
-    },
-    {
-      "name": "Gddc.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc.png"
-    },
-    {
       "name": "Zgflcp.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zgflcp.png"
     },
     {
-      "name": "Xstl-1.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xstl-1.png"
-    },
-    {
-      "name": "Txsp.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Txsp.png"
-    },
-    {
-      "name": "Ysf.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ysf.png"
-    },
-    {
-      "name": "Zgtycp.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zgtycp.png"
-    },
-    {
-      "name": "Mn.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mn.png"
-    },
-    {
-      "name": "Alyp.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Alyp.png"
-    },
-    {
-      "name": "Sqdz.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sqdz.png"
-    },
-    {
-      "name": "Wph.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wph.png"
-    },
-    {
-      "name": "Gzxj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gzxj.png"
-    },
-    {
-      "name": "Zswy.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zswy.png"
-    },
-    {
-      "name": "Mswer.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mswer.png"
-    },
-    {
-      "name": "Gddc-1.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc-1.png"
-    },
-    {
-      "name": "Rqsptyg.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Rqsptyg.png"
-    },
-    {
-      "name": "Bilibili-1.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bilibili-1.png"
-    },
-    {
-      "name": "Zxsjsc.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zxsjsc.png"
-    },
-    {
-      "name": "Wangchao.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wangchao.png"
-    },
-    {
-      "name": "Wutui.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wutui.png"
-    },
-    {
-      "name": "Iqiyi.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Iqiyi.png"
-    },
-    {
-      "name": "Bilibili.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bilibili.png"
-    },
-    {
-      "name": "Dlm.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dlm.png"
-    },
-    {
-      "name": "Haitmwg.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Haitmwg.png"
-    },
-    {
-      "name": "Gjgj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gjgj.png"
-    },
-    {
-      "name": "Yht.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yht.png"
-    },
-    {
-      "name": "Mxbc.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mxbc.png"
-    },
-    {
-      "name": "10001.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10001.png"
-    },
-    {
-      "name": "Mpcbh.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mpcbh.png"
-    },
-    {
-      "name": "Bwcj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bwcj.png"
-    },
-    {
-      "name": "Bdyp.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bdyp.png"
-    },
-    {
-      "name": "Kjh.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kjh.png"
-    },
-    {
-      "name": "Quark.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Quark.png"
-    },
-    {
-      "name": "Wx.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wx.png"
-    },
-    {
-      "name": "Mt.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mt.png"
-    },
-    {
-      "name": "Xjb.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xjb.png"
-    },
-    {
-      "name": "Xjb-1.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xjb-1.png"
-    },
-    {
-      "name": "10010.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10010.png"
-    },
-    {
-      "name": "Hsay.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hsay.png"
-    },
-    {
-      "name": "Xstl.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xstl.png"
-    },
-    {
-      "name": "Missevan.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Missevan.png"
-    },
-    {
-      "name": "Sfsy-1.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy-1.png"
-    },
-    {
-      "name": "Wb.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wb.png"
+      "name": "Xclx.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xclx.png"
     },
     {
       "name": "Aoliao.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Aoliao.png"
     },
     {
-      "name": "Pgsh.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Pgsh.png"
+      "name": "Mpcbh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mpcbh.png"
     },
     {
-      "name": "Sandeli.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sandeli.png"
+      "name": "Wutui.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wutui.png"
     },
     {
-      "name": "Fyh.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Fyh.png"
+      "name": "Gddc-1.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc-1.png"
     },
     {
-      "name": "Jph.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jph.png"
+      "name": "Sfsy-1.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy-1.png"
     },
     {
-      "name": "Sfsy.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png"
-    },
-    {
-      "name": "Mryj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png"
-    },
-    {
-      "name": "10086.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10086.png"
-    },
-    {
-      "name": "Switch.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Switch.png"
-    },
-    {
-      "name": "Midea.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Midea.png"
+      "name": "Zswy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zswy.png"
     },
     {
       "name": "Nwdjg.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Nwdjg.png"
     },
     {
-      "name": "Jrhj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jrhj.png"
+      "name": "Mryj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png"
     },
     {
-      "name": "Dfjs.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dfjs.png"
+      "name": "Gzxj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gzxj.png"
     },
     {
-      "name": "Ziwi+.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ziwi+.png"
+      "name": "Missevan.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Missevan.png"
     },
     {
-      "name": "Zxjl.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zxjl.png"
-    },
-    {
-      "name": "Agedm.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Agedm.png"
-    },
-    {
-      "name": "Mnyyshj.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mnyyshj.png"
-    },
-    {
-      "name": "Ncdhy.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ncdhy.png"
-    },
-    {
-      "name": "Banuhg.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Banuhg.png"
-    },
-    {
-      "name": "Tmkk.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Tmkk.png"
-    },
-    {
-      "name": "Wxzfyyh.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wxzfyyh.png"
-    },
-    {
-      "name": "Zggd.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zggd.png"
-    },
-    {
-      "name": "Wyyyy.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wyyyy.png"
+      "name": "Qdxw.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdxw.png"
     },
     {
       "name": "Gzmt.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gzmt.png"
     },
     {
-      "name": "Hdl.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hdl.png"
+      "name": "Rqsptyg.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Rqsptyg.png"
     },
     {
-      "name": "Nfsq.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Nfsq.png"
+      "name": "Wb.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wb.png"
+    },
+    {
+      "name": "Mxbc.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mxbc.png"
+    },
+    {
+      "name": "Alyp.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Alyp.png"
+    },
+    {
+      "name": "Jrhj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jrhj.png"
+    },
+    {
+      "name": "Midea.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Midea.png"
+    },
+    {
+      "name": "Wangchao.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wangchao.png"
+    },
+    {
+      "name": "Ysf.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ysf.png"
+    },
+    {
+      "name": "Kkmh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kkmh.png"
+    },
+    {
+      "name": "Ncdhy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ncdhy.png"
+    },
+    {
+      "name": "Zxsjsc.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zxsjsc.png"
+    },
+    {
+      "name": "Xjb.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xjb.png"
+    },
+    {
+      "name": "Bwcj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bwcj.png"
+    },
+    {
+      "name": "Xsy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xsy.png"
+    },
+    {
+      "name": "Yht.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yht.png"
+    },
+    {
+      "name": "Xcbwc.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xcbwc.png"
+    },
+    {
+      "name": "Switch.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Switch.png"
+    },
+    {
+      "name": "Zgtycp.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zgtycp.png"
+    },
+    {
+      "name": "Txsp.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Txsp.png"
+    },
+    {
+      "name": "Zggd.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zggd.png"
+    },
+    {
+      "name": "Jph.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jph.png"
+    },
+    {
+      "name": "Zxjl.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Zxjl.png"
+    },
+    {
+      "name": "Bdyp.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bdyp.png"
+    },
+    {
+      "name": "Wph.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wph.png"
+    },
+    {
+      "name": "Gddc.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gddc.png"
+    },
+    {
+      "name": "Wxzfyyh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wxzfyyh.png"
+    },
+    {
+      "name": "Mnyyshj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mnyyshj.png"
+    },
+    {
+      "name": "Iqiyi.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Iqiyi.png"
+    },
+    {
+      "name": "10001.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10001.png"
+    },
+    {
+      "name": "Mn.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mn.png"
+    },
+    {
+      "name": "Quark.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Quark.png"
+    },
+    {
+      "name": "Sqdz.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sqdz.png"
+    },
+    {
+      "name": "Banuhg.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Banuhg.png"
+    },
+    {
+      "name": "Bilibili.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bilibili.png"
+    },
+    {
+      "name": "Dfjs.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dfjs.png"
     },
     {
       "name": "Kghw.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kghw.png"
     },
     {
+      "name": "Fyh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Fyh.png"
+    },
+    {
+      "name": "Hn.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hn.png"
+    },
+    {
+      "name": "Hdl.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hdl.png"
+    },
+    {
+      "name": "Gjgj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gjgj.png"
+    },
+    {
+      "name": "Sfsy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png"
+    },
+    {
+      "name": "Hsay.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Hsay.png"
+    },
+    {
+      "name": "Xjb-1.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xjb-1.png"
+    },
+    {
+      "name": "Gjjj.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Gjjj.png"
+    },
+    {
+      "name": "Wyyyy.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wyyyy.png"
+    },
+    {
+      "name": "Jlqc.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jlqc.png"
+    },
+    {
+      "name": "Wx.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wx.png"
+    },
+    {
       "name": "Boxjs-hhqh.png",
       "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Boxjs-hhqh.png"
     },
     {
-      "name": "Xclx.png",
-      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xclx.png"
+      "name": "Kjh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kjh.png"
+    },
+    {
+      "name": "Mswer.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mswer.png"
+    },
+    {
+      "name": "Mt.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mt.png"
+    },
+    {
+      "name": "Nfsq.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Nfsq.png"
+    },
+    {
+      "name": "10010.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10010.png"
+    },
+    {
+      "name": "Sandeli.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sandeli.png"
+    },
+    {
+      "name": "Tmkk.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Tmkk.png"
+    },
+    {
+      "name": "Ziwi+.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Ziwi+.png"
+    },
+    {
+      "name": "Xstl-1.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xstl-1.png"
+    },
+    {
+      "name": "Haitmwg.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Haitmwg.png"
+    },
+    {
+      "name": "Bilibili-1.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Bilibili-1.png"
+    },
+    {
+      "name": "Agedm.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Agedm.png"
+    },
+    {
+      "name": "Xstl.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Xstl.png"
+    },
+    {
+      "name": "Pgsh.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Pgsh.png"
+    },
+    {
+      "name": "10086.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/10086.png"
+    },
+    {
+      "name": "Dlm.png",
+      "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dlm.png"
     }
   ]
 }
