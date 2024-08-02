@@ -1,0 +1,249 @@
+/*
+------------------------------------------
+@Author: Xhy333
+@Date: 2024-08-3更新
+蜜雪冰城抢券
+仅QX测试
+
+
+
+⚠️【免责声明】
+------------------------------------------
+1、此脚本仅用于学习研究，不保证其合法性、准确性、有效性，请根据情况自行判断，本人对此不承担任何保证责任。
+2、由于此脚本仅用于学习研究，您必须在下载后 24 小时内将所有内容从您的计算机或手机或任何存储设备中完全删除，若违反规定引起任何事件本人对此均不负责。
+3、请勿将此脚本用于任何商业或非法目的，若违反规定请自行对此负责。
+4、此脚本涉及应用与本人无关，本人对因此引起的任何隐私泄漏或其他后果不承担任何责任。
+5、本人对任何脚本引发的问题概不负责，包括但不限于由脚本错误引起的任何损失和损害。
+6、如果任何单位或个人认为此脚本可能涉嫌侵犯其权利，应及时通知并提供身份证明，所有权证明，我们将在收到认证文件确认后删除此脚本。
+7、所有直接或间接使用、查看此脚本的人均应该仔细阅读此声明。本人保留随时更改或补充此声明的权利。一旦您使用或复制了此脚本，即视为您已接受此免责声明。
+*/
+const $ = new Env("蜜雪冰城");
+const ckName = "mxbc_data";
+const userCookie = $.toObj($.isNode() ? process.env[ckName] : $.getdata(ckName)) || [];
+//notify
+const notify = $.isNode() ? require('./sendNotify') : '';
+$.notifyMsg = []
+//debug
+$.is_debug = ($.isNode() ? process.env.IS_DEDUG : $.getdata('is_debug')) || 'false';
+$.doFlag = { "true": "✅", "false": "⛔️" };
+
+//------------------------------------------
+const baseUrl = "https://mxsa.mxbc.net"
+const _headers = {
+    "app": "mxbc",
+    "appchannel": "xiaomi",
+    "appversion": "3.0.3",
+    "Access-Token": "",
+    "Host": "mxsa.mxbc.net",
+    "User-Agent": "okhttp/4.4.1"
+};
+const fetch = async (o) => {
+    try {
+        if (typeof o === 'string') o = { url: o };
+        if (o?.url?.startsWith("/") || o?.url?.startsWith(":")) o.url = baseUrl + o.url
+        const res = await Request({ ...o, headers: o.headers || _headers, url: o.url })
+        debug(res, o?.url?.replace(/\/+$/, '').substring(o?.url?.lastIndexOf('/') + 1));
+        //if (!(res?.code == 0 || res?.code == 5020||res?.)) throw new Error(res?.msg || `用户需要去登录`);
+        return res;
+    } catch (e) {
+        $.ckStatus = false;
+        $.log(`⛔️ 请求发起失败！${e}`);
+    }
+}
+//查询用户信息
+async function getUserInfo() {
+    try {
+        let timestamp = ts13();
+        const options = {
+            url: `/api/v1/customer/info`,
+            params: {
+                "appId": "d82be6bbc1da11eb9dd000163e122ecb",
+                "t": timestamp,
+                "sign": getSHA256withRSA('appId=d82be6bbc1da11eb9dd000163e122ecb&t=' + timestamp)
+            }
+        };
+        //post方法
+        let res = await fetch(options);
+        if (!(res?.code == 0 || res?.code == 5020)) throw new Error(`失败!${res?.msg}`)
+        return {
+            userName: res?.data?.mobilePhone,
+            level: res?.data?.customerLevel,
+            levelName: res?.data?.customerLevelVo?.levelName,
+            point: res?.data?.customerPoint
+        }
+
+    } catch (e) {
+        $.ckStatus = false;
+        $.log(`❌签到执行失败！原因为${e}`);
+    }
+}
+//获取页面跳转url
+async function getLoginUrl() {
+    try {
+        let timestamp = ts13();
+        const options = {
+            url: `/api/v1/duiba/getLoginUrl`,
+            params: {
+                "appId": "d82be6bbc1da11eb9dd000163e122ecb",
+                "t": timestamp,
+                "sign": getSHA256withRSA('appId=d82be6bbc1da11eb9dd000163e122ecb&t=' + timestamp)
+            }
+        };
+        //post方法
+        let res = await fetch(options);
+        return res?.data?.loginUrl;
+    } catch (e) {
+        $.log(`❌签到执行失败！原因为${e}`);
+    }
+}
+//获取活动token
+async function getActivityToken(url) {
+    try {
+        const opts = {
+            url: url,
+            followRedirect: false,
+            resultType: "all",
+            headers: {
+                'Accept-Encoding': `gzip, deflate, br`,
+                'Connection': `keep-alive`,
+                'Cookie': "",
+                'Accept': `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
+                'Host': `76177.activity-12.m.duiba.com.cn`,
+                'User-Agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X)mxsa_mxbc`,
+                'Accept-Language': `zh-CN,zh-Hans;q=0.9`
+            }
+        }
+        let res = await fetch(opts);
+        let headers = ObjectKeys2LowerCase(res?.headers) ?? {};
+        //对青龙进行兼容
+        let session = Array.isArray(headers['set-cookie']) ? [...new Set(headers['set-cookie'])].join("") : headers['set-cookie'];
+        let [wdata4, w_ts, _ac, wdata3, dcustom] = session?.match(/(wdata4|w_ts|_ac|wdata3|dcustom)=.+?;/g) ?? [];
+        if (!wdata4) throw new Error(`token不存在`);
+        $.session = wdata4 + w_ts + _ac + wdata3 + dcustom;
+        $.log(`✅ 获取活动token成功！`)
+    } catch (e) {
+        $.log(`⛔️ 获取活动token失败！${e}`);
+    }
+}
+//获取Cookie
+async function getCookie() {
+    try {
+        if ($request && $request.method === 'OPTIONS') return;
+
+        const header = ObjectKeys2LowerCase($request.headers) ?? {};
+        const body = $.toObj($response.body);
+        const token = header['access-token'];
+        if (!(token && body)) throw new Error("get token error,the value is empty");
+
+        const newData = {
+            "userId": body?.data?.mobilePhone,
+            "token": token,
+            "userName": body?.data?.mobilePhone,
+        }
+
+        const index = userCookie.findIndex(e => e.userId == newData.userId);
+        userCookie[index] ? userCookie[index] = newData : userCookie.push(newData);
+
+        $.setjson(userCookie, ckName);
+        $.msg($.name, `🎉${newData.userName}更新token成功!`, ``);
+
+    } catch (e) {
+        throw e;
+    }
+}
+
+//13位时间戳
+function ts13() { return Math.round(new Date().getTime()).toString(); }
+
+function getSHA256withRSA(content) {
+    var privateKeyString = `-----BEGIN PRIVATE KEY-----
+MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCtypUdHZJKlQ9L
+L6lIJSphnhqjke7HclgWuWDRWvzov30du235cCm13mqJ3zziqLCwstdQkuXo9sOP
+Ih94t6nzBHTuqYA1whrUnQrKfv9X4/h3QVkzwT+xWflE+KubJZoe+daLKkDeZjVW
+nUku8ov0E5vwADACfntEhAwiSZUALX9UgNDTPbj5ESeII+VztZ/KOFsRHMTfDb1G
+IR/dAc1mL5uYbh0h2Fa/fxRPgf7eJOeWGiygesl3CWj0Ue13qwX9PcG7klJXfToI
+576MY+A7027a0aZ49QhKnysMGhTdtFCksYG0lwPz3bIR16NvlxNLKanc2h+ILTFQ
+bMW/Y3DRAgMBAAECggEBAJGTfX6rE6zX2bzASsu9HhgxKN1VU6/L70/xrtEPp4SL
+SpHKO9/S/Y1zpsigr86pQYBx/nxm4KFZewx9p+El7/06AX0djOD7HCB2/+AJq3iC
+5NF4cvEwclrsJCqLJqxKPiSuYPGnzji9YvaPwArMb0Ff36KVdaHRMw58kfFys5Y2
+HvDqh4x+sgMUS7kSEQT4YDzCDPlAoEFgF9rlXnh0UVS6pZtvq3cR7pR4A9hvDgX9
+wU6zn1dGdy4MEXIpckuZkhwbqDLmfoHHeJc5RIjRP7WIRh2CodjetgPFE+SV7Sdj
+ECmvYJbet4YLg+Qil0OKR9s9S1BbObgcbC9WxUcrTgECgYEA/Yj8BDfxcsPK5ebE
+9N2teBFUJuDcHEuM1xp4/tFisoFH90JZJMkVbO19rddAMmdYLTGivWTyPVsM1+9s
+tq/NwsFJWHRUiMK7dttGiXuZry+xvq/SAZoitgI8tXdDXMw7368vatr0g6m7ucBK
+jZWxSHjK9/KVquVr7BoXFm+YxaECgYEAr3sgVNbr5ovx17YriTqe1FLTLMD5gPrz
+ugJj7nypDYY59hLlkrA/TtWbfzE+vfrN3oRIz5OMi9iFk3KXFVJMjGg+M5eO9Y8m
+14e791/q1jUuuUH4mc6HttNRNh7TdLg/OGKivE+56LEyFPir45zw/dqwQM3jiwIz
+yPz/+bzmfTECgYATxrOhwJtc0FjrReznDMOTMgbWYYPJ0TrTLIVzmvGP6vWqG8rI
+S8cYEA5VmQyw4c7G97AyBcW/c3K1BT/9oAj0wA7wj2JoqIfm5YPDBZkfSSEcNqqy
+5Ur/13zUytC+VE/3SrrwItQf0QWLn6wxDxQdCw8J+CokgnDAoehbH6lTAQKBgQCE
+67T/zpR9279i8CBmIDszBVHkcoALzQtU+H6NpWvATM4WsRWoWUx7AJ56Z+joqtPK
+G1WztkYdn/L+TyxWADLvn/6Nwd2N79MyKyScKtGNVFeCCJCwoJp4R/UaE5uErBNn
+OH+gOJvPwHj5HavGC5kYENC1Jb+YCiEDu3CB0S6d4QKBgQDGYGEFMZYWqO6+LrfQ
+ZNDBLCI2G4+UFP+8ZEuBKy5NkDVqXQhHRbqr9S/OkFu+kEjHLuYSpQsclh6XSDks
+5x/hQJNQszLPJoxvGECvz5TN2lJhuyCupS50aGKGqTxKYtiPHpWa8jZyjmanMKnE
+dOGyw/X4SFyodv8AEloqd81yGg==
+-----END PRIVATE KEY-----
+`
+    const { KEYUTIL, KJUR, hextob64u } = $.Jsrsasign;
+    const key = KEYUTIL.getKey(privateKeyString)
+    const signature = new KJUR.crypto.Signature({ alg: 'SHA256withRSA' })
+    signature.init(key)
+    signature.updateString(content)
+    const originSign = signature.sign()
+    const sign64u = hextob64u(originSign)
+    return sign64u
+}
+//抢免单券
+ def mkpayload(self,params):
+        params.update({'stamp':ts()})
+        sorted_items = sorted(params.items())
+        formatted_string = '&'.join([f'{k}={v}' for k, v in sorted_items])+'c274bac6493544b89d9c4f9d8d542b84'
+        params.update({'sign':hashlib.md5(formatted_string.encode()).hexdigest()})
+        return params
+    def info(self):
+        u='https://mxsa.mxbc.net/api/v1/h5/marketing/secretword/info'
+        p={
+            'marketingId': marketingId,
+            's': '2',
+        }
+        p=self.mkpayload(p)
+        r=requests.get(u,headers=self.headers,params=p)
+        if 'marketingId' in r.text:
+            rj=r.json()
+            print('marketingId：',rj['data']['marketingId'])
+            print(rj['data']['hintWord'])
+            print('-'*50)
+        else:
+            print(r.text)
+            print('信息获取异常')
+    def confirm(self):
+        try:
+            u='https://mxsa.mxbc.net/api/v1/h5/marketing/secretword/confirm'
+            p={"marketingId":marketingId,"round":round,'s':'2',"secretword":secretword}
+            p = self.mkpayload(p)
+            r=requests.post(u,headers=self.headers,json=p,timeout=0.75)
+            print(r.text)
+            if '已达领取上限' in r.text:
+                return True
+        except Exception as e:
+            print(e)
+    def run(self):
+        self.info()
+        wait(0.005)
+        print(datetime.datetime.now())
+        for i in range(fb_cont):
+            if self.confirm()==True:
+                return True
+            time.sleep(0.75)
+        print(datetime.datetime.now())
+if __name__ == '__main__':
+    token='eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUx'
+    marketingId='1816854086004391938'
+    secretword = "好一朵美丽的茉莉花"
+    fb_cont = 300
+    nowTine0 = time.strftime('%H', time.localtime())
+    nextTime0 = str(int(nowTine0) + 1).zfill(2)
+    round=nextTime0+":00"
+    api=MXMS(token)
+    api.run()
