@@ -11,7 +11,7 @@
 
 
 ### 已有图标列表
-[自用icon图标集](https://github.com/Xhy333/QuantumultX/blob/main/Files.icons.json)｜[自boxjs订阅](https://github.dev/Xhy333/QuantumultX/blob/main/Boxjs/Xhy333.json)
+[自用icon图标集](https://github.com/Xhy333/QuantumultX/blob/main/Files.icons.json)｜[自用boxjs订阅](https://github.dev/Xhy333/QuantumultX/blob/main/Boxjs/Xhy333.json)
 
 
 
