@@ -6,6 +6,33 @@
   "repo": "https://github.com/Xhy333/QuantumultX",
   "apps": [
     {
+        "id": "sliverkiss_sfsy",
+        "name": "顺丰速运",
+        "author": "@Sliverkiss",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/sfsy.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/sfsy.png"
+        ],
+        "keys": ["sfsy_bee","sfsy_data"],
+        "settings": [
+          {
+            "id": "sfsy_bee",
+            "name": "是否开启采蜜任务",
+            "val": false,
+            "type": "boolean",
+            "desc": "默认关闭"
+          },{
+            "id": "sfsy_data",
+            "name": "会员数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": ""
+          }
+        ]
+      },
+    {
         "id": "sliverkiss_teaMilk",
         "name": "奶茶多合一",
         "author": "@Sliverkiss",
