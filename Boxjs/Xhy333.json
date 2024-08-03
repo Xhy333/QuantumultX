@@ -1,0 +1,83 @@
+{
+  "id": "Xhy333",
+  "name": "人帅鸡疤累",
+  "author": "@Xhy333",
+  "icon": "https://github.dev/Xhy333/QuantumultX/blob/main/avatar/Xhy333.JPG",
+  "repo": "https://github.com/Xhy333/QuantumultX",
+  "apps": [
+    {
+        "id": "sliverkiss_dlm",
+        "name": "达美乐披萨",
+        "author": "@Sliverkiss",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png"
+        ],
+        "keys": ["dlm_score","dlm_notify","dlm_date","dlm_game","dlm_data"],
+        "settings": [
+          {
+            "id": "dlm_score",
+            "name": "开启内置分数(1425)",
+            "val": false,
+            "type": "boolean",
+            "desc": "默认关闭"
+          },{
+            "id": "dlm_notify",
+            "name": "开启简略通知模式",
+            "val": false,
+            "type": "boolean",
+            "desc": "默认关闭"
+          },{
+            "id": "dlm_game",
+            "name": "活动id",
+            "val": "",
+            "type": "text",
+            "desc": "活动id"
+          },{
+            "id": "dlm_date",
+            "name": "活动时间",
+            "val": "",
+            "type": "text",
+            "desc": "自定义活动时间，如2024.04.23-2024.06.22"
+          },{
+            "id": "dlm_data",
+            "name": "会员Cookie数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "会员Cookie数据"
+          }
+        ]
+      },
+     {
+      "id": "AiLuQiao",
+      "name": "爱路桥",
+      "keys": [
+        "AiLuQiao"
+      ],
+      "scripts": [
+        {
+          "name": "爱路桥-手动执行",
+          "script": "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.js"
+        }
+      ],
+      "settings": [
+        {
+          "id": "AiLuQiao",
+          "name": "uid",
+          "val": "",
+          "type": "text",
+          "desc": "格式:uid1 uid2"
+        }
+      ],
+      "author": "@xzxxn777",
+      "repo": "https://github.com/xzxxn777/Surge",
+      "script": "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.js",
+      "icons": [
+        "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.png",
+        "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.png"
+      ]
+    }
+  ]
+}
