@@ -101,37 +101,8 @@
             "type": "textarea",
             "autoGrow": true,
             "desc": "会员Cookie数据"
-          }
+         }
         ]
-      },
-     {
-      "id": "AiLuQiao",
-      "name": "爱路桥",
-      "keys": [
-        "AiLuQiao"
-      ],
-      "scripts": [
-        {
-          "name": "爱路桥-手动执行",
-          "script": "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.js"
-        }
-      ],
-      "settings": [
-        {
-          "id": "AiLuQiao",
-          "name": "uid",
-          "val": "",
-          "type": "text",
-          "desc": "格式:uid1 uid2"
-        }
-      ],
-      "author": "@xzxxn777",
-      "repo": "https://github.com/xzxxn777/Surge",
-      "script": "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.js",
-      "icons": [
-        "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.png",
-        "https://raw.githubusercontent.com/xzxxn777/Surge/main/Script/AiLuQiao/AiLuQiao.png"
-      ]
-    }
-  ]
-}
+      }
+    ]
+  }
