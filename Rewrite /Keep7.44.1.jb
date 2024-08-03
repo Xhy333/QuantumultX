@@ -12,7 +12,7 @@
 *******************************
 [rewrite_local]
 # >keep 
-https://api.gotokeep.com.+ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/Rewrite%20/Keep7.44.1.jb
+^https://api.gotokeep.com.+ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/Rewrite%20/Keep7.44.1.jb
 
 
 [mitm]
