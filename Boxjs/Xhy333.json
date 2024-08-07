@@ -6,6 +6,26 @@
   "repo": "https://github.com/Xhy333/QuantumultX",
   "apps": [
     {
+        "id": "sliverkiss_wzyd",
+        "name": "王者营地",
+        "author": "@Sliverkiss",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Wzyd.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Wzyd.png"
+        ],
+        "keys": ["wzyd_data"],
+        "settings": [
+          {
+            "id": "wzyd_data",
+            "name": "会员Cookie数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "会员Cookie数据"
+          }
+        ]
+      },{
       "id": "weibo",
       "name": "新浪微博",
       "author": "@sunert",
