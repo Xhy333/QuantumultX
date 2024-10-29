@@ -1,6 +1,7 @@
 # > AGE动漫
 HOST-SUFFIX,agedm.org
 HOST-SUFFIX,age.tv
+HOST-SUFFIX,fb.omoo.tv
 HOST-SUFFIX,agefans.com
 HOST-SUFFIX,hm.baidu.com
 HOST-SUFFIX,cdn.aiqingyu1314.com
@@ -15,6 +16,9 @@ HOST-SUFFIX,art.v2player.top
 HOST-SUFFIX,google-analytics.com
 HOST-SUFFIX,res.jcbdfyy.cn
 HOST-SUFFIX,cn.233dm.com
+HOST-SUFFIX,fengche11.com
+HOST-SUFFIX,acg2day.net
+HOST-SUFFIX,omofuns.com
 HOST-KEYWORD,-cdn-tos.bytecdntp.com
 HOST-KEYWORD,.baidu.com
 HOST-KEYWORD,ugcws.video.gtimg.com
