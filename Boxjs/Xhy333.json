@@ -45,45 +45,20 @@
            "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
            "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
         ],
-        "keys": ["yjwj_token", "yjwj_stats", "yjwj_config"],
+        "keys": ["CookieData", "yjwj_stats"],
         "settings": [
           {
             "id": "Notify",
             "name": "通知开关",
-            "val": "on",
             "type": "select",
-            "options": [
-            {"name": "开启通知", "value": "on"},
-            {"name": "关闭通知", "value": "off"}
-        ],
-            "desc": "控制签到结果通知的开启状态"
+            "val": "on",
+            "options": [{"name":"开启","val":"on"},{"name":"关闭","val":"off"}]
         },{
             "id": "TaskMode",
             "name": "任务模式",
+            "type": "select",
             "val": "all",
-            "type": "select",
-            "options": [
-            {"name": "全部任务", "value": "all"},
-            {"name": "仅签到", "value": "sign"}
-         ],
-            "desc": "选择需要执行的任务类型"
-        },{
-            "id": "DebugMode",
-            "name": "调试模式",
-            "val": "off",
-            "type": "select",
-            "options": [
-            {"name": "关闭调试", "value": "off"},
-            {"name": "开启调试", "value": "on"}
-          ],
-            "desc": "调试模式会输出详细日志"
-        },{
-            "id": "CookieData",
-            "name": "会员Cookie数据",
-            "val": "",
-            "type": "textarea",
-            "autoGrow": true,
-            "desc": "自动获取的凭证数据（多账号用@分隔）"
+            "options": [{"name":"全部任务","val":"all"},{"name":"仅签到","val":"sign"}]
         }
       ]
     },{
