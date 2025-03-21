@@ -45,37 +45,31 @@
            "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
            "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
         ],
-        "keys": ["CookieData", "yjwj_stats"],
+        "keys": ["yjwj_token"],
         "settings": [
-          {
-            "id": "Notify",
-            "name": "通知开关",
-            "type": "select",
-            "val": "true",
-            "options": [
-        {"name": "开启", "value": "true"},
-        {"name": "关闭", "value": "false"}
-         ],
-      "desc": "默认开启通知功能 开启：true 关闭：false"
-        },
-        {
-            "id": "TaskMode",
-            "name": "任务模式",
-            "type": "select",
-            "val": "all",
-            "options": [
-        {"name": "签到+任务", "value": "all"},
-        {"name": "仅签到", "value": "sign"}
-        ],
-      "desc": "默认执行全部任务 签到+任务：all 仅签到：sign"
-       },
-       {
-            "id": "CookieData",
-            "name": "账号数据",
+         {
+            "id": "yjwj_token",
+            "name": "授权令牌管理",
             "val": "",
             "type": "textarea",
+            "rows": 5,
+            "placeholder": "格式：xcxToken@xcxToken",
             "autoGrow": true,
-            "desc": "自动获取的加密凭证（多账号用@分隔）"
+            "desc": "多个账号用 @ 分隔，自动获取后会自动填充"
+        },
+         {
+            "id": "debug_mode",
+            "name": "调试模式",
+            "val": false,
+            "type": "checkbox",
+            "desc": "开启后显示详细日志"
+        },
+         {
+            "id": "notification",
+            "name": "通知设置",
+            "val": true,
+            "type": "checkbox",
+            "desc": "关闭后将不发送任何通知"
         }
       ]
     },{
