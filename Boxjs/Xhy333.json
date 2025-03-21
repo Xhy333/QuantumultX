@@ -64,7 +64,7 @@
             "type": "select",
             "val": "all",
             "options": [
-        {"name": ""签到+任务"", "value": "all"},
+        {"name": "签到+任务", "value": "all"},
         {"name": "仅签到", "value": "sign"}
         ],
       "desc": "默认执行全部任务 签到+任务：all 仅签到：sign"
