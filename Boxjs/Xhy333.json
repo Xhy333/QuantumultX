@@ -56,7 +56,7 @@
         {"name": "开启", "value": "true"},
         {"name": "关闭", "value": "false"}
          ],
-      "desc": "默认开启通知功能"
+      "desc": "默认开启通知功能 开启：true 关闭：false"
         },
         {
             "id": "TaskMode",
@@ -64,10 +64,10 @@
             "type": "select",
             "val": "all",
             "options": [
-        {"name": "签到+任务", "value": "all"},
+        {"name": ""签到+任务"", "value": "all"},
         {"name": "仅签到", "value": "sign"}
         ],
-      "desc": "默认执行全部任务"
+      "desc": "默认执行全部任务 签到+任务：all 仅签到：sign"
        },
        {
             "id": "CookieData",
