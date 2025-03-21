@@ -41,8 +41,8 @@
     "<p>会员Cookie数据<font color='#FF0000' style='font-weight: bold;'> @多账号分隔符 </font>脚本运行可自动获取后方可显示</p >"
   ],
   "icons": [
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wzyd.png",
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wzyd.png"
+    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
+    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
   ],
   "keys": ["yjwj_token", "yjwj_stats", "yjwj_config"],
   "settings": [
