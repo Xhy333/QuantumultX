@@ -51,14 +51,31 @@
             "id": "Notify",
             "name": "通知开关",
             "type": "select",
-            "val": "on",
-            "options": [{"name":"开启","val":"on"},{"name":"关闭","val":"off"}]
-        },{
+            "val": "true",
+            "options": [
+        {"name": "开启", "value": "true"},
+        {"name": "关闭", "value": "false"}
+         ],
+      "desc": "默认开启通知功能"
+        },
+        {
             "id": "TaskMode",
             "name": "任务模式",
             "type": "select",
             "val": "all",
-            "options": [{"name":"全部任务","val":"all"},{"name":"仅签到","val":"sign"}]
+            "options": [
+        {"name": "签到+任务", "value": "all"},
+        {"name": "仅签到", "value": "sign"}
+        ],
+      "desc": "默认执行全部任务"
+       },
+       {
+            "id": "CookieData",
+            "name": "账号凭证数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "自动获取的加密凭证（多账号用@分隔）"
         }
       ]
     },{
