@@ -33,59 +33,60 @@
       ],
       "script": "https://raw.githubusercontent.com/Xhy333/QuantumultXJB/main/Script/Apple IOSQxyztd/IOSxtyztd.js"
     },{
-  "name": "永劫无间",
-  "author": "@Xhy333",
-  "descs_html": [
-    "<h4 align=\"center\">获取Cookie以及脚本配置请查看<a href=\"https://raw.githubusercontent.com/Xhy333/QuantumultX\">配置说明</a></h4>",
-    "<br/>",
-    "<p>会员Cookie数据<font color='#FF0000' style='font-weight: bold;'> @多账号分隔符 </font>脚本运行可自动获取后方可显示</p >"
-  ],
-  "icons": [
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
-  ],
-  "keys": ["yjwj_token", "yjwj_stats", "yjwj_config"],
-  "settings": [
-    {
-      "id": "Notify",
-      "name": "通知开关",
-      "val": "on",
-      "type": "select",
-      "options": [
-        {"name": "开启通知", "value": "on"},
-        {"name": "关闭通知", "value": "off"}
-      ],
-      "desc": "控制签到结果通知的开启状态"
-    },
-    {
-      "id": "TaskMode",
-      "name": "任务模式",
-      "val": "all",
-      "type": "select",
-      "options": [
-        {"name": "全部任务", "value": "all"},
-        {"name": "仅签到", "value": "sign"}
-      ],
-      "desc": "选择需要执行的任务类型"
-    },
-    {
-      "id": "DebugMode",
-      "name": "调试模式",
-      "val": "off",
-      "type": "select",
-      "options": [
-        {"name": "关闭调试", "value": "off"},
-        {"name": "开启调试", "value": "on"}
-      ],
-      "desc": "调试模式会输出详细日志"
-    },
-    {
-      "id": "CookieData",
-      "name": "会员Cookie数据",
-      "val": "",
-      "type": "textarea",
-      "autoGrow": true,
-      "desc": "自动获取的凭证数据（多账号用@分隔）"
+       "id": "Xhy333_yjwj",
+       "name": "永劫无间",
+       "author": "@Xhy333",
+       "descs_html": [
+       "<h4 align=\"center\">获取Cookie以及脚本配置请查看<a href=\"https://raw.githubusercontent.com/Xhy333/QuantumultX\">配置说明</a></h4>",
+       "<br/>",
+       "<p>会员Cookie数据<font color='#FF0000' style='font-weight: bold;'> @多账号分隔符 </font>脚本运行可自动获取后方可显示</p >"
+       ],
+       "icons": [
+       "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
+       "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
+       ],
+       "keys": ["yjwj_token", "yjwj_stats", "yjwj_config"],
+       "settings": [
+       {
+          "id": "Notify",
+          "name": "通知开关",
+          "val": "on",
+          "type": "select",
+          "options": [
+            {"name": "开启通知", "value": "on"},
+            {"name": "关闭通知", "value": "off"}
+          ],
+          "desc": "控制签到结果通知的开启状态"
+        },
+        {
+          "id": "TaskMode",
+          "name": "任务模式",
+          "val": "all",
+          "type": "select",
+          "options": [
+            {"name": "全部任务", "value": "all"},
+            {"name": "仅签到", "value": "sign"}
+          ],
+          "desc": "选择需要执行的任务类型"
+        },
+        {
+          "id": "DebugMode",
+          "name": "调试模式",
+          "val": "off",
+          "type": "select",
+          "options": [
+            {"name": "关闭调试", "value": "off"},
+            {"name": "开启调试", "value": "on"}
+          ],
+          "desc": "调试模式会输出详细日志"
+        },
+        {
+          "id": "CookieData",
+          "name": "会员Cookie数据",
+          "val": "",
+          "type": "textarea",
+          "autoGrow": true,
+          "desc": "自动获取的凭证数据（多账号用@分隔）"
         }
       ]
     },{
