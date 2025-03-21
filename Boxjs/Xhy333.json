@@ -71,7 +71,7 @@
        },
        {
             "id": "CookieData",
-            "name": "账号凭证数据",
+            "name": "账号数据",
             "val": "",
             "type": "textarea",
             "autoGrow": true,
