@@ -3,7 +3,7 @@
  * 爷爷不泡茶
  * cron: 10 8 * * *
  * QX配置: [task_local]
- * 0 8 * * * https://raw.githubusercontent.com/yourrepo/yybpc.js, tag=爷爷不泡茶, enabled=true
+ * 0 8 * * * https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/CsWj/Yybpc.js, tag=爷爷不泡茶, enabled=true
  * 变量名: yybpc
  * 格式: qm-user-token 多账号用换行或@分隔
  */
