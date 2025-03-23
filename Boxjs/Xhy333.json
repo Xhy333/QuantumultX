@@ -189,14 +189,14 @@
             "autoGrow": true,
             "desc": "会员Cookie数据"
          },{
-            "id": "Xhy333_yybpc",
-            "name": "爷爷不泡茶",
-            "author": "Xhy333",
-            "repo": "https://github.com/Xhy333/QuantumultX",
-            "icons": [
+        "id": "Xhy333_yybpc",
+        "name": "爷爷不泡茶",
+        "author": "Xhy333",
+        "repo": "https://github.com/Xhy333/QuantumultX",
+        "icons": [
               "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png",
               "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png"
-            ],
+        ],
             "keys": ["yybpc"],
             "settings": [
               {
