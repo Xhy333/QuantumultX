@@ -201,21 +201,11 @@
             "settings": [
               {
                 "id": "yybpc",
-                "name": "账号配置",
+                "name": "qm-user-token数据",
                 "val": "",
                 "type": "textarea",
                 "autoGrow": true,
                 "desc": "请填写抓包获取的qm-user-token，多账号用换行或@分隔"
-              },{
-                "id": "Notify",
-                "name": "通知开关",
-                "val": 1,
-                "type": "select",
-                "options": [
-                  {"label": "开启", "val": 1},
-                  {"label": "关闭", "val": 0}
-                ],
-                "desc": "运行结果通知开关"
               }
         ]
       }
