@@ -47,7 +47,7 @@
         "id": "yybpc",
         "name": "爷爷不泡茶",
         "desc": "需要配置qm-user-token",
-        "icon": "https://example.com/icon.png", // 请替换实际图标URL
+        "icon": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png",
         "variables": [{
         "id": "yybpc",
         "name": "账号配置",
