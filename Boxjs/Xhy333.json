@@ -45,10 +45,10 @@
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png",
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png"
         ],
-        "keys": ["wzyd_data"],
+        "keys": ["yybpc","Notify"],
         "settings": [
           {
-            "id": "wzyd_data",
+            "id": "yybpc",
             "name": "会员Cookie数据",
             "val": "",
             "type": "textarea",
