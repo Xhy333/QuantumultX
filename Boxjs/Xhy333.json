@@ -54,6 +54,13 @@
             "type": "textarea",
             "autoGrow": true,
             "desc": "会员Cookie数据"
+          },{
+            "id": "Notify",
+            "name": "通知开关 默认开启",
+            "val": "",
+            "type": "select",
+            "options": [{"label": "开启", "val": 1}, {"label": "关闭", "val": 0}],
+            "default": 1
           }
         ]
       },{
