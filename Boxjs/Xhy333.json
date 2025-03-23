@@ -227,11 +227,6 @@
                 ],
                 "desc": "调试日志输出开关"
               }
-            ],
-                "scripts": {
-                "pre_request": "function preRequest(options) {\n  const input = options.boxdat.yybpc;\n  if (input) {\n    options.variables.yybpc = input\n      .split(/[\\n@]/)\n      .map(s => s.trim())\n      .filter(Boolean)\n      .join('@');\n  }\n  return options;\n}"
-        }
-          }
         ]
       }
     ]
