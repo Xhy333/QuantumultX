@@ -33,46 +33,63 @@
       ],
       "script": "https://raw.githubusercontent.com/Xhy333/QuantumultXJB/main/Script/Apple IOSQxyztd/IOSxtyztd.js"
     },{
-       "id": "Xhy333_yjwj",
-       "name": "永劫无间",
-       "author": "@Xhy333",
-       "descs_html": [
-       "<h4 align=\"center\">获取Cookie以及脚本配置请查看<a href=\"https://raw.githubusercontent.com/Xhy333/QuantumultX\">配置说明</a></h4>",
-       "<br/>",
-       "<p>会员Cookie数据<font color='#FF0000' style='font-weight: bold;'> @多账号分隔符 </font>脚本运行可自动获取后方可显示</p >"
-       ],
-       "icons": [
-           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png",
-           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yjwj.png"
-        ],
-        "keys": ["yjwj_token"],
-        "settings": [
-         {
-            "id": "yjwj_token",
-            "name": "授权令牌管理",
-            "val": "",
-            "type": "textarea",
-            "rows": 5,
-            "placeholder": "格式：xcxToken@xcxToken",
-            "autoGrow": true,
-            "desc": "多个账号用 @ 分隔，自动获取后会自动填充"
-        },
-         {
-            "id": "debug_mode",
-            "name": "调试模式",
-            "val": false,
-            "type": "checkbox",
-            "desc": "开启后显示详细日志"
-        },
-         {
-            "id": "notification",
-            "name": "通知设置",
-            "val": true,
-            "type": "checkbox",
-            "desc": "关闭后将不发送任何通知"
+        "name": "爷爷不泡茶",
+        "author": "Xhy333",
+        "version": "1.1",
+        "updateTime": "2024-05-20",
+        "subscriptions": [{
+        "id": "yybpc_config",
+        "name": "爷爷不泡茶配置",
+        "author": "Xhy333",
+        "version": "1.0",
+        "updateTime": "2024-05-20",
+        "apps": [{
+        "id": "yybpc",
+        "name": "爷爷不泡茶",
+        "desc": "需要配置qm-user-token",
+        "icon": "https://example.com/icon.png", // 请替换实际图标URL
+        "variables": [{
+        "id": "yybpc",
+        "name": "账号配置",
+        "type": "array",
+        "desc": "点击添加账号→输入抓包获取的qm-user-token",
+        "items": {
+          "type": "object",
+          "properties": [{
+              "id": "token",
+              "name": "用户Token",
+              "type": "password",
+              "desc": "抓包获取qm-user-token值"
+            },
+            {
+              "id": "remark",
+              "name": "账号备注",
+              "type": "string",
+              "desc": "自定义账号名称(可选)"
+            }
+          ]
         }
-      ]
-    },{
+      }],
+        "scripts": [{
+        "title": "配置预处理",
+        "desc": "将数组格式转换为环境变量",
+        "run": "preRequest",
+        "code": "function preRequest(options) {\n  if (options.boxdat.yybpc) {\n    options.variables.yybpc = options.boxdat.yybpc\n      .map(account => account.token?.trim())\n      .filter(Boolean)\n      .join('@');\n  }\n  return options;\n}"
+           }]
+         }]
+       }],
+        "notice": {
+        "usage": [
+        "1. 需要配合QuantumultX脚本使用",
+        "2. 添加账号前请先抓包获取qm-user-token",
+        "3. 多账号会自动用@分隔",
+        "4. 定时任务建议设置为早8点后执行"
+         ],
+        "changelog": [
+        "2024-05-20 v1.0 初始版本"
+          ]
+        }
+      },{
         "id": "Xhy333_wzyd",
         "name": "王者营地",
         "author": "@Xhy333",
