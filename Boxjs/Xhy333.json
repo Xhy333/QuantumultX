@@ -205,7 +205,7 @@
                 "val": "",
                 "type": "textarea",
                 "autoGrow": true,
-                "desc": "请填写抓包获取的qm-user-token，多账号用换行或@分隔\n获取方式：\n1. 微信小程序搜索「爷爷不泡茶」\n2. 抓包任意请求头中的qm-user-token值"
+                "desc": "请填写抓包获取的qm-user-token，多账号用换行或@分隔"
               },{
                 "id": "Notify",
                 "name": "通知开关",
@@ -216,16 +216,6 @@
                   {"label": "关闭", "val": 0}
                 ],
                 "desc": "运行结果通知开关"
-              },{
-                "id": "debug",
-                "name": "调试模式",
-                "val": 0,
-                "type": "select",
-                "options": [
-                  {"label": "关闭", "val": 0},
-                  {"label": "开启", "val": 1}
-                ],
-                "desc": "调试日志输出开关"
               }
         ]
       }
