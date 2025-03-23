@@ -33,6 +33,30 @@
       ],
       "script": "https://raw.githubusercontent.com/Xhy333/QuantumultXJB/main/Script/Apple IOSQxyztd/IOSxtyztd.js"
     },{
+        "id": "Xhy333_yybpc",
+        "name": "爷爷不泡茶",
+        "author": "@Xhy333",
+        "descs_html": [
+        "<h4 align=\"center\">获取Cookie以及脚本配置请查看<a href=\"https://raw.githubusercontent.com/Xhy333/QuantumultX\">配置说明</a></h4>",
+        "<br />",
+        "<p>会员Cookie数据<font color='#FF0000',font-weight: bold> @多账号分隔符 </font>脚本运行可自动获取后方可显示</p>"
+      ],
+        "icons": [
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png",
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png"
+        ],
+        "keys": ["wzyd_data"],
+        "settings": [
+          {
+            "id": "wzyd_data",
+            "name": "会员Cookie数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "会员Cookie数据"
+          }
+        ]
+      },{
         "id": "Xhy333_wzyd",
         "name": "王者营地",
         "author": "@Xhy333",
@@ -45,15 +69,15 @@
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wzyd.png",
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Wzyd.png"
         ],
-        "keys": ["wzyd_data"],
+        "keys": ["yybpc"],
         "settings": [
           {
-            "id": "wzyd_data",
-            "name": "会员Cookie数据",
+            "id": "yybpc",
+            "name": "qm-user-token数据",
             "val": "",
             "type": "textarea",
             "autoGrow": true,
-            "desc": "会员Cookie数据"
+            "desc": "qm-user-token数据"
           }
         ]
       },{
@@ -188,25 +212,7 @@
             "type": "textarea",
             "autoGrow": true,
             "desc": "会员Cookie数据"
-         },{
-        "id": "Xhy333_yybpc",
-        "name": "爷爷不泡茶",
-        "author": "Xhy333",
-        "repo": "https://github.com/Xhy333/QuantumultX",
-        "icons": [
-              "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png",
-              "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yybpc.png"
-        ],
-            "keys": ["yybpc"],
-            "settings": [
-              {
-                "id": "yybpc",
-                "name": "qm-user-token数据",
-                "val": "",
-                "type": "textarea",
-                "autoGrow": true,
-                "desc": "请填写抓包获取的qm-user-token，多账号用换行或@分隔"
-           }
+         }
         ]
       }
     ]
