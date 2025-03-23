@@ -16,7 +16,7 @@ let msg = "";
 
 !(async () => {
     await getNotice();
-    await getVersion("yang7758258/ohhh154@main/yybpc.js");
+    await getVersion("https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/CsWj/Yybpc.js");
     await main();
     await SendMsg(msg);
 })().catch((e) => $.logErr(e)).finally(() => $.done());
