@@ -14,11 +14,11 @@
 
 1、⚠️ 配置文件 [task_local] 标签添加
 
-0 0 10 * * ? https://raw.githubusercontent.com/xiaomaoJT/QxScript/main/rewrite/boxJS/XiaoMaoGold.js, tag=💰今日金价, img-url=https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jrhj.png, enabled=true
+0 0 10 * * ? https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mrjj.js, tag=💰今日金价, img-url=https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Jrhj.png, enabled=true
 
 
 单独脚本地址：
-https://raw.githubusercontent.com/xiaomaoJT/QxScript/main/rewrite/boxJS/XiaoMaoGold.js
+https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mrjj.js
 
 ********************************/
 
