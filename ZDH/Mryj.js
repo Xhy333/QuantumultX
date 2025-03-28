@@ -1,5 +1,6 @@
 /**************************
-
+ *  * @Author: XiaoMao
+ * @LastMod:
 仅供学习参考，请于下载后24小时内删除
 
 ********************************
@@ -10,7 +11,7 @@
 
 1、⚠️ 配置文件 [task_local] 标签添加
 
-0 0 10 * * ? https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mryj.js, tag=💰今日金价, img-url=https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png, enabled=true
+0 0 10 * * ? https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mryj.js, tag=💰今日油价, img-url=https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png, enabled=true
 
 
 单独脚本地址：
