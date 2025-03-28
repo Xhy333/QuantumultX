@@ -152,6 +152,53 @@
           }
         ]
       },{
+        "id": "YouJiaInfo",
+        "name": "每日油价",
+        "keys": [
+          "YouJiaProvince",
+          "YouJiaCity",
+          "YouJiaArea"
+        ],
+        "descs_html": [
+          "<h4 align=\"center\">脚本配置请查看<a href=\"https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mryj.js\">脚本注释</a></h4><br/><br/><h5 align=\"center\">油价地区信息不可跨行政区填写</h5>"
+        ],
+        "settings": [
+         {
+            "id": "YouJiaProvince",
+            "name": "省级行政区（拼音）",
+            "val": null,
+            "type": "textarea",
+            "autoGrow": true,
+            "rows": 1,
+            "desc": "【必填】输入省级简称拼音 如广东：guangdong"
+          },
+          {
+            "id": "YouJiaCity",
+            "name": "市级行政区（拼音）",
+            "val": null,
+            "type": "textarea",
+            "autoGrow": true,
+            "rows": 1,
+            "desc": "【非必填】输入市级简称拼音 如深圳：shenzhen"
+          },
+          {
+            "id": "YouJiaArea",
+            "name": "区级行政区（拼音）",
+            "val": null,
+            "type": "textarea",
+            "autoGrow": true,
+            "rows": 1,
+            "desc": "【非必填】输入区级简称拼音 如南山：nanshan"
+          }
+        ],
+        "author": "@Xhy333_Mryj",
+        "repo": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mryj.js",
+        "icons": [
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png",
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Mryj.png"
+        ],
+        "script": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Mryj.js"
+    },{
         "id": "sliverkiss_teaMilk",
         "name": "奶茶多合一",
         "author": "@Sliverkiss",
