@@ -7,10 +7,10 @@
 
 -------------- Quantumult X 配置 --------------
 [mitm]
-hostname = *.snssdk.com
+hostname = *.snssdk.com, *.fanqienovel.com, *.pcmotorsign.com
 
-[rewrite local]
-
+[task_remote]
+https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/F-q-x-s.js, tag=番茄小说签到, enabled=true
 
 
 
