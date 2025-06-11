@@ -22,150 +22,140 @@ hostname = %APPEND% fanqienovel.com, api5-normal-lq.fqnovel.com
 
 
 
-// 基础设置
-const module = {
-  name: "🍅 番茄小说",
-  author: "DeepSeek",
-  version: "1.3",
-  timeout: 10000, // 10秒超时
-  useMitm: true, // 需要MitM
-  hostnames: ["fanqienovel.com", "api5-normal-lq.fqnovel.com"], // 需要MitM的域名
+const cookieName = '🍅 番茄小说'
+const signurl = 'https://api5-normal-lq.fqnovel.com/reading/account/sign_in/v1'
+const coinurl = 'https://api5-normal-lq.fqnovel.com/reading/account/coin_balance/v1'
+const userurl = 'https://api5-normal-lq.fqnovel.com/reading/user/account/v1'
+const device = "DEVICE_INFO" // 替换为你的设备信息
+
+let userCookie = $prefs.valueForKey("fqxsCookie")
+if (!userCookie) {
+    $notify(cookieName, "未配置Cookie", "请先获取Cookie")
+    $done()
 }
 
-// 持久化存储键名
-const COOKIE_KEY = "fanqie_cookie_v2"
+// 执行签到任务
+signTask()
 
-// API配置
-const API = {
-  signin: "https://api5-normal-lq.fqnovel.com/reading/task/check_in",
-  userinfo: "https://api5-normal-lq.fqnovel.com/account/user/info",
-  taskList: "https://api5-normal-lq.fqnovel.com/reading/task/list"
-}
-
-// 主函数
-async function main() {
-  // 检查Cookie是否存在
-  const cookie = $prefs.valueForKey(COOKIE_KEY)
-  if (!cookie) {
-    $notify(module.name, "⚠️ Cookie未配置", "请先获取Cookie")
-    return
-  }
-
-  try {
-    // 1. 获取用户信息
-    const user = await getUserInfo(cookie)
-    const userName = user?.data?.user_name || "未知用户"
-    
-    // 2. 执行签到
-    const signResult = await doSignIn(cookie)
-    
-    // 3. 获取任务列表
-    const tasks = await getTaskList(cookie)
-    
-    // 4. 解析结果
-    let msg = `👤 ${userName}`
-    let subtitle = ""
-    
-    if (signResult.err_no === 0) {
-      const tomatoCount = signResult.data.tomato_count || 0
-      const totalDays = signResult.data.total_days || 0
-      msg += ` | ✅ 签到成功\n`
-      msg += `🍅 今日获得: ${tomatoCount}番茄\n`
-      msg += `📅 累计签到: ${totalDays}天`
-      subtitle = "签到成功"
-    } else if (signResult.err_no === 10009) {
-      msg += " | ⏰ 今日已签到"
-      subtitle = "无需重复签到"
-    } else {
-      throw new Error(`签到失败: ${signResult.err_msg || "未知错误"}`)
-    }
-    
-    // 5. 添加任务信息
-    if (tasks?.data?.tasks) {
-      const todoTasks = tasks.data.tasks.filter(t => t.status === 0)
-      if (todoTasks.length > 0) {
-        msg += `\n\n📝 待完成任务: ${todoTasks.length}个`
-        todoTasks.slice(0, 3).forEach(task => {
-          msg += `\n- ${task.name} (+${task.tomato_count}🍅)`
-        })
-      }
-    }
-    
-    $notify(module.name, subtitle, msg)
-    
-  } catch (error) {
-    $notify(module.name, "⚠️ 执行出错", error.message || error)
-  }
-}
-
-// 获取用户信息
-function getUserInfo(cookie) {
-  return fetchAPI(API.userinfo, "GET", null, cookie)
-}
-
-// 执行签到
-function doSignIn(cookie) {
-  return fetchAPI(API.signin, "POST", {}, cookie)
-}
-
-// 获取任务列表
-function getTaskList(cookie) {
-  return fetchAPI(API.taskList, "GET", null, cookie)
-}
-
-// 通用API请求
-function fetchAPI(url, method, body, cookie) {
-  return new Promise((resolve, reject) => {
+function signTask() {
     const headers = {
-      "Cookie": cookie,
-      "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148",
-      "Referer": "https://fanqienovel.com/",
-      "Content-Type": "application/json"
+        'Host': 'api5-normal-lq.fqnovel.com',
+        'Cookie': userCookie,
+        'User-Agent': 'okhttp/3.12.1',
+        'X-Device': device
     }
-    
-    $task.fetch({
-      url: url,
-      method: method,
-      headers: headers,
-      body: body ? JSON.stringify(body) : undefined
-    }).then(response => {
-      if (response.statusCode === 200) {
-        try {
-          resolve(JSON.parse(response.body))
-        } catch (e) {
-          reject("解析响应失败")
-        }
-      } else {
-        reject(`API请求失败: HTTP ${response.statusCode}`)
-      }
+
+    // 获取用户信息
+    $task.fetch({ url: userurl, headers: headers }).then(userResponse => {
+        handleUserInfo(userResponse)
     }, reason => {
-      reject(`网络请求失败: ${reason.error}`)
+        $notify(cookieName, "用户信息请求失败", reason.error)
+        $done()
     })
-  })
 }
 
-// 获取Cookie处理器
-function getCookieHandler() {
-  const req = $request
-  if (req && req.url.includes("fanqienovel.com") && req.headers) {
-    const cookie = req.headers["Cookie"] || req.headers["cookie"]
-    if (cookie) {
-      $prefs.setValueForKey(cookie, COOKIE_KEY)
-      $notify(module.name, "✅ Cookie获取成功", "请关闭此提示")
-    } else {
-      $notify(module.name, "⚠️ Cookie获取失败", "未找到Cookie字段")
+function handleUserInfo(response) {
+    if (response.statusCode !== 200) {
+        $notify(cookieName, "用户信息获取失败", `状态码: ${response.statusCode}`)
+        $done()
+        return
     }
-  } else {
-    $notify(module.name, "⚠️ 无效请求", "未捕获到有效请求")
-  }
-  $done({})
+
+    try {
+        const userData = JSON.parse(response.body)
+        const userName = userData.data.user.nickname || "未知用户"
+        const userId = userData.data.user.uid
+        
+        // 执行签到
+        signIn(userName, userId)
+    } catch (e) {
+        $notify(cookieName, "解析用户信息失败", e.message)
+        $done()
+    }
 }
 
-// 模块入口
-if (typeof $task !== "undefined") {
-  // 定时任务入口
-  main()
-} else if (typeof $request !== "undefined") {
-  // 请求处理入口 (用于获取Cookie)
-  getCookieHandler()
+function signIn(userName, userId) {
+    const signHeaders = {
+        'Host': 'api5-normal-lq.fqnovel.com',
+        'Content-Type': 'application/json',
+        'Cookie': userCookie,
+        'User-Agent': 'okhttp/3.12.1',
+        'X-Device': device
+    }
+
+    const signBody = {
+        "sign_in_type": 0,
+        "timezone": 8,
+        "fqnovel_id": userId
+    }
+
+    $task.fetch({
+        url: signurl,
+        method: "POST",
+        headers: signHeaders,
+        body: JSON.stringify(signBody)
+    }).then(signResponse => {
+        handleSignResponse(signResponse, userName)
+    }, reason => {
+        $notify(cookieName, "签到请求失败", reason.error)
+        $done()
+    })
+}
+
+function handleSignResponse(response, userName) {
+    if (response.statusCode !== 200) {
+        $notify(cookieName, "签到失败", `状态码: ${response.statusCode}`)
+        $done()
+        return
+    }
+
+    try {
+        const result = JSON.parse(response.body)
+        if (result.code === 0) {
+            getCoinBalance(userName)
+        } else if (result.code === 1001) {
+            getCoinBalance(userName, "今日已签到")
+        } else {
+            $notify(cookieName, "签到失败", result.message || "未知错误")
+            $done()
+        }
+    } catch (e) {
+        $notify(cookieName, "解析签到结果失败", e.message)
+        $done()
+    }
+}
+
+function getCoinBalance(userName, signMsg = "签到成功") {
+    const coinHeaders = {
+        'Host': 'api5-normal-lq.fqnovel.com',
+        'Cookie': userCookie,
+        'User-Agent': 'okhttp/3.12.1',
+        'X-Device': device
+    }
+
+    $task.fetch({ url: coinurl, headers: coinHeaders }).then(coinResponse => {
+        handleCoinResponse(coinResponse, userName, signMsg)
+    }, reason => {
+        $notify(cookieName, "番茄查询失败", reason.error)
+        $done()
+    })
+}
+
+function handleCoinResponse(response, userName, signMsg) {
+    try {
+        const coinData = JSON.parse(response.body)
+        if (coinData.code === 0) {
+            const coins = coinData.data.coin_balance
+            $notify(
+                `${cookieName} - ${userName}`,
+                signMsg,
+                `💰 当前番茄: ${coins}`
+            )
+        } else {
+            $notify(cookieName, "获取番茄失败", coinData.message || "未知错误")
+        }
+    } catch (e) {
+        $notify(cookieName, "解析番茄数据失败", e.message)
+    }
+    $done()
 }
