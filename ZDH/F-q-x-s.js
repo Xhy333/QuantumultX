@@ -9,8 +9,9 @@
 [mitm]
 hostname = *.snssdk.com, *.fanqienovel.com, *.pcmotorsign.com
 
-[task_remote]
-https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/F-q-x-s.js, tag=番茄小说签到, enabled=true
+[rewrite local]
+luckycat/novel/v1/task/sign_in/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
+luckycat/novel/v1/task/done/excitation_ad_treasure_box/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
 
 
 
