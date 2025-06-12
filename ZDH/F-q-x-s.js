@@ -2,7 +2,7 @@
 // 作者: 
 // 描述: 自动完成番茄小说每日签到任务，领取番茄
 // 支持: Quantumult X 
-// 远程链接: https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
+
 
 
 -------------- Quantumult X 配置 --------------
