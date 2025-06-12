@@ -6,14 +6,13 @@
 
 
 -------------- Quantumult X 配置 --------------
+
 [mitm]
 hostname = *.snssdk.com, *.fanqienovel.com, *.pcmotorsign.com
 
 [rewrite local]
-luckycat/novel/v1/task/sign_in/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
-
-luckycat/novel/v1/task/done/excitation_ad_treasure_box/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
-
+^https:\/\/(.+?)\.(snssdk|fanqienovel|pcmotorsign)\.com\/luckycat\/novel\/v\d+\/task\/sign_in url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
+^https:\/\/(.+?)\.(snssdk|fanqienovel|pcmotorsign)\.com\/luckycat\/novel\/v\d+\/task\/excitation_ad\/treasure_box url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/F-q-x-s.js
 
 
 
