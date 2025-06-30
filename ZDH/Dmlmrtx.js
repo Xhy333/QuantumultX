@@ -1,6 +1,6 @@
 /**************************************
 @Name：达美乐每日提醒
-@Author：Sliverkiss
+@Author：
 @Date：2025-7-01 02:58:31
 
 
@@ -11,12 +11,12 @@ QuantumultX
 3.需要搭配大佬的重写自动获取更新脚本使用
 
 [Script]
-cron "30 10 * * *" script-path=https://gist.githubusercontent.com/Sliverkiss/6b4da0d367d13790a9fd1d928c82bdf8/raw/dlm.js,timeout=300, tag=达美乐披萨
+cron "30 10 * * *" script-path=https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Dmlmrtx.js,timeout=300, tag=达美乐每日提醒
 
-http-request ^https:\/\/game\.dominos\.com\.cn\/.+\/game\/gameDone script-path=https://gist.githubusercontent.com/Sliverkiss/6b4da0d367d13790a9fd1d928c82bdf8/raw/dlm.js,requires-body=true, timeout=10, tag=达美乐披萨获取token
+达美乐披萨 = type=http-request, pattern=^https:\/\/game\.dominos\.com\.cn\/.+\/getUser?, script-path=https://gist.githubusercontent.com/Sliverkiss/759317872ee3828579483a57c05b58ea/raw/dlm_upload.js, requires-body=true, max-size=-1, timeout=1600
+
 [MITM]
-hostname =game.dominos.com.cn
-
+hostname = %APPEND% game.dominos.com.cn
 ====================================
 ⚠️【免责声明】
 ------------------------------------------
