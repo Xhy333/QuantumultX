@@ -91,16 +91,15 @@
         "id": "Xhy333_Dmlmrtx",
         "name": "达美乐提醒配置",
         "author": "@Xhy333",
-        "descs_html": ["1.在bot提交ck后自动获取更新脚本保存到本地
-2.打开达乐美披萨公众号->优惠｜咨询->有奖游戏->添加到桌面获取转跳链接->每日提醒弹窗点击自动转跳小程序，获取小程序转跳链接则可以使用该脚本
-3.需要搭配大佬的重写自动获取更新脚本使用"
+        "descs_html": [""
       ],
         "icons": [
-          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dml.png",
-          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Dml.png"
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png"
         ],
         "settings": [
           {
+            "id": "Dmlztlj",
             "name": "小程序链接",
             "val": "",
             "type": "textarea",
