@@ -36,13 +36,12 @@ const subtitle = "小程序自动更新ey字段";
 const message = "请立即进入小程序完成今日更新！";
 
 // 从BoxJS读取自定义链接，若未配置则使用默认链接
-const defaultLink = "https://wxaurl.cn/k9RqtoN7hJr";
-const userLink = $persistentStore.read("达美乐小程序链接");
-const wxLink = userLink ? userLink : defaultLink;
+const userLink = $persistentStore.read("达美乐链接") || $persistentStore.read("Dmlztlj");
+const wxLink = userLink || "https://wxaurl.cn/k9RqtoN7hJr"; // 默认链接
 
 // 发送带跳转功能的通知
 $notify(title, subtitle, message, {
-    "open-url": wxLink,   // 点击通知直接跳转小程序
+    "open-url": wxLink   // 点击通知直接跳转
 });
 
 $done();
