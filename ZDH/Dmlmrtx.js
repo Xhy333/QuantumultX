@@ -37,7 +37,7 @@ const message = "请立即进入小程序完成今日更新！";
 
 // 从BoxJS读取自定义链接，若未配置则使用默认链接
 const defaultLink = "https://wxaurl.cn/k9RqtoN7hJr";
-const userLink = $persistentStore.read("达美乐小程序链接");
+const userLink = $persistentStore.read("Dmlztlj");
 const wxLink = userLink ? userLink : defaultLink;
 // 发送带跳转功能的通知
 $notify(title, subtitle, message, {
