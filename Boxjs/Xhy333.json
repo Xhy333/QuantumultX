@@ -88,26 +88,6 @@
           }
         ]
       },{
-        "id": "Xhy333_Dmlmrtx",
-        "name": "达美乐提醒配置",
-        "author": "@Xhy333",
-        "descs_html": [""
-      ],
-        "icons": [
-          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png",
-          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Dlm.png"
-        ],
-        "settings": [
-          {
-            "id": "Dmlztlj",
-            "name": "小程序链接",
-            "val": "",
-            "type": "textarea",
-            "autoGrow": true,
-            "desc": "Dmlztlj"
-          }
-        ]
-      },{
       "id": "weibo",
       "name": "新浪微博",
       "author": "@sunert",
