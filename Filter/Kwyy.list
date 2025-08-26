@@ -1,4 +1,3 @@
 # > 酷我音乐分流
-# > AGE动漫
-HOST-SUFFIX,*.koowo.cn
-HOST-SUFFIX,abt-kuwo.tencentmusic.com
+DOMAIN-SUFFIX,*.kuwo.con
+DOMAIN-SUFFIX,abt-kuwo.tencentmusic.com
