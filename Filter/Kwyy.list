@@ -1,6 +1,7 @@
 
 # > Kwyy
 #使用方法：
+#QuantumultX
 #1.配置文件中找到[policy]添加策略组
 #[policy] static=酷我音乐, proxy, direct, reject, img-url=https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kwyy.png
 #2.添加分流规则 https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/Filter/Kwyy.list
