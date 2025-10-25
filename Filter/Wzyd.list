@@ -3,7 +3,7 @@
 #使用方法：
 #QuantumultX
 #1.配置文件中找到[policy]添加策略组
-#2.添加分流规则
+#2.添加分流规则 https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/Filter/Wzyd.list
 #3.分流规则设置策略偏好。选择刚刚创建的酷我音乐策略组保存。
 #PROXY （代理）：绕路走流量被发送到代理服务器，再由代理服务器转发到目的地。
 #DIRECT（直连）：直接走流量不经过任何代理，直接从你的设备发送到目的地。
