@@ -268,6 +268,26 @@
             "desc": "会员Cookie数据"
          }
         ]
+      },{
+        "id": "@Xhy333_Kuwu",
+        "name": "酷我音乐",
+        "author": "@Xhy333_Kuwu",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Kwyy.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Kwyy.png"
+        ],
+        "keys": ["Kuwo_cookies"],
+        "settings": [
+          {
+            "id": "Kuwo_cookies",
+            "name": "Cookie数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "Cookie数据"
+          }
+        ]
       }
     ]
   }
