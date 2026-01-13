@@ -272,10 +272,14 @@
         "id": "@Xhy333_Kuwu",
         "name": "酷我音乐",
         "author": "@Xhy333_Kuwu",
-        "repo": "",
+        "descs_html": [
+        "<h4 align=\"center\">获取Cookie以及脚本配置请查看<a href=\"https://www.kuwo.cn">配置说明</a></h4>",
+        "<br />",
+        "<p>Cookie数据<font color='#FF0000',font-weight: bold> &多账号分隔符 </font>脚本运行可自动获取后方可显示</p>"
+      ],
         "icons": [
-          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Kwyy.png",
-          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/Kwyy.png"
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kwyy.png",
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Kwyy.png"
         ],
         "keys": ["Kuwo_cookies"],
         "settings": [
