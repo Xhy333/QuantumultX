@@ -1,7 +1,6 @@
 /*
 ------------------------------------------
 @Author: Sliveriss
-@Github: https://github.com/Sliverkiss/QuantumultX
 @Description: QuantumultX 自动签到脚本
 @Date: 2026.01.28
 ------------------------------------------
@@ -37,7 +36,7 @@ const moduleName = "QuantmultX CheckIn";
 const $ = new Env(moduleName);
 // 优先级: 脚本内 > 脚本外部传入
 $.name = scriptName || moduleName;
-$.ckName = ckName || "slivekriss777";
+$.ckName = ckName || "Xhy333";
 $.bodyRegx = bodyRegx;
 $.resultPath = resultPath;
 $.accountIndex = parseInt(accountIndex) || 0;
