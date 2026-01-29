@@ -1,7 +1,6 @@
 /*
 ------------------------------------------
 @Author: Sliveriss
-@Github: https://github.com/Sliverkiss/QuantumultX
 @Description: QuantumultX 自动签到脚本
 @Date: 2026.01.28
 ------------------------------------------
@@ -26,12 +25,12 @@
 
 // ----------- 固定不动区域 -----------
 const $ = new Env("QuantmultX 脚本生成器");
-const confPath = $.getdata("@sliverkiss_qx.confPath") || "icloud";//配置文件路径
-const ckName = $.getdata("@sliverkiss_qx.ckName") || "test_data";// 脚本ck名称
-const scriptName = $.getdata("@sliverkiss_qx.scriptName") || "测试";// 脚本名称
-const fileName = $.getdata("@sliverkiss_qx.fileName") || "hello";// 脚本文件名
-const cron = $.getdata("@sliverkiss_qx.cron") || "0 9 * * *";//脚本定时
-const getCookieUrl = $.getdata("@sliverkiss_qx.getCookieUrl") || "https://cdp.myfoodiepet.com/tnew/myfoodiepet-member/v1/member/sign";// 获取ck的url
+const confPath = $.getdata("@Xhy333_qx.confPath") || "icloud";//配置文件路径
+const ckName = $.getdata("@Xhy333_qx.ckName") || "test_data";// 脚本ck名称
+const scriptName = $.getdata("@Xhy333_qx.scriptName") || "测试";// 脚本名称
+const fileName = $.getdata("@Xhy333_qx.fileName") || "hello";// 脚本文件名
+const cron = $.getdata("@Xhy333_qx.cron") || "0 9 * * *";//脚本定时
+const getCookieUrl = $.getdata("@Xhy333_qx.getCookieUrl") || "https://cdp.myfoodiepet.com/tnew/myfoodiepet-member/v1/member/sign";// 获取ck的url
 
 
 //主程序执行入口
@@ -71,7 +70,7 @@ function fetch(opts) {
 // 写入脚本文件
 async function writeScript() {
     let scriptConetent = await fetch({
-        "url": "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/refs/heads/main/quantumultX_checkin.js",
+        "url": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/quantumultX_checkin.js",
         "method": "get"
     })
     // 脚本名称
