@@ -1,9 +1,9 @@
 {
   "id": "Xhy333_quantumultX_checkin",
   "name": "Sakura 樱花交流会",
-  "author": "@sliverkiss",
+  "author": "@Xhy333",
   "icon": "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/duona.png",
-  "repo": "https://github.com/Sliverkiss/QuantumultX",
+  "repo": "https://github.com/Xhy333/QuantumultX",
   "apps": [
     {
       "id": "Xhy333_QuantumultX_Checkin",
@@ -19,7 +19,7 @@
       "scripts": [
         {
           "name": "生成脚本相关文件",
-          "script": "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/refs/heads/main/quantumultX_writeConf.js"
+          "script": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/quantumultX_writeConf.js"
         }
       ],
       "settings": [
@@ -68,7 +68,7 @@
       ],
       "author": "@Xhy333",
       "repo": "https://github.com/Xhy333/QuantumultX",
-      "script": "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/refs/heads/main/quantumultX_writeConf.js",
+      "script": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/quantumultX_writeConf.js",
       "icons": [
         "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png",
         "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png"
