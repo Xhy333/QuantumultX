@@ -292,6 +292,74 @@
             "desc": "Cookie数据"
           }
         ]
-      }
+      },{
+      "id": "Xhy333_QuantumultX_Checkin",
+      "name": "Quantumult Checkin",
+      "keys": [
+        "@Xhy333_qx.confPath",
+        "@Xhy333_qx.ckName",
+        "@Xhy333_qx.scriptName",
+        "@Xhy333_qx.fileName",
+        "@Xhy333_qx.cron",
+        "@Xhy333_qx.getCookieUrl"
+      ],
+      "scripts": [
+        {
+          "name": "生成脚本相关文件",
+          "script": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/quantumultX_writeConf.js"
+        }
+      ],
+      "settings": [
+        {
+          "id": "@Xhy333_qx.getCookieUrl",
+          "name": "签到url",
+          "val": "",
+          "type": "text",
+          "desc": "填入签到请求的url"
+        },
+        {
+          "id": "@Xhy333_qx.cron",
+          "name": "脚本定时",
+          "val": "",
+          "type": "text",
+          "desc": "填入要生成脚本的定时表达式"
+        },
+        {
+          "id": "@Xhy333_qx.scriptName",
+          "name": "脚本名称",
+          "val": "",
+          "type": "text",
+          "desc": "填入task列表中想要显示的脚本名称"
+        },
+        {
+          "id": "@Xhy333_qx.ckName",
+          "name": "Cookie变量名称",
+          "val": "",
+          "type": "text",
+          "desc": "填入要读取和写入的cookie变量名称"
+        },
+        {
+          "id": "@Xhy333_qx.fileName",
+          "name": "脚本文件名称",
+          "val": "",
+          "type": "text",
+          "desc": "填入要读取和写入的脚本文件名称"
+        },
+        {
+          "id": "@Xhy333_qx.confPath",
+          "name": "配置文件名称",
+          "val": "",
+          "type": "text",
+          "desc": "填入要读取和写入的配置文件名称"
+        }
+      ],
+      "author": "@Xhy333",
+      "repo": "https://github.com/Xhy333/QuantumultX",
+      "script": "https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/quantumultX_writeConf.js",
+      "icons": [
+        "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png",
+        "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png"
+      ]
+    }
     ]
   }
