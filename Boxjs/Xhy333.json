@@ -360,6 +360,25 @@
         "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png",
         "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png"
       ]
-    }
+    },{
+        "id": "Xhy333_Tyjh",
+        "name": "统一茄皇",
+        "author": "@Xhy333",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/sfsy.png",
+          "https://raw.githubusercontent.com/Sliverkiss/QuantumultX/main/icon/sfsy.png"
+        ],
+        "keys": ["QH"],
+        "settings": [
+          {
+            "id": "QH",
+            "name": "账号ID#手机号",
+            "val": "",
+            "type": "text",
+            "desc": "wid#wm_phone&wid#wm_phone（多个账号用&分隔）"
+          }
+        ]
+      }
     ]
   }
