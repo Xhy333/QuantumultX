@@ -388,14 +388,20 @@
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png",
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png"
         ],
-        "keys": ["sfsyUrl","ENABLE_INTEGRAL_EXCHANGE","ENABLE_LOTTERY_DRAW"],
+        "keys": ["sfsyUrl","SF_COOKIE","ENABLE_INTEGRAL_EXCHANGE","ENABLE_LOTTERY_DRAW"],
         "settings": [
-          {
+            {
             "id": "sfsyUrl",
             "name": "Url",
             "val": "",
             "type": "text",
             "desc": "（多个账号用&分隔）"
+          },{
+            "id": "SF_COOKIE",
+            "name": "Cookie",
+            "val": "",
+            "type": "text",
+            "desc": "格式如 "key1=value1; key2=value2"，多个账号用 & 分隔（优先级高于 sfsyUrl）"
           },{
             "id": "ENABLE_INTEGRAL_EXCHANGE",
             "name": "是否开启积分兑换冲刺次数",
