@@ -388,7 +388,7 @@
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png",
           "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png"
         ],
-        "keys": ["sfsyUrl"],
+        "keys": ["sfsyUrl","ENABLE_INTEGRAL_EXCHANGE","ENABLE_LOTTERY_DRAW"],
         "settings": [
           {
             "id": "sfsyUrl",
