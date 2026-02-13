@@ -396,6 +396,18 @@
             "val": "",
             "type": "text",
             "desc": "（多个账号用&分隔）"
+          },{
+            "id": "ENABLE_INTEGRAL_EXCHANGE",
+            "name": "是否开启积分兑换冲刺次数",
+            "val": false,
+            "type": "boolean",
+            "desc": "默认关闭"
+          },{
+            "id": "ENABLE_LOTTERY_DRAW",
+            "name": "是否开启自动轮次抽奖",
+            "val": false,
+            "type": "boolean",
+            "desc": "默认关闭"
           }
         ]
       }
