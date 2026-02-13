@@ -401,7 +401,7 @@
             "name": "Cookie",
             "val": "",
             "type": "text",
-            "desc": "格式如 "key1=value1; key2=value2"，多个账号用 & 分隔（优先级高于 sfsyUrl）"
+            "desc": "多个账号用 & 分隔（优先级高于 sfsyUrl）"
           },{
             "id": "ENABLE_INTEGRAL_EXCHANGE",
             "name": "是否开启积分兑换冲刺次数",
