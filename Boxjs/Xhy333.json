@@ -380,5 +380,24 @@
           }
         ]
       }
+        "id": "Xhy333_Sfsy",
+        "name": "顺风速运",
+        "author": "@Xhy333",
+        "repo": "",
+        "icons": [
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png",
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Sfsy.png"
+        ],
+        "keys": ["sfsyUrl"],
+        "settings": [
+          {
+            "id": "sfsyUrl",
+            "name": "Url",
+            "val": "",
+            "type": "text",
+            "desc": "（多个账号用&分隔）"
+          }
+        ]
+      }
     ]
   }
