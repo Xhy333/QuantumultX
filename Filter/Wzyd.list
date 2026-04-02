@@ -35,7 +35,7 @@ DOMAIN-SUFFIX,moba.qq.com
 DOMAIN-SUFFIX,xiao.qq.com
 DOMAIN-SUFFIX,game.qq.com
 DOMAIN-SUFFIX,video.qq.com
-DOMAIN-SUFFIX,qq.com
+DOMAIN-SUFFIX,*.qq.com
 DOMAIN-SUFFIX,tencenttds.com
 DOMAIN-SUFFIX,tencent.com
 DOMAIN-SUFFIX,oth.eve.mdt.qq.com
