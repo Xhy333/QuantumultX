@@ -38,4 +38,9 @@ DOMAIN-SUFFIX,video.qq.com
 DOMAIN-SUFFIX,qq.com
 DOMAIN-SUFFIX,tencenttds.com
 DOMAIN-SUFFIX,tencent.com
+DOMAIN-SUFFIX,oth.eve.mdt.qq.com
+DOMAIN-SUFFIX,mtrace.qq.com
+DOMAIN-SUFFIX,otheve.beacon.qq.com
+DOMAIN-SUFFIX,oth.str.mdt.qq.com
+DOMAIN-SUFFIX,ios.rqd.qq.com
 
