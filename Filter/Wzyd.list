@@ -28,9 +28,9 @@
 
 
 
-DOMAIN-SUFFIX,-oth.eve.mdt.qq.com
-DOMAIN-SUFFIX,-mtrace.qq.com
-DOMAIN-SUFFIX,-otheve.beacon.qq.com
-DOMAIN-SUFFIX,-oth.str.mdt.qq.com
-DOMAIN-SUFFIX,-ios.rqd.qq.com
-DOMAIN-SUFFIX,-android.rqd.qq.cnm
+DOMAIN-SUFFIX,-*.oth.eve.mdt.qq.com
+DOMAIN-SUFFIX,-*.mtrace.qq.com
+DOMAIN-SUFFIX,-*.otheve.beacon.qq.com
+DOMAIN-SUFFIX,-*.oth.str.mdt.qq.com
+DOMAIN-SUFFIX,-*.ios.rqd.qq.com
+DOMAIN-SUFFIX,-*.android.rqd.qq.cnm
