@@ -24,6 +24,8 @@
 
 
 
+
+host, fqnovelpic.com , reject
 host, fqnovelvod.com , reject
 host, hl.ecombdapi.com , reject
 host, sign.dailygn.com , reject
