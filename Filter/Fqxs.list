@@ -29,6 +29,7 @@ host, hl.ecombdapi.com , reject
 host, sign.dailygn.com , reject
 host, hl.fqnovel.com, reject
 host, p3-novel.byteimg.com, reject
+host, p6-novel.byteimg.com, reject
 host, p6-ad-sign.byteimg.com, reject
 host, p9-ad-sign.byteimg.com, reject
 host, i.snssdk.com, reject
