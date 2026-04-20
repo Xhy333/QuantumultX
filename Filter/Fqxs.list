@@ -23,6 +23,9 @@
 
 
 
+
+
+host, hl.ecombdapi.com , reject
 host, sign.dailygn.com , reject
 host, hl.fqnovel.com, reject
 host, p3-novel.byteimg.com, reject
