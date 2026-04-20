@@ -47,7 +47,7 @@ DOMAIN-SUFFIX, apd-pcdnwxlogin.teg.tencent-cloud.net, reject
 DOMAIN-SUFFIX, api.iegadp.qq.com, reject
 DOMAIN-SUFFIX, sf3-ttcdn-tos.pstatp.com, reject
 DOMAIN-SUFFIX, pglstatp-toutiao.com, reject
-DOMAIN-SUFFIX, *default.ixigua.com, reject
+host, *default.ixigua.com, reject
 DOMAIN-SUFFIX, v6-novelapp.ixigua.com, reject
 DOMAIN-SUFFIX, *novelapp.ixigua.com, reject
 DOMAIN-SUFFIX, byteorge.com, reject
