@@ -24,6 +24,14 @@
 
 
 
+DOMAIN-KEYWORD,sf-fqnovelvod,REJECT
+DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+DOMAIN-SUFFIX,bytegecko.com,REJECT
+DOMAIN-SUFFIX,snssdk.com,REJECT
+DOMAIN-SUFFIX,zijieapi.com,REJECT
+DOMAIN-SUFFIX,dig.bdurl.net,REJECT
+DOMAIN-SUFFIX,quark.cn,REJECT
+DOMAIN-SUFFIX,jd.com,REJECT
 
 host, fqnovelpic.com , reject
 host, fqnovelvod.com , reject
