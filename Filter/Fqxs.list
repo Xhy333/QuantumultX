@@ -25,34 +25,32 @@
 
 
 
-DOMAIN-SUFFIX, hl.ecombdapi.com , reject
-DOMAIN-SUFFIX, sign.dailygn.com , reject
-DOMAIN-SUFFIX, hl.fqnovel.com, reject
-DOMAIN-SUFFIX, p3-novel.byteimg.com, reject
-DOMAIN-SUFFIX, p6-novel.byteimg.com, reject
-DOMAIN-SUFFIX, p6-ad-sign.byteimg.com, reject
-DOMAIN-SUFFIX, p9-ad-sign.byteimg.com, reject
-DOMAIN-SUFFIX, i.snssdk.com, reject
-DOMAIN-SUFFIX, i-lq.snssdk.com, reject
-DOMAIN-SUFFIX, dig.bdurl.net, reject
-DOMAIN-SUFFIX, zijieapi.com, reject
-DOMAIN-SUFFIX, activity-ag.awemeughun.com, reject
-DOMAIN-SUFFIX, mcs.snssdk.com, reject
-DOMAIN-SUFFIX, tnc3-alisc1.snssdk.com, reject
-DOMAIN-SUFFIX, security-lq.snssdk.com, reject
-DOMAIN-SUFFIX, tnc3-aliec2.snssdk.com, reject
-DOMAIN-SUFFIX, is.snssdk.com, reject
-DOMAIN-SUFFIX, msync-im1-vip6-std.easemob.com, reject
-DOMAIN-SUFFIX, apd-pcdnwxlogin.teg.tencent-cloud.net, reject
-DOMAIN-SUFFIX, api.iegadp.qq.com, reject
-DOMAIN-SUFFIX, sf3-ttcdn-tos.pstatp.com, reject
-DOMAIN-SUFFIX, pglstatp-toutiao.com, reject
-DOMAIN-SUFFIX, ixigua.com, reject
-DOMAIN-SUFFIX, v6-novelapp.ixigua.com, reject
-DOMAIN-SUFFIX, *novelapp.ixigua.com, reject
-DOMAIN-SUFFIX, byteorge.com, reject
-DOMAIN-SUFFIX, bytegoofy.com, reject
-DOMAIN-SUFFIX, bytedance.com, reject
+host, hl.ecombdapi.com , reject
+host, sign.dailygn.com , reject
+host, hl.fqnovel.com, reject
+host, p6-ad-sign.byteimg.com, reject
+host, p9-ad-sign.byteimg.com, reject
+host, i.snssdk.com, reject
+host, i-lq.snssdk.com, reject
+host, dig.bdurl.net, reject
+host-suffix, zijieapi.com, reject
+host, activity-ag.awemeughun.com, reject
+host, mcs.snssdk.com, reject
+host, tnc3-alisc1.snssdk.com, reject
+host, security-lq.snssdk.com, reject
+host, tnc3-aliec2.snssdk.com, reject
+host, is.snssdk.com, reject
+host, msync-im1-vip6-std.easemob.com, reject
+host, apd-pcdnwxlogin.teg.tencent-cloud.net, reject
+host, api.iegadp.qq.com, reject
+host, sf3-ttcdn-tos.pstatp.com, reject
+host-suffix, pglstatp-toutiao.com, reject
+host, *default.ixigua.com, reject
+host, v6-novelapp.ixigua.com, reject
+host, *novelapp.ixigua.com, reject
+host-suffix, byteorge.com, reject
+host-suffix, bytegoofy.com, reject
+host-suffix, bytedance.com, reject
 ip-cidr, 49.71.37.101/32, reject
 ip-cidr, 117.71.105.23/32, reject
 ip-cidr, 218.94.207.205/32, reject
@@ -60,4 +58,4 @@ ip-cidr, 117.92.229.188/32, reject
 ip-cidr, 101.36.166.16/32, reject
 ip-cidr, 180.96.2.114/32, reject
 # 番茄小说福利页
-DOMAIN-SUFFIX, lf-sourcecdn-tos.bytegecko.com, direct
+host, lf-sourcecdn-tos.bytegecko.com, direct
