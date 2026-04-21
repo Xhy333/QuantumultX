@@ -33,34 +33,20 @@ DOMAIN-SUFFIX,dig.bdurl.net,REJECT
 DOMAIN-SUFFIX,quark.cn,REJECT
 DOMAIN-SUFFIX,jd.com,REJECT
 
-host, p6-ad-sign.byteimg.com, reject
-host, p9-ad-sign.byteimg.com, reject
-host, i.snssdk.com, reject
-host, i-lq.snssdk.com, reject
-host, dig.bdurl.net, reject
-host-suffix, zijieapi.com, reject
-host, activity-ag.awemeughun.com, reject
-host, mcs.snssdk.com, reject
-host, tnc3-alisc1.snssdk.com, reject
-host, security-lq.snssdk.com, reject
-host, tnc3-aliec2.snssdk.com, reject
-host, is.snssdk.com, reject
-host, msync-im1-vip6-std.easemob.com, reject
-host, apd-pcdnwxlogin.teg.tencent-cloud.net, reject
-host, api.iegadp.qq.com, reject
-host, sf3-ttcdn-tos.pstatp.com, reject
-host-suffix, pglstatp-toutiao.com, reject
-host, *default.ixigua.com, reject
-host, v6-novelapp.ixigua.com, reject
-host, *novelapp.ixigua.com, reject
-host-suffix, byteorge.com, reject
-host-suffix, bytegoofy.com, reject
-host-suffix, bytedance.com, reject
-ip-cidr, 49.71.37.101/32, reject
-ip-cidr, 117.71.105.23/32, reject
-ip-cidr, 218.94.207.205/32, reject
-ip-cidr, 117.92.229.188/32, reject
-ip-cidr, 101.36.166.16/32, reject
-ip-cidr, 180.96.2.114/32, reject
-# 番茄小说福利页
-host, lf-sourcecdn-tos.bytegecko.com, direct
+# 番茄小说广告域名屏蔽
+DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+DOMAIN-SUFFIX,bytedance.com,REJECT
+DOMAIN-SUFFIX,snssdk.com,REJECT
+DOMAIN-SUFFIX,ixigua.com,REJECT
+DOMAIN-SUFFIX,toutiao.com,REJECT
+DOMAIN-SUFFIX,uc.cn,REJECT
+DOMAIN-SUFFIX,ucweb.com,REJECT
+DOMAIN-SUFFIX,amap.com,REJECT
+DOMAIN-SUFFIX,baidu.com,REJECT
+DOMAIN-SUFFIX,qlogo.cn,REJECT
+DOMAIN-SUFFIX,doubleclick.net,REJECT
+DOMAIN-SUFFIX,googlesyndication.com,REJECT
+DOMAIN-SUFFIX,googleadservices.com,REJECT
+DOMAIN-SUFFIX,google-analytics.com,REJECT
+DOMAIN-SUFFIX,googletagmanager.com,REJECT
