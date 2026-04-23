@@ -22,10 +22,6 @@
 
 
 
-DOMAIN,mon11-misc-hl.fqnovel.com,REJECT
-DOMAIN-SUFFIX,mon-misc-hl.fqnovel.com,REJECT
-DOMAIN-SUFFIX,log.fqnovel.com,REJECT
-DOMAIN-SUFFIX,tracker.fqnovel.com,REJECT
 
 DOMAIN-KEYWORD,sf-fqnovelvod,REJECT
 DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
