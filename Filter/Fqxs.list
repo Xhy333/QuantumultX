@@ -22,7 +22,10 @@
 
 
 
-
+DOMAIN,mon11-misc-hl.fqnovel.com,REJECT
+DOMAIN-SUFFIX,mon-misc-hl.fqnovel.com,REJECT
+DOMAIN-SUFFIX,log.fqnovel.com,REJECT
+DOMAIN-SUFFIX,tracker.fqnovel.com,REJECT
 
 DOMAIN-KEYWORD,sf-fqnovelvod,REJECT
 DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
@@ -31,7 +34,6 @@ DOMAIN-SUFFIX,snssdk.com,REJECT
 DOMAIN-SUFFIX,zijieapi.com,REJECT
 DOMAIN-SUFFIX,dig.bdurl.net,REJECT
 DOMAIN-SUFFIX,quark.cn,REJECT
-DOMAIN-SUFFIX,jd.com,REJECT
 
 # 番茄小说广告域名屏蔽
 DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
