@@ -1,0 +1,37 @@
+; ================== 番茄小说去广告重写规则 ==================
+
+; 优化：福利页视频广告拦截、SDK核心请求屏蔽
+; 需搭配 [mitm] 主机名：
+; hostname = *.pangolin-sdk-toutiao.com, *.pglstatp-toutiao.com, *.pstatp.com, *.snssdk.com, *.byteimg.com, *.fqnovelvod.com, *.ixigua.com
+
+[rewrite_local]
+
+; -------- 穿山甲广告SDK核心请求 --------
+^https?:\/\/.+\.pangolin-sdk-toutiao\.com\/api\/ad\/union\/sdk\/(get_ads|stats|settings)\/ url reject
+^https?:\/\/gurd\.snssdk\.com\/src\/server\/v3\/package url reject
+
+; -------- 字节系 & 穿山甲 CDN 广告资源 --------
+^https?:\/\/.+\.(pglstatp-toutiao|pstatp)\.com\/.+\/toutiao\.mp4 url reject
+^https?:\/\/.+\.(pglstatp-toutiao|pstatp)\.com\/(obj|img)\/(ad-app-package|ad)\/.+ url reject
+^https?:\/\/.+\.(pglstatp-toutiao|pstatp)\.com\/(obj|img)\/web\.business\.image\/.+ url reject
+^https?:\/\/.+\.(pglstatp-toutiao|pstatp)\.com\/obj\/ad-pattern\/renderer url reject
+^https?:\/\/.+\.pstatp\.com\/obj\/mosaic-legacy\/.+\?from\=ad url reject
+^https?:\/\/.+\.pstatp\.com\/bytecom\/resource\/track_log\/src\/.+ url reject
+^https?:\/\/.+\.snssdk\.com\/video\/play\/1\/toutiao\/.+\/mp4 url reject
+^https?:\/\/.+\.snssdk.com\/api\/ad\/.+ url reject
+^http:\/\/.+\.byteimg\.com\/ad-app-package url reject
+^http:\/\/.+\.byteimg\.com\/web\.business\.image url reject
+^https?:\/\/.+\.byteimg.com/tos-cn-i-1yzifmftcy\/(.+)-jpeg\.jpeg url reject
+^https?:\/\/.+\.(pglstatp-toutiao|pstatp)\.com\/(ad-app-package|ad)\/.+ url reject
+
+; -------- 第三方广告与追踪 --------
+^https?:\/\/adim\.pinduoduo\.com\/.+\/toutiao\?.+ url reject
+^https?:\/\/.+novelapp\.fqnovelvod\.com\/.+\/video\/.+ url reject
+^http:\/\/.+\.douyincdn\.com\/stage\/.+\.flv url reject
+
+; -------- 福利页视频及流媒体广告（新增） --------
+^https?:\/\/.+\.fqnovelvod\.com\/.+\.(mp4|flv) url reject
+^https?:\/\/.+\.ixigua\.com\/video\/.+ url reject
+^https?:\/\/v6-novelapp\.fqnovelvod\.com\/.+ url reject
+^https?:\/\/default\.fqnovelvod\.com\/.+ url reject
+^https?:\/\/.+\.fqnovelvod\.com\/.+\/playlist\.m3u8 url reject
