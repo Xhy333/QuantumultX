@@ -2,7 +2,7 @@
 
 ; 优化：福利页视频广告拦截、SDK核心请求屏蔽
 [mitm]
-; hostname = *.pangolin-sdk-toutiao.com, *.pglstatp-toutiao.com, *.pstatp.com, *.snssdk.com, *.byteimg.com, *.fqnovelvod.com, *.ixigua.com
+hostname = *.pangolin-sdk-toutiao.com, *.pglstatp-toutiao.com, *.pstatp.com, *.snssdk.com, *.byteimg.com, *.fqnovelvod.com, *.ixigua.com
 
 [rewrite_local]
 
