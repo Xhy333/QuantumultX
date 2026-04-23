@@ -1,0 +1,72 @@
+# > Fqxs
+# 版本：2026.04.24
+# 番茄小说去广告 - 完整增强版
+# 核心更新：精准拦截伪装成内容服务器的视频/音频广告(vod域名)
+# 
+# 使用方法：
+# Quantumult X → 设置 → 资源 → 分流 → 粘贴链接或文本内容
+# 策略组中对应策略必须选择 REJECT
+#
+# 免责声明：
+# 此脚本仅用于学习研究，请勿用于商业或非法目的。
+# 使用即视为接受免责声明。
+
+# =============================================
+# 【一级拦截】精准打击番茄小说伪内容广告
+# 这是漏网之鱼！伪装成小说/听书内容域名的广告
+# =============================================
+HOST-KEYWORD,fqnovelvod,REJECT
+HOST-KEYWORD,fq-tts.fqnovelvod,REJECT
+HOST-KEYWORD,sf-fqnovelvod,REJECT
+HOST-SUFFIX,fqnovelvod.com,REJECT
+HOST-KEYWORD,fanqienovelvod,REJECT
+HOST-KEYWORD,fanqienovel,REJECT
+HOST-KEYWORD,fqnovel,REJECT
+HOST-SUFFIX,fqnovel.com,REJECT
+
+# =============================================
+# 【二级拦截】封堵微信小程序跳转链路
+# 截断广告→微信→小程序的跳转路径
+# =============================================
+DOMAIN-SUFFIX,game.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,minigame.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,wechatpay.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,payapp.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,xiaochengxu.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,open.weixin.qq.com,REJECT
+DOMAIN-SUFFIX,api.weixin.qq.com,REJECT
+DOMAIN-KEYWORD,wx.tenpay.com,REJECT
+DOMAIN-KEYWORD,weixinbridge,REJECT
+URL-REGEX,^https?://(.*\.)?(weixin\.qq\.com).*$,REJECT
+URL-REGEX,^https?://(.*\.)?(qq\.com).*/.*WeChat.*,REJECT
+
+# =============================================
+# 【三级拦截】字节跳动广告体系·全黑名单
+# 穿山甲SDK / 今日头条 / 抖音广告联盟
+# =============================================
+DOMAIN-SUFFIX,snssdk.com,REJECT
+DOMAIN-SUFFIX,bytedance.com,REJECT
+DOMAIN-SUFFIX,bytedance.net,REJECT
+DOMAIN-SUFFIX,bytedns.net,REJECT
+DOMAIN-SUFFIX,byteoversea.com,REJECT
+DOMAIN-SUFFIX,bytegecko.com,REJECT
+DOMAIN-SUFFIX,byteimg.com,REJECT
+DOMAIN-SUFFIX,bytecdn.cn,REJECT
+DOMAIN-SUFFIX,volccdn.com,REJECT
+DOMAIN-SUFFIX,ixigua.com,REJECT
+DOMAIN-SUFFIX,ixiguacdn.com,REJECT
+DOMAIN-SUFFIX,toutiao.com,REJECT
+DOMAIN-SUFFIX,toutiaocdn.com,REJECT
+DOMAIN-SUFFIX,toutiaocloud.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
+DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
+DOMAIN-SUFFIX,pglstatp-toutiao.com,REJECT
+DOMAIN-SUFFIX,zijieapi.com,REJECT
+DOMAIN-SUFFIX,dig.bdurl.net,REJECT
+
+
+
+
+
+
+
