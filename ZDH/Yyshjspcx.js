@@ -12,7 +12,8 @@ QuantumultX
 1. 用任意抓包工具（如 Stream、Thor、电脑 Charles）抓取一次 god.gameyw.netease.com 请求头，提取 GL-Uid、GL-Token、GL-DeviceId。
 2. 打开 BoxJS → 数据 → 找到或新建 onmyoji_auth。
 3. 将 Value 更新为 {"uid":"新uid","token":"新token","deviceId":"新deviceId"}，保存。
-
+ *   1. 认证信息：BoxJS 中 Key = onmyoji_auth
+ *   2. 查询日期：BoxJS 中 Key = query_date（格式：yyyy-MM-dd，留空则查今天）
 ====================================
 ⚠️【免责声明】
 ------------------------------------------
@@ -27,21 +28,49 @@ QuantumultX
 
 
 
-const STORE_KEY = 'onmyoji_auth';       // BoxJS 中的 Key
+
+
+
+if (typeof $persistentStore === 'undefined' || typeof $task === 'undefined' || typeof $notify === 'undefined') {
+    const msg = '❌ 请在 Quantumult X 的任务中运行此脚本';
+    try { console.log(msg); } catch(e) {}
+    try { $notify('运行错误', '', msg); } catch(e) {}
+    throw new Error(msg);
+}
+
+// ========== 配置常量 ==========
+const STORE_KEY_AUTH = 'onmyoji_auth';
+const STORE_KEY_DATE = 'query_date';      // 自定义查询日期用
 const USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Godlike/4.17.1 UEPay/com.netease.godlike/iOS_7.12.28';
 const SOP_SESSION_INIT = "Tool:Session:sopH5Tool:8f11b9dd-6bd2-4762-ba22-4c5d0e35ddb1";
 
-// 从 BoxJS 读取认证信息
+const BASE_URL = 'https://turing.gameyw.netease.com/sop-api/api/out/context';
+const INIT_URL = `${BASE_URL}/initBySession`;
+const PROCESS_URL = `${BASE_URL}/process`;
+const RESULT_URL = `${BASE_URL}/getAsyncProcessResultV2`;
+
+// ========== 工具函数 ==========
 function getAuth() {
-    const raw = $persistentStore.read(STORE_KEY);
+    const raw = $persistentStore.read(STORE_KEY_AUTH);
     if (!raw) return null;
     try {
         const data = JSON.parse(raw);
-        if (data.uid && data.token && data.deviceId) return data;
-        return null;
-    } catch (e) {
-        return null;
+        return (data.uid && data.token && data.deviceId) ? data : null;
+    } catch (e) { return null; }
+}
+
+function getQueryDate() {
+    let dateStr = $persistentStore.read(STORE_KEY_DATE);
+    dateStr = (dateStr || '').trim();
+    if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+        return dateStr;
     }
+    // 默认今天
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
 }
 
 function buildHeaders(auth) {
@@ -64,15 +93,6 @@ function delay(ms) {
     return new Promise(resolve => $delay(ms, resolve));
 }
 
-function getDateStr(daysAgo) {
-    const d = new Date();
-    d.setDate(d.getDate() - daysAgo);
-    const y = d.getFullYear();
-    const m = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${y}-${m}-${day}`;
-}
-
 function parseFragments(message) {
     const small = message.match(/绘卷碎片·小：<span style="color:#ff0000">(\d+)<\/span>/);
     const medium = message.match(/绘卷碎片·中：<span style="color:#ff0000">(\d+)<\/span>/);
@@ -84,98 +104,85 @@ function parseFragments(message) {
     };
 }
 
-async function queryAll(days = 7) {
-    const auth = getAuth();
-    if (!auth) throw new Error('未找到认证信息，请在 BoxJS 中配置 onmyoji_auth 字段');
+// ========== 查询单日碎片 ==========
+async function queryOneDay(dateStr, headers) {
+    // 1. 初始化会话
+    let resp = await $task.fetch({
+        url: INIT_URL, method: 'POST', headers,
+        body: JSON.stringify({ sopSession: SOP_SESSION_INIT })
+    });
+    let data = JSON.parse(resp.body);
+    if (data.code !== 200) throw new Error(`初始化会话失败 (${dateStr})`);
+    const { contextId, sopSession } = data.item;
 
-    const headers = buildHeaders(auth);
-    const BASE = 'https://turing.gameyw.netease.com/sop-api/api/out/context';
-    const INIT_URL = `${BASE}/initBySession`;
-    const PROCESS_URL = `${BASE}/process`;
-    const RESULT_URL = `${BASE}/getAsyncProcessResultV2`;
+    // 2. 进入槽位
+    resp = await $task.fetch({
+        url: PROCESS_URL, method: 'POST', headers,
+        body: JSON.stringify({ async: true, inputPayload: null, contextId, sopSession })
+    });
+    data = JSON.parse(resp.body);
+    if (data.code !== 200) throw new Error(`进入槽位失败 (${dateStr})`);
 
-    const dayList = [];
-    for (let i = 0; i < days; i++) dayList.push(getDateStr(i));
-    dayList.sort();
-
-    const results = [];
-    for (const dateStr of dayList) {
-        // 初始化会话
-        let resp = await $task.fetch({
-            url: INIT_URL, method: 'POST', headers,
-            body: JSON.stringify({ sopSession: SOP_SESSION_INIT })
-        });
-        let data = JSON.parse(resp.body);
-        if (data.code !== 200) throw new Error(`初始化会话失败 (${dateStr})`);
-        const { contextId, sopSession } = data.item;
-
-        // 进入槽位
+    // 3. 等待 waiting
+    let status = '';
+    for (let i = 0; i < 10; i++) {
+        await delay(1500);
         resp = await $task.fetch({
-            url: PROCESS_URL, method: 'POST', headers,
-            body: JSON.stringify({ async: true, inputPayload: null, contextId, sopSession })
+            url: RESULT_URL, method: 'POST', headers,
+            body: JSON.stringify({ contextId, sopSession })
         });
         data = JSON.parse(resp.body);
-        if (data.code !== 200) throw new Error(`槽位请求失败 (${dateStr})`);
+        status = data.item?.status;
+        if (status === 'waiting') break;
+        if (status === 'error') throw new Error(`槽位异常 (${dateStr})`);
+    }
+    if (status !== 'waiting') throw new Error(`无法进入日期选择 (${dateStr})`);
 
-        // 等待 waiting
-        let status = '';
-        for (let i = 0; i < 10; i++) {
-            await delay(1500);
-            resp = await $task.fetch({
-                url: RESULT_URL, method: 'POST', headers,
-                body: JSON.stringify({ contextId, sopSession })
-            });
-            data = JSON.parse(resp.body);
-            status = data.item?.status;
-            if (status === 'waiting') break;
-            if (status === 'error') throw new Error(`槽位异常 (${dateStr})`);
-        }
-        if (status !== 'waiting') throw new Error(`未进入日期选择 (${dateStr})`);
+    // 4. 提交日期
+    resp = await $task.fetch({
+        url: PROCESS_URL, method: 'POST', headers,
+        body: JSON.stringify({ async: true, inputPayload: { time: dateStr }, contextId, sopSession })
+    });
+    data = JSON.parse(resp.body);
+    if (data.code !== 200) throw new Error(`提交日期失败 (${dateStr})`);
 
-        // 提交日期
+    // 5. 等待 finish
+    for (let i = 0; i < 15; i++) {
+        await delay(2000);
         resp = await $task.fetch({
-            url: PROCESS_URL, method: 'POST', headers,
-            body: JSON.stringify({ async: true, inputPayload: { time: dateStr }, contextId, sopSession })
+            url: RESULT_URL, method: 'POST', headers,
+            body: JSON.stringify({ contextId, sopSession })
         });
         data = JSON.parse(resp.body);
-        if (data.code !== 200) throw new Error(`日期提交失败 (${dateStr})`);
-
-        // 等待 finish
-        for (let i = 0; i < 15; i++) {
-            await delay(2000);
-            resp = await $task.fetch({
-                url: RESULT_URL, method: 'POST', headers,
-                body: JSON.stringify({ contextId, sopSession })
-            });
-            data = JSON.parse(resp.body);
-            status = data.item?.status;
-            if (status === 'finish') break;
-            if (status === 'error') throw new Error(`结果异常 (${dateStr})`);
-        }
-        if (status !== 'finish') throw new Error(`查询超时 (${dateStr})`);
-
-        const message = data.item.handlerResponseList[0]?.result?.message || '';
-        results.push({ date: dateStr, ...parseFragments(message) });
+        status = data.item?.status;
+        if (status === 'finish') break;
+        if (status === 'error') throw new Error(`查询异常 (${dateStr})`);
     }
+    if (status !== 'finish') throw new Error(`查询超时 (${dateStr})`);
 
-    let notifyMsg = '';
-    for (const r of results) {
-        const short = r.date.substring(5);
-        notifyMsg += `${short} | 小:${r.small} 中:${r.medium} 大:${r.large}\n`;
-    }
-    $notify('📜 绘卷七日统计', '', notifyMsg);
+    const message = data.item.handlerResponseList[0]?.result?.message || '';
+    return parseFragments(message);
 }
 
+// ========== 主流程 ==========
 (async () => {
     try {
-        await queryAll(7);
+        const auth = getAuth();
+        if (!auth) throw new Error('未找到认证信息，请在 BoxJS 中填写 onmyoji_auth');
+
+        const queryDate = getQueryDate();
+        const headers = buildHeaders(auth);
+        const frag = await queryOneDay(queryDate, headers);
+
+        const shortDate = queryDate.substring(5); // MM-DD
+        const msg = `📜 绘卷碎片统计\n日期：${queryDate}\n小碎片：${frag.small}\n中碎片：${frag.medium}\n大碎片：${frag.large}`;
+        $notify('阴阳师绘卷查询', '', msg);
     } catch (e) {
         console.log('❌ 错误: ' + e.message);
         $notify('绘卷查询失败', '', e.message);
     }
     $done();
 })();
-
 
 
 //From chavyleung's Env.js
