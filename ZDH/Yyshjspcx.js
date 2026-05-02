@@ -14,13 +14,7 @@ QuantumultX
 3. 将 Value 更新为 {"uid":"新uid","token":"新token","deviceId":"新deviceId"}，保存。
 {"uid":"a06679b811204e959f1438c5bcf*****","token":"58cd30bd5e8b45bb86b2f29c62c*****","deviceId":"B212E258-BC5B-4D6A-BF72-2A98983*****"}
 
-[rewrite_local]
-# 自动捕获认证信息（任何 god.gameyw.netease.com 请求都会触发存储更新）
-https://god.gameyw.netease.com/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Yyshjspcx.js
-
-[mitm]
-hostname = god.gameyw.netease.com, turing.gameyw.netease.com, game.16163.com
-
+ 
 [task_local]
 # 每天上午9:30自动查询七日绘卷碎片
 30 9 * * * https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Yyshjspcx.js, tag=绘卷七日统计
