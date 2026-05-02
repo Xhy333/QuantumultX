@@ -12,7 +12,7 @@ QuantumultX
 https://god.gameyw.netease.com/* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Yyshjspcx.js
 
 [mitm]
-hostname = -god.gameyw.netease.com, turing.gameyw.netease.com, game.16163.com
+hostname = god.gameyw.netease.com, turing.gameyw.netease.com, game.16163.com
 
 [task_local]
 # 每天上午9:30自动查询七日绘卷碎片
