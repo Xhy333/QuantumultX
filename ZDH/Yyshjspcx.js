@@ -12,6 +12,7 @@ QuantumultX
 1. 用任意抓包工具（如 Stream、Thor、电脑 Charles）抓取一次 god.gameyw.netease.com 请求头，提取 GL-Uid、GL-Token、GL-DeviceId。
 2. 打开 BoxJS → 数据 → 找到或新建 onmyoji_auth。
 3. 将 Value 更新为 {"uid":"新uid","token":"新token","deviceId":"新deviceId"}，保存。
+{"uid":"a06679b811204e959f1438c5bcf*****","token":"58cd30bd5e8b45bb86b2f29c62c*****","deviceId":"B212E258-BC5B-4D6A-BF72-2A98983*****"}
 
 [rewrite_local]
 # 自动捕获认证信息（任何 god.gameyw.netease.com 请求都会触发存储更新）
