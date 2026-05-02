@@ -29,18 +29,17 @@ QuantumultX
 
 
 
-
-
-if (typeof $persistentStore === 'undefined' || typeof $task === 'undefined' || typeof $notify === 'undefined') {
-    const msg = '❌ 请在 Quantumult X 的任务中运行此脚本';
-    try { console.log(msg); } catch(e) {}
-    try { $notify('运行错误', '', msg); } catch(e) {}
-    throw new Error(msg);
+if (typeof $task === 'undefined') {
+    const msg = '❌ 请在 Quantumult X 的任务列表中运行此脚本';
+    try { if (typeof console !== 'undefined') console.log(msg); } catch(e) {}
+    try { if (typeof $notify !== 'undefined') $notify('运行错误', '', msg); } catch(e) {}
+    // 不抛异常，直接结束
+    if (typeof $done !== 'undefined') $done();
 }
 
 // ========== 配置常量 ==========
 const STORE_KEY_AUTH = 'onmyoji_auth';
-const STORE_KEY_DATE = 'query_date';      // 自定义查询日期用
+const STORE_KEY_DATE = 'query_date';
 const USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Godlike/4.17.1 UEPay/com.netease.godlike/iOS_7.12.28';
 const SOP_SESSION_INIT = "Tool:Session:sopH5Tool:8f11b9dd-6bd2-4762-ba22-4c5d0e35ddb1";
 
@@ -65,7 +64,6 @@ function getQueryDate() {
     if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
         return dateStr;
     }
-    // 默认今天
     const d = new Date();
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -174,7 +172,7 @@ async function queryOneDay(dateStr, headers) {
         const headers = buildHeaders(auth);
         const frag = await queryOneDay(queryDate, headers);
 
-        const shortDate = queryDate.substring(5); // MM-DD
+        const shortDate = queryDate.substring(5);
         const msg = `📜 绘卷碎片统计\n日期：${queryDate}\n小碎片：${frag.small}\n中碎片：${frag.medium}\n大碎片：${frag.large}`;
         $notify('阴阳师绘卷查询', '', msg);
     } catch (e) {
