@@ -416,6 +416,30 @@
             "desc": "默认关闭"
           }
         ]
-      }
+      },{
+    "id": "Xhy333_Yyshjspcx",
+    "name": "阴阳师绘卷查询",
+    "author": "@Xhy333",
+    "descs_html": [
+        "<h4 align=\"center\">获取Cookie及脚本配置请查看<a href=\"https://github.com/Xhy333/QuantumultX\">配置说明</a></h4>",
+        "<br />",
+        "<p>认证数据 <font color='#FF0000' font-weight='bold'> @多账号分隔符 </font> 请按JSON格式填写</p>"
+    ],
+    "icons": [
+        "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yys.png",
+        "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Yys.png"
+    ],
+    "keys": ["onmyoji_auth"],
+    "settings": [
+        {
+            "id": "onmyoji_auth",
+            "name": "绘卷认证数据",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "请填写完整的 JSON，格式：{\"uid\":\"你的GL-Uid\",\"token\":\"你的GL-Token\",\"deviceId\":\"你的Device-Id\"}"
+        }
+    ]
+}
     ]
   }
