@@ -29,17 +29,17 @@ QuantumultX
 
 
 
+
 if (typeof $task === 'undefined') {
-    const msg = '❌ 请在 Quantumult X 的任务列表中运行此脚本';
-    try { if (typeof console !== 'undefined') console.log(msg); } catch(e) {}
-    try { if (typeof $notify !== 'undefined') $notify('运行错误', '', msg); } catch(e) {}
-    // 不抛异常，直接结束
-    if (typeof $done !== 'undefined') $done();
+    const msg = '❌ 请在 Quantumult X 任务列表中运行此脚本';
+    try { console.log(msg); } catch(e) {}
+    try { $notify('运行错误', '', msg); } catch(e) {}
+    $done();
 }
 
 // ========== 配置常量 ==========
-const STORE_KEY_AUTH = 'onmyoji_auth';
-const STORE_KEY_DATE = 'query_date';
+const AUTH_KEY = 'onmyoji_auth';   // 认证数据存储键
+const DATE_KEY = 'query_date';     // 自定义查询日期键
 const USER_AGENT = 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 Godlike/4.17.1 UEPay/com.netease.godlike/iOS_7.12.28';
 const SOP_SESSION_INIT = "Tool:Session:sopH5Tool:8f11b9dd-6bd2-4762-ba22-4c5d0e35ddb1";
 
@@ -50,7 +50,7 @@ const RESULT_URL = `${BASE_URL}/getAsyncProcessResultV2`;
 
 // ========== 工具函数 ==========
 function getAuth() {
-    const raw = $persistentStore.read(STORE_KEY_AUTH);
+    const raw = $prefs.valueForKey(AUTH_KEY);
     if (!raw) return null;
     try {
         const data = JSON.parse(raw);
@@ -59,11 +59,9 @@ function getAuth() {
 }
 
 function getQueryDate() {
-    let dateStr = $persistentStore.read(STORE_KEY_DATE);
-    dateStr = (dateStr || '').trim();
-    if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-        return dateStr;
-    }
+    let dateStr = $prefs.valueForKey(DATE_KEY) || '';
+    dateStr = dateStr.trim();
+    if (dateStr && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
     const d = new Date();
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
@@ -104,7 +102,6 @@ function parseFragments(message) {
 
 // ========== 查询单日碎片 ==========
 async function queryOneDay(dateStr, headers) {
-    // 1. 初始化会话
     let resp = await $task.fetch({
         url: INIT_URL, method: 'POST', headers,
         body: JSON.stringify({ sopSession: SOP_SESSION_INIT })
@@ -113,7 +110,6 @@ async function queryOneDay(dateStr, headers) {
     if (data.code !== 200) throw new Error(`初始化会话失败 (${dateStr})`);
     const { contextId, sopSession } = data.item;
 
-    // 2. 进入槽位
     resp = await $task.fetch({
         url: PROCESS_URL, method: 'POST', headers,
         body: JSON.stringify({ async: true, inputPayload: null, contextId, sopSession })
@@ -121,7 +117,6 @@ async function queryOneDay(dateStr, headers) {
     data = JSON.parse(resp.body);
     if (data.code !== 200) throw new Error(`进入槽位失败 (${dateStr})`);
 
-    // 3. 等待 waiting
     let status = '';
     for (let i = 0; i < 10; i++) {
         await delay(1500);
@@ -136,7 +131,6 @@ async function queryOneDay(dateStr, headers) {
     }
     if (status !== 'waiting') throw new Error(`无法进入日期选择 (${dateStr})`);
 
-    // 4. 提交日期
     resp = await $task.fetch({
         url: PROCESS_URL, method: 'POST', headers,
         body: JSON.stringify({ async: true, inputPayload: { time: dateStr }, contextId, sopSession })
@@ -144,7 +138,6 @@ async function queryOneDay(dateStr, headers) {
     data = JSON.parse(resp.body);
     if (data.code !== 200) throw new Error(`提交日期失败 (${dateStr})`);
 
-    // 5. 等待 finish
     for (let i = 0; i < 15; i++) {
         await delay(2000);
         resp = await $task.fetch({
@@ -166,7 +159,7 @@ async function queryOneDay(dateStr, headers) {
 (async () => {
     try {
         const auth = getAuth();
-        if (!auth) throw new Error('未找到认证信息，请在 BoxJS 中填写 onmyoji_auth');
+        if (!auth) throw new Error('未找到认证信息，请先在 BoxJS 中配置 onmyoji_auth');
 
         const queryDate = getQueryDate();
         const headers = buildHeaders(auth);
