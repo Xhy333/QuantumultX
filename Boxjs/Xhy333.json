@@ -441,60 +441,86 @@
         }
     ]
 },{
-  "id": "Xhy333_QDDS",
-  "name": "起点读书",
-  "icon": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdds.png",
-  "keys": [
-    {
-      "key": "QDREADER_COOKIE",
-      "type": "text",
-      "desc": "账号 Cookie 缓存",
-      "default": ""
-    },
-    {
-      "key": "QDREADER_DEBUG",
-      "type": "boolean",
-      "desc": "是否开启调试模式",
-      "default": false
-    },
-    {
-      "key": "QDREADER_ADV_JOB_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启激励任务",
-      "default": true
-    },
-    {
-      "key": "QDREADER_EXTRA_ADV_JOB_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启每日任务",
-      "default": true
-    },
-    {
-      "key": "QDREADER_LOTTERY_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启每日抽奖",
-      "default": true
-    },
-    {
-      "key": "QDREADER_WEEKLY_EXCHANGE_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启每周兑换",
-      "default": true
-    },
-    {
-      "key": "QDREADER_CHAPTER_CARD_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启章节卡片",
-      "default": true
-    },
-    {
-      "key": "QDREADER_MESSAGE_BOX_ENABLE",
-      "type": "boolean",
-      "desc": "是否开启大咖荐书",
-      "default": true
-    }
-  ],
-  "scripts": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/QDReader/qdreader.js"
+    "id": "Xhy333_QDReader",
+    "name": "起点读书",
+    "author": "@Xhy333",
+    "descs_html": [
+        "<h4 align=\"center\">点点阅读脚本配置</h4>"
+    ],
+    "icons": [
+        "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdds.png",
+        "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdds.png"
+    ],
+    "keys": [
+        "QDREADER_COOKIE",
+        "QDREADER_DEBUG",
+        "QDREADER_ADV_JOB_ENABLE",
+        "QDREADER_EXTRA_ADV_JOB_ENABLE",
+        "QDREADER_LOTTERY_ENABLE",
+        "QDREADER_WEEKLY_EXCHANGE_ENABLE",
+        "QDREADER_CHAPTER_CARD_ENABLE",
+        "QDREADER_MESSAGE_BOX_ENABLE"
+    ],
+    "settings": [
+        {
+            "id": "QDREADER_COOKIE",
+            "name": "账号 Cookie",
+            "val": "",
+            "type": "textarea",
+            "autoGrow": true,
+            "desc": "请输入完整的 Cookie 字符串"
+        },
+        {
+            "id": "QDREADER_DEBUG",
+            "name": "调试模式",
+            "val": false,
+            "type": "boolean",
+            "desc": "开启后将输出详细运行日志"
+        },
+        {
+            "id": "QDREADER_ADV_JOB_ENABLE",
+            "name": "激励任务",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否执行激励视频等广告任务"
+        },
+        {
+            "id": "QDREADER_EXTRA_ADV_JOB_ENABLE",
+            "name": "每日任务",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否执行每日额外任务"
+        },
+        {
+            "id": "QDREADER_LOTTERY_ENABLE",
+            "name": "每日抽奖",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否参与每日抽奖"
+        },
+        {
+            "id": "QDREADER_WEEKLY_EXCHANGE_ENABLE",
+            "name": "每周兑换",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否自动进行每周积分兑换"
+        },
+        {
+            "id": "QDREADER_CHAPTER_CARD_ENABLE",
+            "name": "章节卡片",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否领取章节卡片奖励"
+        },
+        {
+            "id": "QDREADER_MESSAGE_BOX_ENABLE",
+            "name": "大咖荐书",
+            "val": true,
+            "type": "boolean",
+            "desc": "是否开启大咖荐书消息盒子"
+        }
+    ],
+    "scripts": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/QDReader/qdreader.js"
 }
     ]
   }
