@@ -440,6 +440,61 @@
             "desc": "请填写完整的 JSON，格式：{\"uid\":\"你的GL-Uid\",\"token\":\"你的GL-Token\",\"deviceId\":\"你的Device-Id\"}"
         }
     ]
+},{
+  "id": "Xhy333_QDDS",
+  "name": "起点读书",
+  "icon": "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdds.png",
+  "keys": [
+    {
+      "key": "QDREADER_COOKIE",
+      "type": "text",
+      "desc": "账号 Cookie 缓存",
+      "default": ""
+    },
+    {
+      "key": "QDREADER_DEBUG",
+      "type": "boolean",
+      "desc": "是否开启调试模式",
+      "default": false
+    },
+    {
+      "key": "QDREADER_ADV_JOB_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启激励任务",
+      "default": true
+    },
+    {
+      "key": "QDREADER_EXTRA_ADV_JOB_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启每日任务",
+      "default": true
+    },
+    {
+      "key": "QDREADER_LOTTERY_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启每日抽奖",
+      "default": true
+    },
+    {
+      "key": "QDREADER_WEEKLY_EXCHANGE_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启每周兑换",
+      "default": true
+    },
+    {
+      "key": "QDREADER_CHAPTER_CARD_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启章节卡片",
+      "default": true
+    },
+    {
+      "key": "QDREADER_MESSAGE_BOX_ENABLE",
+      "type": "boolean",
+      "desc": "是否开启大咖荐书",
+      "default": true
+    }
+  ],
+  "scripts": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/QDReader/qdreader.js"
 }
     ]
   }
