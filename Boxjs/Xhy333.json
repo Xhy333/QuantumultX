@@ -445,7 +445,7 @@
     "name": "起点读书1",
     "author": "@Xhy333",
     "descs_html": [
-        "<h4 align=\"center\">点点阅读脚本配置</h4>"
+        "<h4 align=\"center\">获取Cookie及脚本配置请查看<a href=\"https://github.com/Xhy333/QuantumultX\">配置说明</a></h4>"
     ],
     "icons": [
         "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Qdds.png",
@@ -519,8 +519,7 @@
             "type": "boolean",
             "desc": "是否开启大咖荐书消息盒子"
         }
-    ],
-    "scripts": "https://raw.githubusercontent.com/Yuheng0101/X/main/Tasks/QDReader/qdreader.js"
+    ]
 }
     ]
   }
