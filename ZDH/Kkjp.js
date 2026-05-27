@@ -19,10 +19,10 @@ https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Kkjp.js
 ********************************/
 
 
+[rewrite_local]
+^https?:\/\/kk\.weshine\.im\/v1\.0\/text2voice\/(checkCount|consumeCount) url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Kkjp.js
 
+^https?:\/\/kk\.weshine\.im\/v1\.0\/text2voice\/createTtsAudio url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Kkjp.js
 
-^https?:\/\/kk\.weshine\.im\/v1\.0\/text2voice\/(checkCount|consumeCount) url jsonjq-response-body .data.totalCount = 999 | .data.currCount = 999
-
-^https?:\/\/kk\.weshine\.im\/v1\.0\/text2voice\/createTtsAudio url jsonjq-response-body .data.freeCount = 999
-
+[mitm]
 hostname = kk.weshine.im
