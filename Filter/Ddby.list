@@ -1,3 +1,3 @@
 # > 蛋蛋不语
-IP-ASN,38.76.202.248
-IP-ASN,one.one.one.one
+IP-CIDR, 38.76.202.248/32
+DOMAIN, one.one.one.one
