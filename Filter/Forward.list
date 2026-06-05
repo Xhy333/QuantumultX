@@ -1,7 +1,4 @@
 #Forward分流
-
-#Forward模块必要分流，订阅该地址后，需要点进该插件，接着把这个插件代理指向一个可以翻墙的策略or节点
-
 #danmu
 DOMAIN-SUFFIX,dandanplay.net,proxy
 
