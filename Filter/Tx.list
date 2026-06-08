@@ -1,0 +1,8 @@
+#腾讯游戏头像分流
+#当你用微信或 QQ 账号登录腾讯游戏
+#如《王者荣耀》《和平精英》时头像不显示
+#微信区
+DOMAIN-SUFFIX,wx.qlogo.cn
+
+#QQ区
+DOMAIN-SUFFIX,thirdqq.qlogo.cn
