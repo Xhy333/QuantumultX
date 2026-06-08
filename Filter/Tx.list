@@ -6,3 +6,8 @@ DOMAIN-SUFFIX,wx.qlogo.cn
 
 #QQ区
 DOMAIN-SUFFIX,thirdqq.qlogo.cn
+
+#王者营地网络崩溃
+DOMAIN-SUFFIX,othstr.beacon.qq.com
+DOMAIN-SUFFIX,mdt.qq.com
+DOMAIN-SUFFIX,ios.rqd.qq.com
