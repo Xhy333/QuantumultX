@@ -1,6 +1,6 @@
 #腾讯游戏头像分流
 #当你用微信或QQ账号登录腾讯游戏如王者,头像不显示
-
+#被自动Reject可用此分流解决
 #微信区
 DOMAIN-SUFFIX,wx.qlogo.cn
 
