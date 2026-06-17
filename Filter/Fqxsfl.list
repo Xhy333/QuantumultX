@@ -26,8 +26,7 @@
 
 
 
-#番茄小说播放器
-DOMAIN-SUFFIX,bytednsdoc.com,REJECT
+
 
 #番茄抖音直播间
 DOMAIN-SUFFIX,amemv.com,DIRECT
