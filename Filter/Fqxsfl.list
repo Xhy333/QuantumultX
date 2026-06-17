@@ -35,3 +35,6 @@ DOMAIN-SUFFIX,douyinpic.com,DIRECT
 
 #番茄抖音直播
 DOMAIN-SUFFIX,amemv.com,DIRECT
+
+#番茄抖音直播间头像
+DOMAIN-SUFFIX,toutiaocloud.com,DIRECT
