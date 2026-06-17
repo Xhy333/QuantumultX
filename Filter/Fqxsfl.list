@@ -35,4 +35,4 @@ DOMAIN-SUFFIX,douyinpic.com,DIRECT
 
 #屏蔽
 DOMAIN-SUFFIX,ecombdapi.com,REJECT
-
+DOMAIN-SUFFIX,ecombdimg.com,REJECT
