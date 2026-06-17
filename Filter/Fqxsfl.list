@@ -33,6 +33,5 @@ DOMAIN-SUFFIX,byteimg.com,DIRECT
 DOMAIN-SUFFIX,open.douyin.com,DIRECT
 DOMAIN-SUFFIX,douyinpic.com,DIRECT
 
-#屏蔽
-DOMAIN-SUFFIX,ecombdapi.com,REJECT
-DOMAIN-SUFFIX,ecombdimg.com,REJECT
+#番茄抖音直播
+DOMAIN-SUFFIX,amemv.com,DIRECT
