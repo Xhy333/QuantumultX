@@ -24,17 +24,10 @@
 
 
 
-# 番茄小说核心服务
-DOMAIN-SUFFIX,fqnovel.com,DIRECT
-DOMAIN-SUFFIX,fqnovelpic.com,DIRECT
-DOMAIN-SUFFIX,byteimg.com,DIRECT
+
 
 #番茄小说播放器
 DOMAIN-SUFFIX,bytednsdoc.com,REJECT
-
-# 番茄小说抖音登录
-DOMAIN-SUFFIX,douyin.com,DIRECT
-DOMAIN-SUFFIX,douyinpic.com,DIRECT
 
 #番茄抖音直播间
 DOMAIN-SUFFIX,amemv.com,DIRECT
