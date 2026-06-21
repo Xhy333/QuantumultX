@@ -20,12 +20,12 @@ QuantumultX
 
 
 [rewrite_local]
-^https:\/\/god\.gameyw\.netease\.com\/v1\/app\/gameRole\/getGmsdkToken url script-request-header 网易大神绘卷查询.js
-^https:\/\/turing\.gameyw\.netease\.com\/sop-api\/api\/out\/context\/initBySession url script-request-body 网易大神绘卷查询.js
+^https:\/\/god\.gameyw\.netease\.com\/v1\/app\/gameRole\/getGmsdkToken url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js
+^https:\/\/turing\.gameyw\.netease\.com\/sop-api\/api\/out\/context\/initBySession url script-request-body https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js
 
 [task_local]
 # 定时查询，例如每天 9 点
-0 9 * * * 网易大神绘卷查询.js, tag=大神绘卷查询, enabled=true
+0 9 * * * https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js, tag=绘卷查询, enabled=true
 
 
 [mitm]
