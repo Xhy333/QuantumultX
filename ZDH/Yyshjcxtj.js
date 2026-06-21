@@ -10,7 +10,7 @@
 - 双来源解析
 - 强制完整7天日报（缺数据补0）
 - 日期去重（仅查询新日期）
-- 统计周期：每日快照比较，变化才更新，7天无变化重置
+- 统计周期：每日快照比较，变化才更新，7次无变化重置
 - 本期统计：直接从快照汇总
 
 使用方法：
@@ -348,12 +348,12 @@ function updatePeriod(period, dailyMap) {
     console.log("📈 快照已更新");
   } else {
     period.noChangeDays++;
-    console.log(`📉 快照无变化，连续${period.noChangeDays}天`);
+    console.log(`📉 快照无变化，连续${period.noChangeDays}次`);
   }
 
-  // 7天无变化 → 清空周期
+  // 7次无变化 → 清空周期
   if (period.noChangeDays >= 7) {
-    console.log("🔄 连续7天无变化，重置统计周期");
+    console.log("🔄 连续7次无变化，重置统计周期");
     period.snapshot = {};
     period.noChangeDays = 0;
     period.startTime = Date.now();
