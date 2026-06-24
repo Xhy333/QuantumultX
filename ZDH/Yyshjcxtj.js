@@ -25,17 +25,17 @@ QuantumultX
 
 [rewrite_local]
 # 鉴权头部（getGmsdkToken）
-^https:\/\/god\.gameyw\.netease\.com\/v1\/app\/gameRole\/getGmsdkToken url script-request-header 网易大神绘卷查询.js
+^https:\/\/god\.gameyw\.netease\.com\/v1\/app\/gameRole\/getGmsdkToken url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js
 # SOP Session
-^https:\/\/turing\.gameyw\.netease\.com\/sop-api\/api\/out\/context\/initBySession url script-request-body 网易大神绘卷查询.js
+^https:\/\/turing\.gameyw\.netease\.com\/sop-api\/api\/out\/context\/initBySession url script-request-body https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js
 # sopId 捕获（act.ds.163.com 页面）
-^https:\/\/act\.ds\.163\.com\/.* url script-request-header 网易大神绘卷查询.js
+^https:\/\/act\.ds\.163\.com\/.* url script-request-header https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js
 
 [mitm]
 hostname = god.gameyw.netease.com, turing.gameyw.netease.com, act.ds.163.com, game.16163.com
 
 [task_local]
-0 9 * * * 网易大神绘卷查询.js, tag=网易大神绘卷查询, enabled=true
+0 9 * * * https://raw.githubusercontent.com/Xhy333/QuantumultX/refs/heads/main/ZDH/Yyshjcxtj.js, tag=网易大神绘卷查询, enabled=true
 
 
 
@@ -57,15 +57,13 @@ hostname = god.gameyw.netease.com, turing.gameyw.netease.com, act.ds.163.com, ga
 
 
 
-
-// ========== 存储 Key ==========
 const TOKEN_KEY       = "WYDS_GL_TOKEN";
 const UID_KEY         = "WYDS_GL_UID";
 const DEVICE_KEY      = "WYDS_DEVICE_ID";
 const CHECKSUM_KEY    = "WYDS_CHECKSUM";
 const SOP_SESSION_KEY = "WYDS_SOP_SESSION";
-const SOP_ID_KEY      = "WYDS_YYS_SOP_ID";        // 当前活动 sopId
-const ARCHIVE_KEY     = "WYDS_YYS_SOP_ARCHIVE";   // 所有活动归档
+const SOP_ID_KEY      = "WYDS_YYS_SOP_ID";
+const ARCHIVE_KEY     = "WYDS_YYS_SOP_ARCHIVE";
 
 const CONTEXT_API = "https://turing.gameyw.netease.com/sop-api/api/out/context";
 
@@ -75,7 +73,7 @@ Rewrite：捕获鉴权、SOP Session、sopId
 if (typeof $request !== "undefined") {
   const url = $request.url;
 
-  // 1. 捕获 sopId（从 act.ds.163.com 页面请求的 URL 参数）
+  // sopId 从 act.ds.163.com 页面 URL 提取
   if (url.indexOf("act.ds.163.com") !== -1) {
     const match = url.match(/[?&]sopId=([^&]+)/);
     if (match) {
@@ -85,7 +83,7 @@ if (typeof $request !== "undefined") {
     $done({});
   }
 
-  // 2. 捕获 SOP Session（initBySession 请求体）
+  // SOP Session
   if (url.indexOf("initBySession") !== -1) {
     try {
       const body = JSON.parse($request.body);
@@ -97,7 +95,7 @@ if (typeof $request !== "undefined") {
     $done({});
   }
 
-  // 3. 捕获鉴权头部（getGmsdkToken 等请求）
+  // 鉴权头部
   const h = $request.headers;
   $prefs.setValueForKey(h["GL-Token"]    || h["gl-token"]    || "", TOKEN_KEY);
   $prefs.setValueForKey(h["GL-Uid"]      || h["gl-uid"]      || "", UID_KEY);
@@ -122,11 +120,10 @@ if (typeof $request !== "undefined") {
       return $done();
     }
 
-    // 1. 获取 sopId（优先使用捕获的活动ID，否则回退到硬编码常量）
+    // 1. 获取 sopId
     let sopId = $prefs.valueForKey(SOP_ID_KEY);
     if (!sopId) {
-      // 备用：如果从未捕获到，可以尝试使用某个默认值，但建议用户手动触发一次
-      $notify("大神绘卷", "缺少活动ID", "请先打开一次绘卷活动页面（act.ds.163.com）");
+      $notify("大神绘卷", "缺少活动ID", "请先打开一次绘卷活动页面 (act.ds.163.com)");
       return $done();
     }
 
@@ -144,14 +141,22 @@ if (typeof $request !== "undefined") {
     if (!yysRole) throw new Error("未找到阴阳师角色");
     console.log(`✅ 当前角色: ${yysRole.nick} (${yysRole.serverName})`);
 
-    // 3. 读取 SOP Session
+    // 3. SOP Session
     const sopH5Session = $prefs.valueForKey(SOP_SESSION_KEY);
     if (!sopH5Session) {
       throw new Error("未获取到SOP Session\n请打开大神 -> 工具 -> 绘卷碎片获得进度");
     }
 
-    // 4. 获取日期列表（使用 sopId 发起第一次会话）
+    // 4. 获取日期列表
     const initDate = await request("/initBySession", { sopSession: sopH5Session, sopId });
+    // 尝试从接口更新 sopId
+    const newSopId = initDate?.item?.handlerResponseList?.[0]?.sopId
+                  || initDate?.item?.handlerResponseList?.[0]?.result?.sopId;
+    if (newSopId && newSopId !== sopId) {
+      sopId = newSopId;
+      $prefs.setValueForKey(sopId, SOP_ID_KEY);
+    }
+
     const firstSopToolSession = initDate.item.sopSession;
     const firstContextId = initDate.item.contextId;
 
@@ -167,84 +172,82 @@ if (typeof $request !== "undefined") {
     const options = slot.handlerResponseList[0].result.slotMapper.time.options;
     const dates = Object.keys(options).sort().reverse();
 
-    // 5. 活动期管理：检测 sopId 是否变化
+    // 5. 活动期管理
     let archive = loadArchive();
     const { changed, archive: newArchive } = checkSopSwitch(sopId, archive);
     archive = newArchive;
-    if (changed) {
-      $notify("大神绘卷", "检测到新一期活动", `sopId: ${sopId}`);
-    }
-    // 当期数据引用
+    if (changed) $notify("大神绘卷", "检测到新一期活动", `sopId: ${sopId}`);
     const current = archive.list[archive.current];
 
-    // 6. 构建每日碎片 Map（用于日报和快照比较）
+    // 6. 初始化日报 Map 和增量累积变量
     const dailyMap = new Map();
-    for (const d of dates) {
-      dailyMap.set(d, {
-        date: d.slice(5),
-        small: 0,
-        middle: 0,
-        big: 0,
-        filled: false
-      });
-    }
+    // 本期增量（仅本次运行发现的新增碎片）
+    let incSmall = 0, incMiddle = 0, incBig = 0;
 
-    // 7. 加载当期已查询日期（绑定 sopId，防止串期）
-    const doneDatesKey = `WYDS_YYS_DONE_${sopId}`;
-    let doneDates = loadDoneDates(doneDatesKey);
-
-    // 8. 逐日查询（仅查询新日期）
+    // 7. 逐日查询（每次全部请求，不复用缓存）
     for (const date of dates) {
-      if (doneDates.includes(date)) {
-        const cached = current.data[date.slice(5)];
-        if (cached) {
-          dailyMap.set(date, {
-            date: date.slice(5),
-            small: cached.small,
-            middle: cached.middle,
-            big: cached.big,
-            filled: true
-          });
-        }
-        continue;
-      }
-
-      // 新日期：独立会话查询
+      // 新会话查询
       const initData = await request("/initBySession", { sopSession: sopH5Session, sopId });
       const sopToolSession = initData.item.sopSession;
       const contextId = initData.item.contextId;
 
       const resultObj = await queryDateForResult(contextId, sopToolSession, date, sopId);
-      let small = 0, middle = 0, big = 0;
-      if (resultObj) {
-        const extracted = extractData(resultObj, date);
-        small = extracted.small;
-        middle = extracted.middle;
-        big = extracted.big;
-      }
+      const now = extractData(resultObj, date); // 最新实际值
 
-      // 保存到当期 data（键为 MM-DD）
-      current.data[date.slice(5)] = { small, middle, big };
+      // 与缓存对比，计算增量
+      const cached = current.data[date.slice(5)] || { small: 0, middle: 0, big: 0 };
+      const diffSmall  = Math.max(0, now.small - cached.small);
+      const diffMiddle = Math.max(0, now.middle - cached.middle);
+      const diffBig    = Math.max(0, now.big - cached.big);
+
+      // 累加本期增量
+      incSmall += diffSmall;
+      incMiddle += diffMiddle;
+      incBig += diffBig;
+
+      // 更新缓存（用最新值覆盖）
+      current.data[date.slice(5)] = { small: now.small, middle: now.middle, big: now.big };
+
+      // 填入日报（使用最新实际值）
       dailyMap.set(date, {
         date: date.slice(5),
-        small,
-        middle,
-        big,
+        small: now.small,
+        middle: now.middle,
+        big: now.big,
         filled: true
       });
 
-      doneDates.push(date);
-      saveDoneDates(doneDatesKey, doneDates);
       await sleep(1000);
     }
-    // 保存当期数据到归档
     saveArchive(archive);
 
-    // 9. 更新统计周期（快照比较，绑定当期 period）
+    // 8. 更新统计周期快照（基于最新实际值，判断是否有变化）
     current.period = updatePeriod(current.period || createNewPeriod(), dailyMap);
+    // 无变化天数增量逻辑：若本次增量全为0，noChangeDays累计，否则清零
+    // 已在 updatePeriod 中处理，但需确保传入的 period 能感知增量。现改为直接在周期更新时传入增量标志
+    // 我们重构 updatePeriod：改为根据是否有增量来更新周期，而不是快照比较。
+    // 这里保留原快照比较方式，但额外使用增量来修正 noChangeDays。
+    // 更稳健做法：使用增量来判断变化。
+    if (incSmall > 0 || incMiddle > 0 || incBig > 0) {
+      current.period.noChangeDays = 0;
+      current.period.lastUpdateTime = Date.now();
+      // 更新快照为最新值
+      current.period.snapshot = {};
+      for (const [d, obj] of dailyMap) {
+        current.period.snapshot[d.slice(5)] = { small: obj.small, middle: obj.middle, big: obj.big };
+      }
+    } else {
+      current.period.noChangeDays++;
+    }
+
+    // 连续7天无增量重置
+    if (current.period.noChangeDays >= 7) {
+      current.period = createNewPeriod();
+      current.data = {}; // 清空当期数据缓存
+    }
     saveArchive(archive);
 
-    // 10. 计算本期总数（从快照中求和）
+    // 9. 计算本期累计总数（直接从快照中求和，代表当前周期内的碎片总数）
     let totalSmall = 0, totalMiddle = 0, totalBig = 0;
     if (current.period.snapshot) {
       for (const d of Object.values(current.period.snapshot)) {
@@ -254,13 +257,12 @@ if (typeof $request !== "undefined") {
       }
     }
 
-    // 11. 构建日报列表
-    const dailyList = Array.from(dailyMap.values())
-      .sort((a, b) => b.date.localeCompare(a.date));
+    // 10. 日报列表
+    const dailyList = Array.from(dailyMap.values()).sort((a, b) => b.date.localeCompare(a.date));
 
-    // 12. 生成报告
+    // 11. 生成报告
     const noChangeDays = current.period ? current.period.noChangeDays : 0;
-    const report = buildReport(dailyList, totalSmall, totalMiddle, totalBig, noChangeDays);
+    const report = buildReport(dailyList, totalSmall, totalMiddle, totalBig, incSmall, incMiddle, incBig, noChangeDays);
     $notify("大神绘卷", "查询完成", report);
 
   } catch (e) {
@@ -276,202 +278,91 @@ function loadArchive() {
   const s = $prefs.valueForKey(ARCHIVE_KEY);
   return s ? JSON.parse(s) : { current: null, list: {} };
 }
-
 function saveArchive(archive) {
   $prefs.setValueForKey(JSON.stringify(archive), ARCHIVE_KEY);
 }
-
 function checkSopSwitch(newSopId, archive) {
   if (!archive.current) {
-    // 首次运行
     archive.current = newSopId;
-    archive.list[newSopId] = {
-      start: Date.now(),
-      data: {},
-      period: createNewPeriod()
-    };
+    archive.list[newSopId] = { start: Date.now(), data: {}, period: createNewPeriod() };
     return { changed: false, archive };
   }
-
   if (archive.current !== newSopId) {
-    console.log(`🔄 活动切换: ${archive.current} -> ${newSopId}`);
-    // 归档旧期（冻结）
-    if (archive.list[archive.current]) {
-      archive.list[archive.current].end = Date.now();
-    }
-    // 创建新期
+    if (archive.list[archive.current]) archive.list[archive.current].end = Date.now();
     archive.current = newSopId;
-    archive.list[newSopId] = {
-      start: Date.now(),
-      data: {},
-      period: createNewPeriod()
-    };
+    archive.list[newSopId] = { start: Date.now(), data: {}, period: createNewPeriod() };
     return { changed: true, archive };
   }
-
-  // 无变化
   return { changed: false, archive };
 }
-
 function createNewPeriod() {
-  return {
-    snapshot: {},
-    noChangeDays: 0,
-    lastUpdateTime: Date.now()
-  };
+  return { snapshot: {}, noChangeDays: 0, lastUpdateTime: Date.now() };
 }
 
 /*************************************
-查询函数：返回 result 对象（处理 slot 跳转）
+查询函数（slot 二次跳转）
 *************************************/
 async function queryDateForResult(contextId, sopSession, date, sopId) {
-  await request("/process", {
-    async: true,
-    inputPayload: { time: date },
-    contextId,
-    sopSession,
-    sopId
-  });
-
+  const payload = { async: true, inputPayload: { time: date }, contextId, sopSession, sopId };
+  await request("/process", payload);
   let result = await waitResult(contextId, sopSession);
   let node = result?.handlerResponseList?.[0];
-
   if (node?.type === "slot") {
-    await request("/process", {
-      async: true,
-      inputPayload: { time: date },
-      contextId,
-      sopSession,
-      sopId
-    });
+    await request("/process", payload);
     result = await waitResult(contextId, sopSession);
     node = result?.handlerResponseList?.[0];
   }
-
   if (!node?.result?.message && !node?.result?.allTableData) {
-    await request("/process", {
-      async: true,
-      inputPayload: { time: date },
-      contextId,
-      sopSession,
-      sopId
-    });
+    await request("/process", payload);
     result = await waitResult(contextId, sopSession);
     node = result?.handlerResponseList?.[0];
   }
-
   return node?.result || null;
 }
 
 /*************************************
-双来源数据提取
+数据提取
 *************************************/
-function extractData(resultObj, date) {
+function extractData(resultObj) {
   let small = 0, middle = 0, big = 0;
-  const html = resultObj.message || "";
-  if (html) {
-    small  = parseInt((html.match(/绘卷碎片·小[\s\S]*?>(\d+)</) || [])[1] || "0");
-    middle = parseInt((html.match(/绘卷碎片·中[\s\S]*?>(\d+)</) || [])[1] || "0");
-    big    = parseInt((html.match(/绘卷碎片·大[\s\S]*?>(\d+)</) || [])[1] || "0");
+  const msg = resultObj?.message || "";
+  if (msg) {
+    small  = parseInt((msg.match(/绘卷碎片·小[\s\S]*?>(\d+)</) || [])[1] || "0");
+    middle = parseInt((msg.match(/绘卷碎片·中[\s\S]*?>(\d+)</) || [])[1] || "0");
+    big    = parseInt((msg.match(/绘卷碎片·大[\s\S]*?>(\d+)</) || [])[1] || "0");
   }
-
-  const table = resultObj.allTableData?.rows || [];
-  if ((small === 0 && middle === 0 && big === 0) && table.length > 0) {
-    const parsed = parseFromTable(table);
-    small = parsed.small;
-    middle = parsed.middle;
-    big = parsed.big;
+  const rows = resultObj?.allTableData?.rows || [];
+  if ((small === 0 && middle === 0 && big === 0) && rows.length > 0) {
+    for (const r of rows) {
+      const num = parseInt(r.num || "0");
+      if (r.item_name?.includes("小")) small += num;
+      if (r.item_name?.includes("中")) middle += num;
+      if (r.item_name?.includes("大")) big += num;
+    }
   }
   return { small, middle, big };
 }
 
-function parseFromTable(rows) {
-  let s = 0, m = 0, b = 0;
-  for (const r of rows) {
-    const type = r.item_name || "";
-    const num = parseInt(r.num || "0");
-    if (type.includes("小")) s += num;
-    if (type.includes("中")) m += num;
-    if (type.includes("大")) b += num;
-  }
-  return { small: s, middle: m, big: b };
-}
-
 /*************************************
-统计周期快照更新（绑定当期 period）
+周期更新（仅用于快照维护，noChangeDays由外部控制）
 *************************************/
 function updatePeriod(period, dailyMap) {
-  // 构建当前快照（MM-DD 键）
   const curSnapshot = {};
   for (const [date, d] of dailyMap.entries()) {
-    curSnapshot[date.slice(5)] = {
-      small: d.small,
-      middle: d.middle,
-      big: d.big
-    };
+    curSnapshot[date.slice(5)] = { small: d.small, middle: d.middle, big: d.big };
   }
-
-  const oldSnapshot = period.snapshot || {};
-  let changed = false;
-
-  // 比较新旧快照
-  const oldKeys = Object.keys(oldSnapshot);
-  const newKeys = Object.keys(curSnapshot);
-  if (oldKeys.length !== newKeys.length) {
-    changed = true;
-  } else {
-    for (const key of newKeys) {
-      const old = oldSnapshot[key];
-      const cur = curSnapshot[key];
-      if (!old || old.small !== cur.small || old.middle !== cur.middle || old.big !== cur.big) {
-        changed = true;
-        break;
-      }
-    }
-  }
-
-  if (changed) {
-    period.snapshot = curSnapshot;
-    period.lastUpdateTime = Date.now();
-    period.noChangeDays = 0;
-    console.log("📈 快照已更新");
-  } else {
-    period.noChangeDays++;
-    console.log(`📉 快照无变化，连续${period.noChangeDays}天`);
-  }
-
-  // 连续7天无变化重置
-  if (period.noChangeDays >= 7) {
-    console.log("🔄 连续7天无变化，重置统计周期");
-    period.snapshot = {};
-    period.noChangeDays = 0;
-    period.lastUpdateTime = Date.now();
-  }
-
+  period.snapshot = curSnapshot;
   return period;
 }
 
 /*************************************
-日期去重（绑定 sopId）
+报告生成（新增显示本次增量）
 *************************************/
-function loadDoneDates(key) {
-  const s = $prefs.valueForKey(key);
-  return s ? JSON.parse(s) : [];
-}
-function saveDoneDates(key, list) {
-  if (list.length > 30) list = list.slice(-15);
-  $prefs.setValueForKey(JSON.stringify(list), key);
-}
-
-/*************************************
-报告生成
-*************************************/
-function buildReport(dailyList, totalSmall, totalMiddle, totalBig, noChangeDays) {
+function buildReport(dailyList, totalSmall, totalMiddle, totalBig, incSmall, incMiddle, incBig, noChangeDays) {
   const score = totalSmall * 10 + totalMiddle * 20 + totalBig * 100;
-  let text = `📊 本期绘卷碎片\n`;
-  text += `小：${totalSmall}  中：${totalMiddle}  大：${totalBig}\n`;
-  text += `积分：${score}\n`;
-  text += `连续无变化：${noChangeDays} 天\n\n`;
+  let text = `📊 本期绘卷累计\n小：${totalSmall}  中：${totalMiddle}  大：${totalBig}\n积分：${score}\n`;
+  text += `📈 本次新增碎片\n小：${incSmall}  中：${incMiddle}  大：${incBig}\n`;
+  text += `⏱️ 连续无增长：${noChangeDays} 天\n\n`;
   text += `📅 最近7天详情：\n`;
   for (const d of dailyList) {
     text += `${d.date}  小${d.small}  中${d.middle}  大${d.big}\n`;
@@ -499,23 +390,17 @@ function getGodHeaders(token, uid, deviceId, checksum) {
     "User-Agent": getUserAgent()
   };
 }
-
 function getUserAgent() {
   return "godlike_iOS/55241 CFNetwork/3826.600.41.2.1 Darwin/24.6.0";
 }
-
 function generateNonce() {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 10).toUpperCase();
-  return `${timestamp}_${random}`;
+  return `${Date.now()}_${Math.random().toString(36).substring(2, 10).toUpperCase()}`;
 }
-
 function fetchJson(opt) {
   return new Promise((resolve, reject) => {
     $task.fetch(opt).then(resp => resolve(JSON.parse(resp.body))).catch(reject);
   });
 }
-
 function request(path, body) {
   return new Promise((resolve, reject) => {
     $task.fetch({
@@ -526,7 +411,6 @@ function request(path, body) {
     }).then(resp => resolve(JSON.parse(resp.body))).catch(reject);
   });
 }
-
 async function waitResult(contextId, sopSession) {
   for (let i = 0; i < 30; i++) {
     await sleep(1000);
@@ -537,10 +421,10 @@ async function waitResult(contextId, sopSession) {
   }
   throw new Error("等待结果超时");
 }
-
 function sleep(ms) {
   return new Promise(r => setTimeout(r, ms));
 }
+
 
 
 
