@@ -41,6 +41,7 @@ hostname = god.gameyw.netease.com, turing.gameyw.netease.com, act.ds.163.com, ga
 
 
 
+
 ====================================
 ⚠️【免责声明】
 ------------------------------------------
@@ -57,6 +58,8 @@ hostname = god.gameyw.netease.com, turing.gameyw.netease.com, act.ds.163.com, ga
 
 
 
+
+
 const TOKEN_KEY       = "WYDS_GL_TOKEN";
 const UID_KEY         = "WYDS_GL_UID";
 const DEVICE_KEY      = "WYDS_DEVICE_ID";
@@ -68,12 +71,11 @@ const ARCHIVE_KEY     = "WYDS_YYS_SOP_ARCHIVE";
 const CONTEXT_API = "https://turing.gameyw.netease.com/sop-api/api/out/context";
 
 /*************************************
-Rewrite：捕获鉴权、SOP Session、sopId
+Rewrite
 *************************************/
 if (typeof $request !== "undefined") {
   const url = $request.url;
 
-  // sopId 从 act.ds.163.com 页面 URL 提取
   if (url.indexOf("act.ds.163.com") !== -1) {
     const match = url.match(/[?&]sopId=([^&]+)/);
     if (match) {
@@ -83,7 +85,6 @@ if (typeof $request !== "undefined") {
     $done({});
   }
 
-  // SOP Session
   if (url.indexOf("initBySession") !== -1) {
     try {
       const body = JSON.parse($request.body);
@@ -95,7 +96,6 @@ if (typeof $request !== "undefined") {
     $done({});
   }
 
-  // 鉴权头部
   const h = $request.headers;
   $prefs.setValueForKey(h["GL-Token"]    || h["gl-token"]    || "", TOKEN_KEY);
   $prefs.setValueForKey(h["GL-Uid"]      || h["gl-uid"]      || "", UID_KEY);
@@ -120,14 +120,14 @@ if (typeof $request !== "undefined") {
       return $done();
     }
 
-    // 1. 获取 sopId
+    // 1. sopId
     let sopId = $prefs.valueForKey(SOP_ID_KEY);
     if (!sopId) {
       $notify("大神绘卷", "缺少活动ID", "请先打开一次绘卷活动页面 (act.ds.163.com)");
       return $done();
     }
 
-    // 2. 获取角色
+    // 2. 角色
     const roleData = await fetchJson({
       url: "https://god.gameyw.netease.com/v1/app/gameRole/getBindList",
       method: "POST",
@@ -147,9 +147,8 @@ if (typeof $request !== "undefined") {
       throw new Error("未获取到SOP Session\n请打开大神 -> 工具 -> 绘卷碎片获得进度");
     }
 
-    // 4. 获取日期列表
+    // 4. 初始化一次会话，获取日期列表（不需要每个日期单独 initBySession）
     const initDate = await request("/initBySession", { sopSession: sopH5Session, sopId });
-    // 尝试从接口更新 sopId
     const newSopId = initDate?.item?.handlerResponseList?.[0]?.sopId
                   || initDate?.item?.handlerResponseList?.[0]?.result?.sopId;
     if (newSopId && newSopId !== sopId) {
@@ -170,7 +169,10 @@ if (typeof $request !== "undefined") {
 
     const slot = await waitResult(firstContextId, firstSopToolSession);
     const options = slot.handlerResponseList[0].result.slotMapper.time.options;
-    const dates = Object.keys(options).sort().reverse();
+    const allDates = Object.keys(options).sort().reverse(); // 从最新到最旧
+    if (allDates.length === 0) {
+      throw new Error("未获取到任何日期");
+    }
 
     // 5. 活动期管理
     let archive = loadArchive();
@@ -179,36 +181,51 @@ if (typeof $request !== "undefined") {
     if (changed) $notify("大神绘卷", "检测到新一期活动", `sopId: ${sopId}`);
     const current = archive.list[archive.current];
 
-    // 6. 初始化日报 Map 和增量累积变量
+    // 6. 构建日报 Map（从缓存初始化全部日期）
     const dailyMap = new Map();
-    // 本期增量（仅本次运行发现的新增碎片）
+    for (const d of allDates) {
+      const cached = current.data?.[d.slice(5)] || { small: 0, middle: 0, big: 0 };
+      dailyMap.set(d, {
+        date: d.slice(5),
+        small: cached.small,
+        middle: cached.middle,
+        big: cached.big,
+        filled: true
+      });
+    }
+
+    // 7. 确定需要实际查询的“变化窗口”：今天和昨天（列表前两个）
+    const targetDates = allDates.slice(0, 2);
+    console.log(`🔍 变化窗口: ${targetDates.join(', ')}`);
+
     let incSmall = 0, incMiddle = 0, incBig = 0;
 
-    // 7. 逐日查询（每次全部请求，不复用缓存）
-    for (const date of dates) {
-      // 新会话查询
+    // 8. 只对变化窗口的日期执行查询（复用同一个会话？这里为了绝对安全，每个日期还是独立 initBySession，但仅对targetDates）
+    //    注意：SOP 机制可能要求每个日期独立会话，我们保持之前成功的做法，但只对窗口内日期做。
+    for (const date of targetDates) {
+      // 独立会话查询该日期
       const initData = await request("/initBySession", { sopSession: sopH5Session, sopId });
       const sopToolSession = initData.item.sopSession;
       const contextId = initData.item.contextId;
 
       const resultObj = await queryDateForResult(contextId, sopToolSession, date, sopId);
-      const now = extractData(resultObj, date); // 最新实际值
+      const now = extractData(resultObj, date);
 
-      // 与缓存对比，计算增量
-      const cached = current.data[date.slice(5)] || { small: 0, middle: 0, big: 0 };
+      // 与缓存对比（缓存值可能来自之前数据或已初始化为0）
+      const cached = current.data?.[date.slice(5)] || { small: 0, middle: 0, big: 0 };
       const diffSmall  = Math.max(0, now.small - cached.small);
       const diffMiddle = Math.max(0, now.middle - cached.middle);
       const diffBig    = Math.max(0, now.big - cached.big);
 
-      // 累加本期增量
       incSmall += diffSmall;
       incMiddle += diffMiddle;
       incBig += diffBig;
 
-      // 更新缓存（用最新值覆盖）
+      // 更新缓存
+      if (!current.data) current.data = {};
       current.data[date.slice(5)] = { small: now.small, middle: now.middle, big: now.big };
 
-      // 填入日报（使用最新实际值）
+      // 更新日报Map中的值
       dailyMap.set(date, {
         date: date.slice(5),
         small: now.small,
@@ -219,35 +236,34 @@ if (typeof $request !== "undefined") {
 
       await sleep(1000);
     }
+
     saveArchive(archive);
 
-    // 8. 更新统计周期快照（基于最新实际值，判断是否有变化）
-    current.period = updatePeriod(current.period || createNewPeriod(), dailyMap);
-    // 无变化天数增量逻辑：若本次增量全为0，noChangeDays累计，否则清零
-    // 已在 updatePeriod 中处理，但需确保传入的 period 能感知增量。现改为直接在周期更新时传入增量标志
-    // 我们重构 updatePeriod：改为根据是否有增量来更新周期，而不是快照比较。
-    // 这里保留原快照比较方式，但额外使用增量来修正 noChangeDays。
-    // 更稳健做法：使用增量来判断变化。
+    // 9. 统计周期更新（基于本次增量）
+    if (!current.period) current.period = createNewPeriod();
     if (incSmall > 0 || incMiddle > 0 || incBig > 0) {
+      // 有增长：重置无变化天数，更新快照（使用最新dailyMap的所有日期值）
       current.period.noChangeDays = 0;
       current.period.lastUpdateTime = Date.now();
-      // 更新快照为最新值
-      current.period.snapshot = {};
+      // 快照保存为当前所有日期的实时值（从dailyMap获取）
+      const snapshot = {};
       for (const [d, obj] of dailyMap) {
-        current.period.snapshot[d.slice(5)] = { small: obj.small, middle: obj.middle, big: obj.big };
+        snapshot[d.slice(5)] = { small: obj.small, middle: obj.middle, big: obj.big };
       }
+      current.period.snapshot = snapshot;
     } else {
+      // 无增长
       current.period.noChangeDays++;
     }
 
-    // 连续7天无增量重置
+    // 连续7天无增长重置
     if (current.period.noChangeDays >= 7) {
       current.period = createNewPeriod();
-      current.data = {}; // 清空当期数据缓存
+      current.data = {}; // 清空当期缓存
     }
     saveArchive(archive);
 
-    // 9. 计算本期累计总数（直接从快照中求和，代表当前周期内的碎片总数）
+    // 10. 本期累计总数（从快照汇总）
     let totalSmall = 0, totalMiddle = 0, totalBig = 0;
     if (current.period.snapshot) {
       for (const d of Object.values(current.period.snapshot)) {
@@ -257,11 +273,11 @@ if (typeof $request !== "undefined") {
       }
     }
 
-    // 10. 日报列表
+    // 11. 日报列表
     const dailyList = Array.from(dailyMap.values()).sort((a, b) => b.date.localeCompare(a.date));
 
-    // 11. 生成报告
-    const noChangeDays = current.period ? current.period.noChangeDays : 0;
+    // 12. 报告
+    const noChangeDays = current.period.noChangeDays;
     const report = buildReport(dailyList, totalSmall, totalMiddle, totalBig, incSmall, incMiddle, incBig, noChangeDays);
     $notify("大神绘卷", "查询完成", report);
 
@@ -321,7 +337,7 @@ async function queryDateForResult(contextId, sopSession, date, sopId) {
 }
 
 /*************************************
-数据提取
+数据提取（双来源）
 *************************************/
 function extractData(resultObj) {
   let small = 0, middle = 0, big = 0;
@@ -344,19 +360,7 @@ function extractData(resultObj) {
 }
 
 /*************************************
-周期更新（仅用于快照维护，noChangeDays由外部控制）
-*************************************/
-function updatePeriod(period, dailyMap) {
-  const curSnapshot = {};
-  for (const [date, d] of dailyMap.entries()) {
-    curSnapshot[date.slice(5)] = { small: d.small, middle: d.middle, big: d.big };
-  }
-  period.snapshot = curSnapshot;
-  return period;
-}
-
-/*************************************
-报告生成（新增显示本次增量）
+报告生成
 *************************************/
 function buildReport(dailyList, totalSmall, totalMiddle, totalBig, incSmall, incMiddle, incBig, noChangeDays) {
   const score = totalSmall * 10 + totalMiddle * 20 + totalBig * 100;
