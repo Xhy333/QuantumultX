@@ -3,5 +3,6 @@ ip-cidr, 152.70.110.194/32
 ip-cidr, 207.56.228.178/32
 ip-cidr, 216.144.234.247/32
 
-HOST-SUFFIX,vd.wmvbo.com
-HOST-SUFFIX,m.youtube.com
+HOST-SUFFIX,wmvbo.com
+HOST-SUFFIX,youtube.com
+HOST-SUFFIX,ng6.app
