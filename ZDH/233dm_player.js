@@ -1,15 +1,16 @@
+
 WidgetMetadata = {
   id: "https://cn.233dm.com?rev=20260718d",
-  title: "233¶¯Âş²¥·ÅÔ´",
-  description: "233¶¯Âş ÌìÌÃ/±©·ç/Á¿×Ó ÈıÏßÂ·²¥·ÅÔ´",
+  title: "233åŠ¨æ¼«æ’­æ”¾æº",
+  description: "233åŠ¨æ¼« å¤©å ‚/æš´é£/é‡å­ ä¸‰çº¿è·¯æ’­æ”¾æº",
   author: "Forward",
   site: "https://cn.233dm.com",
   version: "1.0.0",
   requiredVersion: "0.0.1",
   modules: [
-    { id: "loadResource", title: "ÌìÌÃÏßÂ·", description: "233¶¯ÂşÌìÌÃÏßÂ·", functionName: "loadTiantang", type: "stream", cacheDuration: 0, params: [] },
-    { id: "loadResource", title: "±©·çÏßÂ·", description: "233¶¯Âş±©·çÏßÂ·", functionName: "loadBaofeng", type: "stream", cacheDuration: 0, params: [] },
-    { id: "loadResource", title: "Á¿×ÓÏßÂ·", description: "233¶¯ÂşÁ¿×ÓÏßÂ·", functionName: "loadLiangzi", type: "stream", cacheDuration: 0, params: [] }
+    { id: "loadResource", title: "å¤©å ‚çº¿è·¯", description: "233åŠ¨æ¼«å¤©å ‚çº¿è·¯", functionName: "loadTiantang", type: "stream", cacheDuration: 0, params: [] },
+    { id: "loadResource", title: "æš´é£çº¿è·¯", description: "233åŠ¨æ¼«æš´é£çº¿è·¯", functionName: "loadBaofeng", type: "stream", cacheDuration: 0, params: [] },
+    { id: "loadResource", title: "é‡å­çº¿è·¯", description: "233åŠ¨æ¼«é‡å­çº¿è·¯", functionName: "loadLiangzi", type: "stream", cacheDuration: 0, params: [] }
   ]
 };
 
@@ -17,7 +18,7 @@ const BASE = "https://cn.233dm.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
 const SRC_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
-const SRC_NAMES = { tiantang: "ÌìÌÃ", baofeng: "±©·ç", liangzi: "Á¿×Ó" };
+const SRC_NAMES = { tiantang: "å¤©å ‚", baofeng: "æš´é£", liangzi: "é‡å­" };
 
 function _btoa(str) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -108,7 +109,7 @@ async function resolve(params, sk) {
     let url = decodeURIComponent(eu);
     url = url.replace(/&amp;/g, "&");
     return [{
-      name: sname + "ÏßÂ·",
+      name: sname + "çº¿è·¯",
       description: sname + " 1080P",
       url: url,
       customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
