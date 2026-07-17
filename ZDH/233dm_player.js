@@ -1,4 +1,4 @@
-﻿// --- 233dm 四线路播放源配置 ---
+﻿// --- 233dm 线路播放源配置 ---
 const RESOURCE_SITES = [
   { title: '天堂线路', sid: '3', from: 'dyttm3u8', name: '天堂' },
   { title: '暴风线路', sid: '2', from: 'bfzym3u8', name: '暴风' },
@@ -17,7 +17,7 @@ WidgetMetadata = {
   version: "1.2.0",
   requiredVersion: "0.0.1",
   description: "233动漫 天堂/暴风/量子 三线路播放源",
-  author: "Forward",
+  author: "233",
   site: "https://cn.233dm.com",
   globalParams: [
     {
