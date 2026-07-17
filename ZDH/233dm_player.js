@@ -1,5 +1,9 @@
 ﻿// --- 233dm 默认线路配置 ---
 const DEFAULT_SITES = "天堂,dyttm3u8\n暴风,bfzym3u8\n量子,lzm3u8";
+const CHINESE_NUM_MAP = {
+  '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
+  '六': 6, '七': 7, '八': 8, '九': 9, '十': 10
+};
 
 WidgetMetadata = {
   id: "https://cn.233dm.com?rev=20260718i",
@@ -42,6 +46,25 @@ const BASE = "https://cn.233dm.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
 
+// --- 辅助工具函数 ---
+
+const isM3U8Url = (url) => url?.toLowerCase().includes('m3u8') || false;
+
+function extractSeasonInfo(seriesName) {
+  if (!seriesName) return { baseName: seriesName, seasonNumber: 1 };
+  const chineseMatch = seriesName.match(/第([一二三四五六七八九十\d]+)[季部]/);
+  if (chineseMatch) {
+    const val = chineseMatch[1];
+    const seasonNum = CHINESE_NUM_MAP[val] || parseInt(val) || 1;
+    const baseName = seriesName.replace(/第[一二三四五六七八九十\d]+[季部]/, '').trim();
+    return { baseName, seasonNumber: seasonNum };
+  }
+  const digitMatch = seriesName.match(/(.+?)(\d+)$/);
+  if (digitMatch) {
+    return { baseName: digitMatch[1].trim(), seasonNumber: parseInt(digitMatch[2]) || 1 };
+  }
+  return { baseName: seriesName.trim(), seasonNumber: 1 };
+}
 // 模块级缓存
 const _cache = {
   bypassed: false,
