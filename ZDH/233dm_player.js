@@ -2,7 +2,7 @@
   id: "https://cn.233dm.com?rev=20260718f",
   title: "233动漫播放源",
   description: "233动漫 天堂/暴风/量子 三线路播放源",
-  author: "Forward",
+  author: "233",
   site: "https://cn.233dm.com",
   version: "1.1.0",
   requiredVersion: "0.0.1",
