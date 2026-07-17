@@ -7,34 +7,27 @@ WidgetMetadata = {
   author: "Forward",
   site: "https://cn.233dm.com",
   icon: "https://cn.233dm.com/favicon.ico",
-  detailCacheDuration: 600,
   modules: [
     {
-      id: "loadTiantang",
-      title: "天堂线路",
-      description: "233动漫天堂线路",
-      functionName: "loadTiantang",
+      id: "loadResource",
+      title: "233动漫播放源",
+      description: "天堂/暴风/量子 三线路",
+      functionName: "loadPlaySource",
       type: "stream",
       cacheDuration: 0,
-      params: []
-    },
-    {
-      id: "loadBaofeng",
-      title: "暴风线路",
-      description: "233动漫暴风线路",
-      functionName: "loadBaofeng",
-      type: "stream",
-      cacheDuration: 0,
-      params: []
-    },
-    {
-      id: "loadLiangzi",
-      title: "量子线路",
-      description: "233动漫量子线路",
-      functionName: "loadLiangzi",
-      type: "stream",
-      cacheDuration: 0,
-      params: []
+      params: [
+        {
+          name: "source",
+          title: "播放线路",
+          type: "enumeration",
+          value: "tiantang",
+          enumOptions: [
+            { title: "天堂线路", value: "tiantang" },
+            { title: "暴风线路", value: "baofeng" },
+            { title: "量子线路", value: "liangzi" }
+          ]
+        }
+      ]
     }
   ],
   search: {
@@ -51,7 +44,6 @@ var PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X;
 var SOURCE_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
 var SOURCE_NAMES = { tiantang: "天堂", baofeng: "暴风", liangzi: "量子" };
 
-// Custom btoa polyfill
 var _btoa = typeof btoa !== "undefined" ? btoa : function(str) {
   var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
   var out = "";
@@ -72,7 +64,6 @@ function extractText(text, regex) {
   return m ? m[1].trim() : "";
 }
 
-// Generate verification token
 function generateVerifyToken() {
   var key = [0x4e, 0x3f, 0xa9, 0xc2, 0x12, 0x7d, 0x88, 0xef, 0x55, 0xaa, 0x0b, 0xcd, 0xde, 0xad, 0xbe, 0xef];
   var ts = String(Date.now());
@@ -83,7 +74,6 @@ function generateVerifyToken() {
   return _btoa(out);
 }
 
-// Bypass search page anti-bot verification
 async function ensureSearchAccess() {
   try {
     await Widget.http.get(BASE + "/", { headers: { "User-Agent": UA } });
@@ -102,17 +92,14 @@ async function ensureSearchAccess() {
   } catch (e) {}
 }
 
-// Search anime
 async function searchAnime(params) {
   var keyword = String(params.keyword || params.text || "").trim();
   if (!keyword) return [];
-
   var resp = await Widget.http.get(BASE + "/index.php/ajax/suggest?mid=1&wd=" + encodeURIComponent(keyword), {
     headers: { "User-Agent": UA, "X-Requested-With": "XMLHttpRequest" }
   });
   var raw = typeof resp.data === "string" ? JSON.parse(resp.data) : resp.data;
   if (!raw || raw.code !== 1 || !raw.list) return [];
-
   var results = [];
   for (var i = 0; i < raw.list.length; i++) {
     var item = raw.list[i];
@@ -127,14 +114,11 @@ async function searchAnime(params) {
   return results;
 }
 
-// Load detail page
 async function loadDetail(link) {
   if (!link || typeof link !== "string") return null;
-
   var hash = "";
   var html = "";
   var hashMatch = link.match(/\/anime\/([a-f0-9]{24})\.html/);
-
   if (hashMatch) {
     hash = hashMatch[1];
     var resp = await Widget.http.get(BASE + "/anime/" + hash + ".html", { headers: { "User-Agent": UA } });
@@ -150,53 +134,31 @@ async function loadDetail(link) {
       html = typeof resp2.data === "string" ? resp2.data : String(resp2.data || "");
     }
   }
-
   if (!hash) return null;
-
   var title = extractText(html, /<title>([^<]+?)免费在线观看/i);
   if (!title) title = extractText(html, /<title>([^<]+?)\s*-/i);
   if (!title) title = "未知";
-
-  var sources = parseEpisodeList(html);
-
-  return {
-    title: title,
-    type: "url",
-    link: BASE + "/anime/" + hash + ".html",
-    hash: hash,
-    sources: sources
-  };
+  return { title: title, type: "url", link: BASE + "/anime/" + hash + ".html", hash: hash };
 }
 
-// Parse episode list grouped by source
 function parseEpisodeList(html) {
   var sources = [];
-
-  // Find the channel-tab section
   var tabStart = html.indexOf('class="channel-tab"');
   if (tabStart < 0) return sources;
   var tabEnd = html.indexOf("</ul>", tabStart);
   if (tabEnd < 0) return sources;
   var tabHtml = html.substring(tabStart, tabEnd);
-
-  // Extract source tabs: playlist id and name
   var srcRe = /<a[^>]*href="#playlist(\d+)"[^>]*>([^<]+)/g;
   var m;
   while ((m = srcRe.exec(tabHtml)) !== null) {
     var sid = m[1];
     var sname = m[2].replace(/<[^>]+>/g, "").trim();
     sources.push({ id: sid, name: sname, episodes: [] });
-
-    // Find the playlist div and extract episode links
     var marker = 'id="playlist' + sid + '"';
     var ps = html.indexOf(marker);
     if (ps < 0) continue;
-
-    // Find the opening > of this div
     var divOpenEnd = html.indexOf(">", ps);
     if (divOpenEnd < 0) continue;
-
-    // Now find the matching </div> by counting depth
     var depth = 1;
     var searchPos = divOpenEnd + 1;
     while (depth > 0 && searchPos < html.length) {
@@ -211,10 +173,7 @@ function parseEpisodeList(html) {
         searchPos = nextClose + 6;
       }
     }
-
     var playlistHtml = html.substring(divOpenEnd + 1, searchPos - 6);
-
-    // Extract episode links
     var epRe = /<a[^>]*href="([^"]*\/play\/[^"]*)"[^>]*>([^<]+)<\/a>/g;
     var em;
     while ((em = epRe.exec(playlistHtml)) !== null) {
@@ -225,11 +184,9 @@ function parseEpisodeList(html) {
   return sources;
 }
 
-// Find best match// Find best match from suggest API results
 function pickBestMatch(list, seriesName, seasonNum) {
   if (!list || list.length === 0) return null;
   if (list.length === 1) return list[0];
-
   var scored = [];
   for (var i = 0; i < list.length; i++) {
     var item = list[i];
@@ -246,7 +203,6 @@ function pickBestMatch(list, seriesName, seasonNum) {
   return scored[0].score > 0 ? scored[0].item : list[0];
 }
 
-// Search for anime and get its hash
 async function searchHashByName(name) {
   await ensureSearchAccess();
   var searchUrl = BASE + "/search/" + encodeURIComponent(name) + "-------------.html";
@@ -255,25 +211,16 @@ async function searchHashByName(name) {
     var html = typeof resp.data === "string" ? resp.data : String(resp.data || "");
     var hm = html.match(/\/anime\/([a-f0-9]{24})\.html/);
     return hm ? hm[1] : "";
-  } catch (e) {
-    return "";
-  }
+  } catch (e) { return ""; }
 }
 
-// Core function to get playable URL
-async function resolveSource(params, sourceKey) {
+async function loadPlaySource(params) {
   var seriesName = String(params.seriesName || "").trim();
   if (!seriesName) return [];
-
   var episodeNum = parseInt(params.episode, 10) || 1;
   var seasonNum = parseInt(params.season, 10) || 1;
   if (params.type === "movie") { seasonNum = 1; episodeNum = 1; }
 
-  var sourceId = SOURCE_IDS[sourceKey];
-  var sourceName = SOURCE_NAMES[sourceKey];
-  if (!sourceId) return [];
-
-  // Step 1: Search using suggest API
   var sr = await Widget.http.get(BASE + "/index.php/ajax/suggest?mid=1&wd=" + encodeURIComponent(seriesName), {
     headers: { "User-Agent": UA, "X-Requested-With": "XMLHttpRequest" }
   });
@@ -282,40 +229,38 @@ async function resolveSource(params, sourceKey) {
 
   var best = pickBestMatch(sd.list, seriesName, seasonNum);
   if (!best) return [];
-
-  // Step 2: Get hash via search page
   var hash = await searchHashByName(best.name);
   if (!hash) return [];
 
-  // Step 3: Get play page
-  var playUrl = BASE + "/anime/" + hash + "/play/" + sourceId + "/" + episodeNum + ".html";
-  var pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
-  var ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
+  var results = [];
+  var sourceKeys = ["tiantang", "baofeng", "liangzi"];
+  for (var si = 0; si < sourceKeys.length; si++) {
+    var sk = sourceKeys[si];
+    var sourceId = SOURCE_IDS[sk];
+    var sourceName = SOURCE_NAMES[sk];
+    if (!sourceId) continue;
 
-  // Step 4: Extract m3u8 URL
-  var pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
-  if (!pm) return [];
-
-  try {
-    var pd = JSON.parse(pm[1]);
-    var eu = pd.url || "";
-    if (!eu) return [];
-    var m3u8Url = decodeURIComponent(eu);
-    m3u8Url = m3u8Url.replace(/&amp;/g, "&");
-
-    return [{
-      name: sourceName + "线路",
-      description: "1080P - " + sourceName + "线路",
-      url: m3u8Url,
-      customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
-      headers: { "User-Agent": PLAY_UA, "Referer": BASE + "/" }
-    }];
-  } catch (e) {
-    return [];
+    var playUrl = BASE + "/anime/" + hash + "/play/" + sourceId + "/" + episodeNum + ".html";
+    try {
+      var pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
+      var ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
+      var pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
+      if (pm) {
+        var pd = JSON.parse(pm[1]);
+        var eu = pd.url || "";
+        if (eu) {
+          var m3u8Url = decodeURIComponent(eu);
+          m3u8Url = m3u8Url.replace(/&amp;/g, "&");
+          results.push({
+            name: sourceName + "线路",
+            description: "1080P - " + sourceName + "线路",
+            url: m3u8Url,
+            customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
+            headers: { "User-Agent": PLAY_UA, "Referer": BASE + "/" }
+          });
+        }
+      }
+    } catch (e) {}
   }
+  return results;
 }
-
-// Stream module handlers
-async function loadTiantang(params) { return resolveSource(params, "tiantang"); }
-async function loadBaofeng(params) { return resolveSource(params, "baofeng"); }
-async function loadLiangzi(params) { return resolveSource(params, "liangzi"); }
