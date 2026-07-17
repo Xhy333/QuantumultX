@@ -1,34 +1,21 @@
-﻿// --- 233dm 线路播放源配置 ---
-const RESOURCE_SITES = [
-  { title: '天堂线路', sid: '3', from: 'dyttm3u8', name: '天堂' },
-  { title: '暴风线路', sid: '2', from: 'bfzym3u8', name: '暴风' },
-  { title: '量子线路', sid: '4', from: 'lzm3u8', name: '量子' }
-];
-
-const CHINESE_NUM_MAP = {
-  '一': 1, '二': 2, '三': 3, '四': 4, '五': 5,
-  '六': 6, '七': 7, '八': 8, '九': 9, '十': 10
-};
-
-WidgetMetadata = {
-  id: "https://cn.233dm.com?rev=20260718g",
+﻿WidgetMetadata = {
+  id: "https://cn.233dm.com?rev=20260718f",
   title: "233动漫播放源",
-  icon: "https://cn.233dm.com/template/the4/statics/img/favicon.ico",
-  version: "1.2.0",
-  requiredVersion: "0.0.1",
   description: "233动漫 天堂/暴风/量子 三线路播放源",
-  author: "233",
+  author: "Forward",
   site: "https://cn.233dm.com",
+  version: "1.1.0",
+  requiredVersion: "0.0.1",
   globalParams: [
     {
       name: "source",
       title: "播放线路",
       type: "enumeration",
       enumOptions: [
-        { title: "全部线路（按顺序尝试）", value: "all" },
-        { title: "天堂线路", value: "3" },
-        { title: "暴风线路", value: "2" },
-        { title: "量子线路", value: "4" }
+        { title: "天堂线路", value: "tiantang" },
+        { title: "暴风线路", value: "baofeng" },
+        { title: "量子线路", value: "liangzi" },
+        { title: "全部线路（按顺序尝试）", value: "all" }
       ]
     }
   ],
@@ -47,19 +34,16 @@ WidgetMetadata = {
 const BASE = "https://cn.233dm.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
-const CACHE_TTL = 10800; // 3小时缓存
+const SRC_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
+const SRC_NAMES = { tiantang: "天堂", baofeng: "暴风", liangzi: "量子" };
+const SOURCE_ORDER = ["tiantang", "baofeng", "liangzi"];
 
-function extractSeasonInfo(seriesName) {
-  if (!seriesName) return { baseName: seriesName, seasonNumber: 1 };
-  const chineseMatch = seriesName.match(/第([一二三四五六七八九十\d]+)[季部]/);
-  if (chineseMatch) {
-    const val = chineseMatch[1];
-    const seasonNum = CHINESE_NUM_MAP[val] || parseInt(val) || 1;
-    const baseName = seriesName.replace(/第[一二三四五六七八九十\d]+[季部]/, '').trim();
-    return { baseName, seasonNumber: seasonNum };
-  }
-  return { baseName: seriesName.trim(), seasonNumber: 1 };
-}
+// 模块级缓存：减少重复请求
+const _cache = {
+  bypassed: false,
+  hash: new Map(),
+  suggest: new Map()
+};
 
 function _btoa(str) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -85,13 +69,6 @@ function genToken() {
   }
   return _btoa(out);
 }
-
-// --- 模块级内存缓存（减少重复请求） ---
-const _cache = {
-  bypassed: false,
-  hash: new Map(),
-  suggest: new Map()
-};
 
 async function bypass() {
   if (_cache.bypassed) return;
@@ -146,114 +123,60 @@ async function suggest(name) {
   }
 }
 
-// --- 核心加载函数 ---
-
-async function loadResource(params) {
-  const { seriesName, episode } = params;
-  const name = String(seriesName || "").trim();
+async function resolveSingle(params, sk) {
+  const name = String(params.seriesName || "").trim();
   if (!name) return [];
+  const ep = parseInt(params.episode, 10) || 1;
+  const sid = SRC_IDS[sk];
+  const sname = SRC_NAMES[sk];
+  if (!sid) return [];
 
-  const targetEpisode = episode ? parseInt(episode) : 1;
-  const { baseName } = extractSeasonInfo(name);
-  const searchName = baseName || name;
-
-  // 确定要尝试的线路列表
-  const rawSource = String(params.source || "all").trim();
-  let siteList;
-  if (rawSource === "all") {
-    siteList = RESOURCE_SITES;
-  } else {
-    const matched = RESOURCE_SITES.find(s => s.sid === rawSource);
-    siteList = matched ? [matched] : RESOURCE_SITES;
-  }
-
-  console.log("[233dm] 搜索: " + searchName + " 第" + targetEpisode + "集 线路:" + siteList.length + "个");
-
-  // 尝试从 Widget.storage 缓存读取（按剧名+集数+线路缓存）
-  const storageKey = "233dm_" + searchName + "_" + targetEpisode;
-  let cachedResult = null;
-  try {
-    cachedResult = Widget.storage.get(storageKey);
-    if (cachedResult && Array.isArray(cachedResult) && cachedResult.length > 0) {
-      console.log("[233dm] 命中 storage 缓存: " + storageKey);
-      return cachedResult;
-    }
-  } catch (e) {}
-
-  // 获取 suggest + hash（所有线路共享）
-  const sd = await suggest(searchName);
-  if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) {
-    console.log("[233dm] suggest 无结果");
-    return [];
-  }
+  const sd = await suggest(name);
+  if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) return [];
 
   let best = null;
   for (const item of sd.list) {
-    if (item.name === searchName || item.name.indexOf(searchName) >= 0) { best = item; break; }
+    if (item.name === name) { best = item; break; }
+    if (item.name.indexOf(name) >= 0) best = item;
   }
   if (!best) best = sd.list[0];
   if (!best || !best.name) return [];
 
   const hash = await getHash(best.name);
-  if (!hash) {
-    console.log("[233dm] 未找到 hash");
-    return [];
-  }
+  if (!hash) return [];
 
-  // 按顺序尝试各线路
-  for (const site of siteList) {
-    try {
-      const playUrl = BASE + "/anime/" + hash + "/play/" + site.sid + "/" + targetEpisode + ".html";
-      console.log("[233dm] 尝试: " + site.title + " " + playUrl);
+  const playUrl = BASE + "/anime/" + hash + "/play/" + sid + "/" + ep + ".html";
+  try {
+    const pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
+    const ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
+    const pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
+    if (!pm) return [];
+    const pd = JSON.parse(pm[1]);
+    const eu = pd.url || "";
+    if (!eu) return [];
+    let url = decodeURIComponent(eu);
+    url = url.replace(/&amp;/g, "&");
+    return [{
+      name: sname + "线路",
+      description: sname + " 1080P",
+      url: url,
+      customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
+      headers: { "User-Agent": PLAY_UA, "Referer": BASE + "/" }
+    }];
+  } catch (e) { return []; }
+}
 
-      const pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
-      const ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
-      const pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
-      if (!pm) {
-        console.log("[233dm] " + site.title + " 未找到 player_aaaa");
-        continue;
-      }
+async function loadResource(params) {
+  const source = String(params.source || "all").trim();
+  const skList = source === "all" ? SOURCE_ORDER : [source];
 
-      const pd = JSON.parse(pm[1]);
-      const eu = pd.url || "";
-      if (!eu) {
-        console.log("[233dm] " + site.title + " url 为空");
-        continue;
-      }
-
-      let url;
-      try {
-        url = decodeURIComponent(eu);
-      } catch (e) {
-        // 如果 decode 失败，尝试直接使用原始值
-        url = eu;
-      }
-      url = url.replace(/&amp;/g, "&");
-
-      // 过滤非 URL 值（如精品线路返回的 hash）
-      if (!url.startsWith("http://") && !url.startsWith("https://")) {
-        console.log("[233dm] " + site.title + " url 非 HTTP 链接，跳过: " + url.substring(0, 50));
-        continue;
-      }
-
-      const result = [{
-        name: site.name + "线路",
-        description: site.name + " 1080P",
-        url: url,
-        customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
-        headers: { "User-Agent": PLAY_UA, "Referer": BASE + "/" }
-      }];
-
-      // 写入 storage 缓存
-      try { Widget.storage.set(storageKey, result, CACHE_TTL); } catch (e) {}
-
-      console.log("[233dm] " + site.title + " 成功");
+  for (const sk of skList) {
+    const result = await resolveSingle(params, sk);
+    if (result.length > 0) {
+      console.log("[233dm] " + sk + " 线路成功");
       return result;
-    } catch (e) {
-      console.log("[233dm] " + site.title + " 失败: " + (e.message || e));
     }
+    console.log("[233dm] " + sk + " 线路无结果，尝试下一个");
   }
-
-  console.log("[233dm] 所有线路均失败");
   return [];
 }
