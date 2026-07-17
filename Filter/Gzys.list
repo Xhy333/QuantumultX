@@ -7,7 +7,6 @@ DOMAIN-SUFFIX,vvebo.vip,PROXY
 DOMAIN-SUFFIX,wmvbo.com,PROXY
 # 瓜子影视官网/接口
 DOMAIN-SUFFIX,ng6.app,PROXY
-# CDN 库直连
-DOMAIN-SUFFIX,jsdelivr.net,DIRECT
+
 
 
