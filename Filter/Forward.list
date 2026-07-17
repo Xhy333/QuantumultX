@@ -35,7 +35,6 @@ DOMAIN-SUFFIX,efhie.com
 DOMAIN-SUFFIX,newpppp.com
 DOMAIN-SUFFIX,ceres9350.com
 
-#低调影视
 
-DOMAIN-SUFFIX,ddys.app
-
+# CDN 库直连
+DOMAIN-SUFFIX,jsdelivr.net
