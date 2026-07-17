@@ -1,16 +1,16 @@
 WidgetMetadata = {
-  id: "test.233dm.v1",
-  title: "233测试1",
-  description: "相同结构测试",
+  id: "test.minimal.v2",
+  title: "最小测试",
+  description: "测试是否能加载",
   author: "Test",
-  site: "https://cn.233dm.com",
+  site: "https://example.com",
   version: "1.0.0",
   requiredVersion: "0.0.1",
   modules: [
-    { id: "loadResource", title: "测试源", description: "测试", functionName: "loadV1", type: "stream", cacheDuration: 0, params: [] }
+    { id: "loadResource", title: "测试源", description: "测试", functionName: "loadTest", type: "stream", cacheDuration: 0, params: [] }
   ]
 };
 
-async function loadV1(params) {
+async function loadTest(params) {
   return [{ name: "测试", url: "https://example.com/test.m3u8" }];
 }
