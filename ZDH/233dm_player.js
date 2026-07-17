@@ -1,9 +1,9 @@
 WidgetMetadata = {
   id: "cn.233dm.player",
-  title: "动漫源",
+  title: "233动漫源",
   version: "1.0.0",
   requiredVersion: "0.0.1",
-  description: "233动漫 天堂/暴风/量子 源",
+  description: "233动漫 天堂/暴风/量子 播放源",
   author: "Forward",
   site: "https://cn.233dm.com",
   icon: "https://cn.233dm.com/favicon.ico",
@@ -12,7 +12,7 @@ WidgetMetadata = {
     {
       id: "loadTiantang",
       title: "天堂线路",
-      description: "天堂源",
+      description: "233动漫天堂线路",
       functionName: "loadTiantang",
       type: "stream",
       cacheDuration: 0,
@@ -21,7 +21,7 @@ WidgetMetadata = {
     {
       id: "loadBaofeng",
       title: "暴风线路",
-      description: "暴风源",
+      description: "233动漫暴风线路",
       functionName: "loadBaofeng",
       type: "stream",
       cacheDuration: 0,
@@ -30,7 +30,7 @@ WidgetMetadata = {
     {
       id: "loadLiangzi",
       title: "量子线路",
-      description: "量子源",
+      description: "233动漫量子线路",
       functionName: "loadLiangzi",
       type: "stream",
       cacheDuration: 0,
@@ -45,16 +45,13 @@ WidgetMetadata = {
   }
 };
 
-const BASE = "https://cn.233dm.com";
-const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
+var BASE = "https://cn.233dm.com";
+var UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+var PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
+var SOURCE_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
+var SOURCE_NAMES = { tiantang: "天堂", baofeng: "暴风", liangzi: "量子" };
 
-// Source ID mapping (from detail page data-channel-tab):
-// 天堂=3, 暴风=2, 量子=4
-const SOURCE_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
-const SOURCE_NAMES = { tiantang: "天堂", baofeng: "暴风", liangzi: "量子" };
-
-// Custom btoa for environments without it
+// Custom btoa polyfill
 var _btoa = typeof btoa !== "undefined" ? btoa : function(str) {
   var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
   var out = "";
@@ -75,10 +72,10 @@ function extractText(text, regex) {
   return m ? m[1].trim() : "";
 }
 
-// Generate verification token (XOR timestamp with key, base64)
+// Generate verification token
 function generateVerifyToken() {
-  var key = new Uint8Array([0x4e, 0x3f, 0xa9, 0xc2, 0x12, 0x7d, 0x88, 0xef, 0x55, 0xaa, 0x0b, 0xcd, 0xde, 0xad, 0xbe, 0xef]);
-  var ts = Date.now().toString();
+  var key = [0x4e, 0x3f, 0xa9, 0xc2, 0x12, 0x7d, 0x88, 0xef, 0x55, 0xaa, 0x0b, 0xcd, 0xde, 0xad, 0xbe, 0xef];
+  var ts = String(Date.now());
   var out = "";
   for (var i = 0; i < ts.length; i++) {
     out += String.fromCharCode(ts.charCodeAt(i) ^ key[i % key.length]);
@@ -102,12 +99,10 @@ async function ensureSearchAccess() {
         }
       }
     );
-  } catch (e) {
-    // silent - some environments may not need bypass
-  }
+  } catch (e) {}
 }
 
-// Search anime via suggest API (no verification needed)
+// Search anime
 async function searchAnime(params) {
   var keyword = String(params.keyword || params.text || "").trim();
   if (!keyword) return [];
@@ -118,32 +113,33 @@ async function searchAnime(params) {
   var raw = typeof resp.data === "string" ? JSON.parse(resp.data) : resp.data;
   if (!raw || raw.code !== 1 || !raw.list) return [];
 
-  return raw.list.map(function(item) {
-    return {
+  var results = [];
+  for (var i = 0; i < raw.list.length; i++) {
+    var item = raw.list[i];
+    results.push({
       id: String(item.id),
       type: "url",
       title: item.name,
       posterPath: item.pic,
       link: BASE + "/search/" + encodeURIComponent(item.name) + "-------------.html"
-    };
-  });
+    });
+  }
+  return results;
 }
 
-// Load detail page with episode list
+// Load detail page
 async function loadDetail(link) {
   if (!link || typeof link !== "string") return null;
 
-  // If it's a search URL, extract keyword and get hash first
   var hash = "";
   var html = "";
-
   var hashMatch = link.match(/\/anime\/([a-f0-9]{24})\.html/);
+
   if (hashMatch) {
     hash = hashMatch[1];
     var resp = await Widget.http.get(BASE + "/anime/" + hash + ".html", { headers: { "User-Agent": UA } });
     html = typeof resp.data === "string" ? resp.data : String(resp.data || "");
   } else {
-    // It's a search URL -> get search results, find hash, then detail
     await ensureSearchAccess();
     var resp = await Widget.http.get(link, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
     html = typeof resp.data === "string" ? resp.data : String(resp.data || "");
@@ -172,38 +168,71 @@ async function loadDetail(link) {
   };
 }
 
-// Parse episode list grouped by source (天堂/精品/暴风/量子)
+// Parse episode list grouped by source
 function parseEpisodeList(html) {
   var sources = [];
-  var tabBlock = html.match(/<ul class="channel-tab">(.*?)<\/ul>/s);
-  if (!tabBlock) return sources;
 
+  // Find the channel-tab section
+  var tabStart = html.indexOf('class="channel-tab"');
+  if (tabStart < 0) return sources;
+  var tabEnd = html.indexOf("</ul>", tabStart);
+  if (tabEnd < 0) return sources;
+  var tabHtml = html.substring(tabStart, tabEnd);
+
+  // Extract source tabs: playlist id and name
   var srcRe = /<a[^>]*href="#playlist(\d+)"[^>]*>([^<]+)/g;
   var m;
-  while ((m = srcRe.exec(tabBlock[1])) !== null) {
+  while ((m = srcRe.exec(tabHtml)) !== null) {
     var sid = m[1];
     var sname = m[2].replace(/<[^>]+>/g, "").trim();
-    var playlistRe = new RegExp('<div id="playlist' + sid + '"[^>]*>(.*?)<\/div>', "s");
-    var pm = html.match(playlistRe);
-    var eps = [];
-    if (pm) {
-      var epRe = /<a[^>]*href="([^"]*\/play\/[^"]*)"[^>]*>([^<]+)<\/a>/g;
-      var em;
-      while ((em = epRe.exec(pm[1])) !== null) {
-        eps.push({ name: em[2].trim(), link: em[1].startsWith("http") ? em[1] : BASE + em[1] });
+    sources.push({ id: sid, name: sname, episodes: [] });
+
+    // Find the playlist div and extract episode links
+    var marker = 'id="playlist' + sid + '"';
+    var ps = html.indexOf(marker);
+    if (ps < 0) continue;
+
+    // Find the opening > of this div
+    var divOpenEnd = html.indexOf(">", ps);
+    if (divOpenEnd < 0) continue;
+
+    // Now find the matching </div> by counting depth
+    var depth = 1;
+    var searchPos = divOpenEnd + 1;
+    while (depth > 0 && searchPos < html.length) {
+      var nextOpen = html.indexOf("<div", searchPos);
+      var nextClose = html.indexOf("</div>", searchPos);
+      if (nextClose < 0) break;
+      if (nextOpen >= 0 && nextOpen < nextClose) {
+        depth++;
+        searchPos = nextOpen + 4;
+      } else {
+        depth--;
+        searchPos = nextClose + 6;
       }
     }
-    sources.push({ id: sid, name: sname, episodes: eps });
+
+    var playlistHtml = html.substring(divOpenEnd + 1, searchPos - 6);
+
+    // Extract episode links
+    var epRe = /<a[^>]*href="([^"]*\/play\/[^"]*)"[^>]*>([^<]+)<\/a>/g;
+    var em;
+    while ((em = epRe.exec(playlistHtml)) !== null) {
+      var epLink = em[1].indexOf("http") === 0 ? em[1] : BASE + em[1];
+      sources[sources.length - 1].episodes.push({ name: em[2].trim(), link: epLink });
+    }
   }
   return sources;
 }
 
-// Find best match from suggest API results
+// Find best match// Find best match from suggest API results
 function pickBestMatch(list, seriesName, seasonNum) {
   if (!list || list.length === 0) return null;
   if (list.length === 1) return list[0];
 
-  var scored = list.map(function(item) {
+  var scored = [];
+  for (var i = 0; i < list.length; i++) {
+    var item = list[i];
     var score = 0;
     var name = item.name || "";
     if (name === seriesName) score += 100;
@@ -211,8 +240,8 @@ function pickBestMatch(list, seriesName, seasonNum) {
     var sStr = "\u7b2c" + seasonNum + "\u5b63";
     if (name.indexOf(sStr) >= 0) score += 20;
     if (name.indexOf("OVA") >= 0) score -= 10;
-    return { item: item, score: score };
-  });
+    scored.push({ item: item, score: score });
+  }
   scored.sort(function(a, b) { return b.score - a.score; });
   return scored[0].score > 0 ? scored[0].item : list[0];
 }
@@ -231,7 +260,7 @@ async function searchHashByName(name) {
   }
 }
 
-// Core function to get playable URL for a given source and episode
+// Core function to get playable URL
 async function resolveSource(params, sourceKey) {
   var seriesName = String(params.seriesName || "").trim();
   if (!seriesName) return [];
@@ -263,7 +292,7 @@ async function resolveSource(params, sourceKey) {
   var pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
   var ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
 
-  // Step 4: Extract m3u8 URL from player_aaaa JSON
+  // Step 4: Extract m3u8 URL
   var pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
   if (!pm) return [];
 
@@ -286,7 +315,7 @@ async function resolveSource(params, sourceKey) {
   }
 }
 
-// Stream module handlers for each source
+// Stream module handlers
 async function loadTiantang(params) { return resolveSource(params, "tiantang"); }
 async function loadBaofeng(params) { return resolveSource(params, "baofeng"); }
 async function loadLiangzi(params) { return resolveSource(params, "liangzi"); }
