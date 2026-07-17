@@ -1,22 +1,31 @@
-﻿WidgetMetadata = {
-  id: "https://cn.233dm.com?rev=20260718f",
+﻿// --- 233dm 默认线路配置 ---
+const DEFAULT_SITES = "天堂,3\n暴风,2\n量子,4";
+暴风,2
+量子,4;
+
+WidgetMetadata = {
+  id: "https://cn.233dm.com?rev=20260718h",
   title: "233动漫播放源",
   description: "233动漫 天堂/暴风/量子 三线路播放源",
-  author: "233",
+  author: "Forward",
   site: "https://cn.233dm.com",
   version: "1.1.0",
   requiredVersion: "0.0.1",
   globalParams: [
     {
-      name: "source",
-      title: "播放线路",
+      name: "multiSource",
+      title: "是否启用聚合搜索",
       type: "enumeration",
       enumOptions: [
-        { title: "天堂线路", value: "tiantang" },
-        { title: "暴风线路", value: "baofeng" },
-        { title: "量子线路", value: "liangzi" },
-        { title: "全部线路（按顺序尝试）", value: "all" }
+        { title: "启用", value: "enabled" },
+        { title: "禁用", value: "disabled" }
       ]
+    },
+    {
+      name: "VodData",
+      title: "线路配置（名称,线路ID）",
+      type: "input",
+      value: DEFAULT_SITES
     }
   ],
   modules: [
@@ -34,9 +43,6 @@
 const BASE = "https://cn.233dm.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
-const SRC_IDS = { tiantang: "3", baofeng: "2", liangzi: "4" };
-const SRC_NAMES = { tiantang: "天堂", baofeng: "暴风", liangzi: "量子" };
-const SOURCE_ORDER = ["tiantang", "baofeng", "liangzi"];
 
 // 模块级缓存：减少重复请求
 const _cache = {
@@ -44,6 +50,23 @@ const _cache = {
   hash: new Map(),
   suggest: new Map()
 };
+
+function parseSourceSites(VodData) {
+  try {
+    const trimmed = (VodData || "").trim();
+    if (!trimmed) return [];
+    const lines = trimmed.split('\\n').filter(Boolean);
+    return lines.map(line => {
+      const parts = line.split(',').map(s => s.trim());
+      if (parts.length >= 2 && parts[1]) {
+        return { name: parts[0], sid: parts[1] };
+      }
+      return null;
+    }).filter(Boolean);
+  } catch (e) {
+    return [];
+  }
+}
 
 function _btoa(str) {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
@@ -123,13 +146,11 @@ async function suggest(name) {
   }
 }
 
-async function resolveSingle(params, sk) {
+async function resolveSingle(params, sk, sname) {
   const name = String(params.seriesName || "").trim();
   if (!name) return [];
   const ep = parseInt(params.episode, 10) || 1;
-  const sid = SRC_IDS[sk];
-  const sname = SRC_NAMES[sk];
-  if (!sid) return [];
+  if (!sk) return [];
 
   const sd = await suggest(name);
   if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) return [];
@@ -145,7 +166,7 @@ async function resolveSingle(params, sk) {
   const hash = await getHash(best.name);
   if (!hash) return [];
 
-  const playUrl = BASE + "/anime/" + hash + "/play/" + sid + "/" + ep + ".html";
+  const playUrl = BASE + "/anime/" + hash + "/play/" + sk + "/" + ep + ".html";
   try {
     const pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
     const ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
@@ -166,17 +187,24 @@ async function resolveSingle(params, sk) {
   } catch (e) { return []; }
 }
 
-async function loadResource(params) {
-  const source = String(params.source || "all").trim();
-  const skList = source === "all" ? SOURCE_ORDER : [source];
+// --- 主入口 ---
 
-  for (const sk of skList) {
-    const result = await resolveSingle(params, sk);
+async function loadResource(params) {
+  const { seriesName, multiSource, VodData } = params;
+  if (multiSource !== "enabled" || !seriesName) return [];
+
+  const siteList = parseSourceSites(VodData);
+  if (siteList.length === 0) return [];
+
+  console.log("[233dm] 搜索: " + seriesName + " 线路数: " + siteList.length);
+
+  for (const site of siteList) {
+    const result = await resolveSingle(params, site.sid, site.name);
     if (result.length > 0) {
-      console.log("[233dm] " + sk + " 线路成功");
+      console.log("[233dm] " + site.name + "(" + site.sid + ") 成功");
       return result;
     }
-    console.log("[233dm] " + sk + " 线路无结果，尝试下一个");
+    console.log("[233dm] " + site.name + "(" + site.sid + ") 无结果，尝试下一个");
   }
   return [];
 }
