@@ -1,15 +1,13 @@
 ﻿// --- 233dm 默认线路配置 ---
-const DEFAULT_SITES = "天堂,3\n暴风,2\n量子,4";
-暴风,2
-量子,4;
+const DEFAULT_SITES = "天堂,dyttm3u8\n暴风,bfzym3u8\n量子,lzm3u8";
 
 WidgetMetadata = {
-  id: "https://cn.233dm.com?rev=20260718h",
+  id: "https://cn.233dm.com?rev=20260718i",
   title: "233动漫播放源",
   description: "233动漫 天堂/暴风/量子 三线路播放源",
   author: "Forward",
   site: "https://cn.233dm.com",
-  version: "1.1.0",
+  version: "1.2.0",
   requiredVersion: "0.0.1",
   globalParams: [
     {
@@ -23,7 +21,7 @@ WidgetMetadata = {
     },
     {
       name: "VodData",
-      title: "线路配置（名称,线路ID）",
+      title: "线路配置（名称,from值）",
       type: "input",
       value: DEFAULT_SITES
     }
@@ -44,28 +42,28 @@ const BASE = "https://cn.233dm.com";
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const PLAY_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
 
-// 模块级缓存：减少重复请求
+// 模块级缓存
 const _cache = {
   bypassed: false,
   hash: new Map(),
-  suggest: new Map()
+  suggest: new Map(),
+  // 缓存 (hash:from) -> sid，避免重复扫描
+  sidFrom: new Map()
 };
 
 function parseSourceSites(VodData) {
   try {
     const trimmed = (VodData || "").trim();
     if (!trimmed) return [];
-    const lines = trimmed.split('\\n').filter(Boolean);
+    const lines = trimmed.split('\n').filter(Boolean);
     return lines.map(line => {
       const parts = line.split(',').map(s => s.trim());
       if (parts.length >= 2 && parts[1]) {
-        return { name: parts[0], sid: parts[1] };
+        return { name: parts[0], from: parts[1] };
       }
       return null;
     }).filter(Boolean);
-  } catch (e) {
-    return [];
-  }
+  } catch (e) { return []; }
 }
 
 function _btoa(str) {
@@ -146,39 +144,56 @@ async function suggest(name) {
   }
 }
 
-async function resolveSingle(params, sk, sname) {
-  const name = String(params.seriesName || "").trim();
-  if (!name) return [];
-  const ep = parseInt(params.episode, 10) || 1;
-  if (!sk) return [];
+/**
+ * 扫描 sids 1~6，找到匹配 from 值的 sid
+ * 因为不同动漫的 sid 到 from 映射不同，需要动态查找
+ */
+async function findSidByFrom(hash, targetFrom) {
+  const cacheKey = hash + ":" + targetFrom;
+  const cached = _cache.sidFrom.get(cacheKey);
+  if (cached !== undefined) return cached;
 
-  const sd = await suggest(name);
-  if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) return [];
-
-  let best = null;
-  for (const item of sd.list) {
-    if (item.name === name) { best = item; break; }
-    if (item.name.indexOf(name) >= 0) best = item;
+  for (let sid = 1; sid <= 6; sid++) {
+    try {
+      const url = BASE + "/anime/" + hash + "/play/" + sid + "/1.html";
+      const pr = await Widget.http.get(url, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
+      const ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
+      const pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
+      if (!pm) continue;
+      const pd = JSON.parse(pm[1]);
+      if (pd.from === targetFrom) {
+        _cache.sidFrom.set(cacheKey, sid);
+        return sid;
+      }
+    } catch (e) { /* continue */ }
   }
-  if (!best) best = sd.list[0];
-  if (!best || !best.name) return [];
+  _cache.sidFrom.set(cacheKey, null);
+  return null;
+}
 
-  const hash = await getHash(best.name);
-  if (!hash) return [];
+async function resolveByFrom(hash, targetFrom, sname, ep) {
+  const sid = await findSidByFrom(hash, targetFrom);
+  if (!sid) return [];
 
-  const playUrl = BASE + "/anime/" + hash + "/play/" + sk + "/" + ep + ".html";
   try {
+    const playUrl = BASE + "/anime/" + hash + "/play/" + sid + "/" + ep + ".html";
     const pr = await Widget.http.get(playUrl, { headers: { "User-Agent": UA, "Referer": BASE + "/" } });
     const ph = typeof pr.data === "string" ? pr.data : String(pr.data || "");
     const pm = ph.match(/player_aaaa\s*=\s*(\{[^;]+\})/);
     if (!pm) return [];
+
     const pd = JSON.parse(pm[1]);
     const eu = pd.url || "";
     if (!eu) return [];
-    let url = decodeURIComponent(eu);
+
+    let url;
+    try { url = decodeURIComponent(eu); } catch (e) { url = eu; }
     url = url.replace(/&amp;/g, "&");
+
+    if (!url.startsWith("http://") && !url.startsWith("https://")) return [];
+
     return [{
-      name: sname + "线路",
+      name: sname,
       description: sname + " 1080P",
       url: url,
       customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
@@ -190,21 +205,38 @@ async function resolveSingle(params, sk, sname) {
 // --- 主入口 ---
 
 async function loadResource(params) {
-  const { seriesName, multiSource, VodData } = params;
+  const { seriesName, episode, multiSource, VodData } = params;
   if (multiSource !== "enabled" || !seriesName) return [];
 
+  const targetEpisode = episode ? parseInt(episode) : 1;
   const siteList = parseSourceSites(VodData);
   if (siteList.length === 0) return [];
 
-  console.log("[233dm] 搜索: " + seriesName + " 线路数: " + siteList.length);
+  console.log("[233dm] 搜索: " + seriesName + " 第" + targetEpisode + "集 线路:" + siteList.length + "个");
 
+  const sd = await suggest(seriesName);
+  if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) return [];
+
+  let best = null;
+  for (const item of sd.list) {
+    if (item.name === seriesName) { best = item; break; }
+    if (item.name.indexOf(seriesName) >= 0) best = item;
+  }
+  if (!best) best = sd.list[0];
+  if (!best || !best.name) return [];
+
+  const hash = await getHash(best.name);
+  if (!hash) return [];
+
+  // 按配置顺序尝试各线路（通过 from 值动态查找对应的 sid）
   for (const site of siteList) {
-    const result = await resolveSingle(params, site.sid, site.name);
+    console.log("[233dm] 尝试: " + site.name + " (from=" + site.from + ")");
+    const result = await resolveByFrom(hash, site.from, site.name, targetEpisode);
     if (result.length > 0) {
-      console.log("[233dm] " + site.name + "(" + site.sid + ") 成功");
+      console.log("[233dm] " + site.name + " 成功");
       return result;
     }
-    console.log("[233dm] " + site.name + "(" + site.sid + ") 无结果，尝试下一个");
+    console.log("[233dm] " + site.name + " 无结果，尝试下一个");
   }
   return [];
 }
