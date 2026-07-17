@@ -110,7 +110,7 @@ async function resolve(params, sk) {
     url = url.replace(/&amp;/g, "&");
     return [{
       name: sname + "线路",
-      description: sname + " 1080P",
+      description: sname + " 其他",
       url: url,
       customHeaders: { "User-Agent": PLAY_UA, "Referer": BASE + "/" },
       headers: { "User-Agent": PLAY_UA, "Referer": BASE + "/" }
