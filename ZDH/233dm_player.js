@@ -154,8 +154,7 @@ async function suggest(name) {
   const cached = _cache.suggest.get(name);
   if (cached !== undefined) return cached;
   try {
-    const sr = await Widget.http.get(BASE + "/index.php/ajax/suggest", {
-      params: { mid: "1", wd: name },
+    const sr = await Widget.http.get(BASE + "/index.php/ajax/suggest?mid=1&wd=" + encodeURIComponent(name), {
       headers: { "User-Agent": UA, "X-Requested-With": "XMLHttpRequest" }
     });
     const sd = (typeof sr.data === "string") ? JSON.parse(sr.data) : sr.data;
@@ -236,6 +235,9 @@ async function loadResource(params) {
   if (siteList.length === 0) return [];
 
   console.log("[233dm] 搜索: " + seriesName + " 第" + targetEpisode + "集 线路:" + siteList.length + "个");
+
+  // 先执行反爬验证（verify_check），再调用任何 API
+  await bypass();
 
   const sd = await suggest(seriesName);
   if (!sd || sd.code !== 1 || !sd.list || sd.list.length === 0) return [];
