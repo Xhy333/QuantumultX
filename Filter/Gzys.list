@@ -10,5 +10,5 @@ DOMAIN-SUFFIX,ddys.app,PROXY
 
 # TMDb 搜索（含 fluxapi、forwardinfo 等）
 DOMAIN-SUFFIX,vvebo.vip,PROXY
-
+#js
 DOMAIN-SUFFIX,mock.forward1.workers.dev
