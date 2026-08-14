@@ -4,6 +4,10 @@ DOMAIN-SUFFIX,dandanplay.net
 
 # TMDb 搜索（含 fluxapi、forwardinfo 等）
 DOMAIN-SUFFIX,vvebo.vip,PROXY
+
+# 新增：另一个搜索/资源域名
+DOMAIN-SUFFIX,wmvbo.com,PROXY
+
 #自
 DOMAIN-SUFFIX,mock.forward1.workers.dev
 DOMAIN-SUFFIX,api.xqe4cxu.com
