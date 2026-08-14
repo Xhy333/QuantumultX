@@ -8,3 +8,5 @@ DOMAIN-SUFFIX,ng6.app,PROXY
 #低调影视
 DOMAIN-SUFFIX,ddys.app,PROXY
 
+# TMDb 搜索（含 fluxapi、forwardinfo 等）
+DOMAIN-SUFFIX,vvebo.vip,PROXY
