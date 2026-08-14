@@ -2,6 +2,15 @@
 #danmu
 DOMAIN-SUFFIX,dandanplay.net
 
+#自
+DOMAIN-SUFFIX,fluxapi.vvebo.vip
+DOMAIN-SUFFIX,mock.forward1.workers.dev
+DOMAIN-SUFFIX,forwardinfo.vvebo.vip
+DOMAIN-SUFFIX,api.xqe4cxu.com
+DOMAIN-SUFFIX,api.syq8gvw.com
+
+
+
 #porn系列模块
 DOMAIN-KEYWORD,javday
 DOMAIN-SUFFIX,pornhub.com
