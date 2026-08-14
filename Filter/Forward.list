@@ -2,8 +2,7 @@
 #danmu
 DOMAIN-SUFFIX,dandanplay.net
 
-# TMDb 搜索（含 fluxapi、forwardinfo 等）
-DOMAIN-SUFFIX,vvebo.vip,PROXY
+
 
 # 新增：另一个搜索/资源域名
 DOMAIN-SUFFIX,wmvbo.com,PROXY
@@ -24,8 +23,7 @@ DOMAIN-SUFFIX,api.trakt.tv
 
 
 
-#首页页面 可能冲突油管
-DOMAIN-SUFFIX,www.youtube.com
+
 
 #porn系列模块
 DOMAIN-KEYWORD,javday
