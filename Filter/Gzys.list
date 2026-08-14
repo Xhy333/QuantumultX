@@ -1,8 +1,7 @@
 
 # 核心 API
 DOMAIN-SUFFIX,8b42w67.com,PROXY
-# TMDb 搜索（含 fluxapi、forwardinfo 等）
-DOMAIN-SUFFIX,vvebo.vip,PROXY
+
 # 新增：另一个搜索/资源域名
 DOMAIN-SUFFIX,wmvbo.com,PROXY
 # 瓜子影视官网/接口
