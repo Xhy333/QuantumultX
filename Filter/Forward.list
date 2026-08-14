@@ -37,6 +37,29 @@ DOMAIN-SUFFIX,dytt8vip.com
 DOMAIN-SUFFIX,imgzy360.com
 DOMAIN-SUFFIX,iill.top
 
+#VOD播放源
+DOMAIN-SUFFIX,ffzy5.tv
+DOMAIN-SUFFIX,wolongzyw.com
+DOMAIN-SUFFIX,api.zuidapi.com
+DOMAIN-SUFFIX,bfzyapi.com
+DOMAIN-SUFFIX,jszyapi.com
+DOMAIN-SUFFIX,api.wujinapi.com
+DOMAIN-SUFFIX,caiji.dyttzyapi.com
+DOMAIN-SUFFIX,cj.rycjapi.com
+DOMAIN-SUFFIX,www.hongniuzy2.com
+DOMAIN-SUFFIX,api.guangsuapi.com
+DOMAIN-SUFFIX,ikunzyapi.com
+DOMAIN-SUFFIX,api.ukuapi.com
+DOMAIN-SUFFIX,www.huyaapi.com
+DOMAIN-SUFFIX,api.xinlangapi.com
+DOMAIN-SUFFIX,cj.lziapi.com
+DOMAIN-SUFFIX,jyzyapi.com
+DOMAIN-SUFFIX,lovedan.net
+DOMAIN-SUFFIX,caiji.maotaizy.cc
+DOMAIN-SUFFIX,dbzy.tv
+DOMAIN-SUFFIX,subocaiji.com
+DOMAIN-SUFFIX,p2100.net
+
 #预告封面
 DOMAIN-SUFFIX,googlevideo.com
 
