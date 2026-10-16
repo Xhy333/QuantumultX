@@ -10,9 +10,9 @@ QuantumultX
 
 
 [rewrite_local]
-^https?://[^/]+\.dytt-(cinema|hot)\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/233dm_ad.js
-^https?://[^/]+\.rrcdnbf\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/233dm_ad.js
-^https?://[^/]+\.lz-cdn\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/233dm_ad.js
+^https?://[^/]+\.dytt-(cinema|hot)\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
+^https?://[^/]+\.rrcdnbf\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
+^https?://[^/]+\.lz-cdn\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
 
 [mitm]
 hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com
@@ -32,6 +32,24 @@ hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.
 6、如果任何单位或个人认为此脚本可能涉嫌侵犯其权利，应及时通知并提供身份证明，所有权证明，我们将在收到认证文件确认后删除此脚本。
 7、所有直接或间接使用、查看此脚本的人均应该仔细阅读此声明。本人保留随时更改或补充此声明的权利。一旦您使用或复制了此脚本，即视为您已接受此免责声明。
 ******************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
