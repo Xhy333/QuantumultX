@@ -1,5 +1,5 @@
 ﻿/***********************************************
- * 233dm 播放源 m3u8 去广告  (Quantumult X · script-response-body)
+ * 播放源 m3u8 去广告  (Quantumult X · script-response-body)
  * 拦截媒体播放列表 -> 查询广告分片区间 -> 删除广告分片
  * 广告区间接口: https://m3u8.web.sgzm.net:2087/ad_positions
  ***********************************************/
