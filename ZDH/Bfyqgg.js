@@ -5,11 +5,15 @@
  1) 纯本地：分片URL含 /adjump/ 即广告，直接删除（不联网）；
  2) 可选兜底：对常见片源域名再用广告区间接口(经 QX 的 $task.fetch)补删。
 无通知、匹配不到不改动。
-搭配(通用，自动覆盖所有片源域名)：
+#MT就* 会对所有 HTTPS 解密，稍耗性能，个别做证书固定的 App 可能异常。若想更轻量，只用已知片源域名
+搭配(通用，自动覆盖所有片源域名)（这样写就得遇到新域名时再补；要"全自动"就用 *）
+先用锁提交地址放上去测一集，确认 QX 日志里出现 [Bfyqgg] 去广告 ... 且广告消失即可
+
 [rewrite_local]
 ^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js
 [mitm]
-hostname = *
+hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com, fengbao13.com
+
 **************************************/
 var KK_AD_URL_PAT = /adjump/i;
 var KK_AD_API = "https://m3u8.web.sgzm.net:2087/ad_positions";
