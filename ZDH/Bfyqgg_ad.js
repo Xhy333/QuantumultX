@@ -9,13 +9,14 @@
 QuantumultX
 
 
-[rewrite_local]
+$0
 ^https?://[^/]+\.dytt-(cinema|hot)\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
 ^https?://[^/]+\.rrcdnbf\d+\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
 ^https?://[^/]+\.lz-cdn\d+\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
+^https?://[^/]*fengbao\d*\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
 
 [mitm]
-hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com
+hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com, fengbao13.com
 
 
 
@@ -55,15 +56,20 @@ hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.
 
 var KK_AD_API = "https://m3u8.web.sgzm.net:2087/ad_positions";
 var KK_AD_JSV = "stable-client-v3-normal-segment-whitelist-v2-blocks";
-var KK_AD_DEBUG = false; // 改为 true 可收到触发/结果通知
+var KK_AD_URL_PAT = /adjump/i; // 分片URL含该词即广告(如 /video/adjump/time/0000000.ts)
+var KK_AD_DEBUG = false;       // 改为 true 可收到触发/结果通知
+
 function kkNotify(t, s, b) { try { if (KK_AD_DEBUG && typeof $notify === "function") $notify(t, s, b); } catch (e) {} }
-
-function kkCountSeg(lines) {
-  var n = 0;
-  for (var i = 0; i < lines.length; i++) { var c = lines[i].charAt(0); if (c !== "#" && lines[i].length) n++; }
-  return n;
+function kkCountSeg(lines) { var n = 0; for (var i = 0; i < lines.length; i++) { if (lines[i].charAt(0) !== "#" && lines[i].length) n++; } return n; }
+function kkCollapseDisc(lines) {
+  var out = [];
+  for (var i = 0; i < lines.length; i++) {
+    var l = lines[i];
+    if (l.indexOf("#EXT-X-DISCONTINUITY") === 0 && out.length && out[out.length - 1].indexOf("#EXT-X-DISCONTINUITY") === 0) continue;
+    out.push(l);
+  }
+  return out;
 }
-
 function kkFilter(lines, ranges) {
   var ad = {}, i, k;
   for (i = 0; i < ranges.length; i++) {
@@ -75,37 +81,34 @@ function kkFilter(lines, ranges) {
   for (i = 0; i < lines.length; i++) {
     var ln = lines[i];
     if (ln.charAt(0) === "#") { pending.push(ln); continue; }
-    if (ad[idx]) { pending = []; }
+    var isAd = ad[idx] || KK_AD_URL_PAT.test(ln);
+    if (isAd) { pending = []; }
     else { for (k = 0; k < pending.length; k++) out.push(pending[k]); out.push(ln); pending = []; }
     idx++;
   }
   for (k = 0; k < pending.length; k++) out.push(pending[k]);
-  return out;
+  return kkCollapseDisc(out);
 }
-
 (function () {
   try {
     var url = ($request && $request.url) || "";
     var body = ($response && $response.body) || "";
     if (!body || body.indexOf("#EXTM3U") < 0) { $done({}); return; }
-    if (body.indexOf("#EXTINF") < 0) { kkNotify("233dm去广告", "主列表放行", url.slice(0, 80)); $done({}); return; } // 主列表不改
-    if (url.indexOf(".m3u8") < 0) { $done({}); return; }
+    if (body.indexOf("#EXTINF") < 0) { $done({}); return; } // 主列表不改
+    if (url.indexOf(".m3u8") < 0 && !KK_AD_URL_PAT.test(url)) { $done({}); return; }
     var lines = body.split(/\r?\n/);
     var total = kkCountSeg(lines);
     if (total < 2) { $done({}); return; }
-    kkNotify("233dm去广告", "命中m3u8", url.slice(0, 80) + "\n段数=" + total);
     var api = KK_AD_API + "?url=" + encodeURIComponent(url) + "&seen_total=" + total + "&lenfast=1&jsv=" + KK_AD_JSV + "&_ts=" + Date.now();
     $httpClient.get({ url: api, headers: { "User-Agent": "Mozilla/5.0" } }, function (err, resp, data) {
-      if (err || !data) { $done({}); return; }
       var ranges = [];
-      try { var j = JSON.parse(data); ranges = (j.ad_ranges || []).concat(j.ad_blocks || []); } catch (e) {}
-      if (!ranges.length) { kkNotify("233dm去广告", "无广告区间", "段数=" + total); $done({}); return; }
+      if (!err && data) { try { var j = JSON.parse(data); ranges = (j.ad_ranges || []).concat(j.ad_blocks || []); } catch (e) {} }
       var out = kkFilter(lines, ranges);
-      console.log("[233dm] 去广告 " + total + " -> " + kkCountSeg(out) + " 段 " + JSON.stringify(ranges));
-      kkNotify("233dm去广告", "已删除", total + " -> " + kkCountSeg(out) + " " + JSON.stringify(ranges));
-      $done({ body: out.join("\n") });
+      if (kkCountSeg(out) < total) {
+        console.log("[Bfyqgg] 去广告 " + total + " -> " + kkCountSeg(out));
+        kkNotify("Bfyqgg去广告", "已删 " + total + "->" + kkCountSeg(out), url.slice(0, 80) + " " + JSON.stringify(ranges));
+        $done({ body: out.join("\n") });
+      } else { kkNotify("Bfyqgg去广告", "无广告", "段=" + total + " " + url.slice(0, 70)); $done({}); }
     });
-  } catch (e) {
-    $done({});
-  }
+  } catch (e) { $done({}); }
 })();
