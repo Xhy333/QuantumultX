@@ -10,10 +10,3 @@ host-suffix, dsmovie2019.tv, direct
 host-suffix, ddushe.com, direct
 host-suffix, zip0.com, direct
 
-# Google DNS / DoH 走代理分流（不直连）
-host, dns.google, PROXY
-host-suffix, dns.google, PROXY
-ip-cidr, 8.8.8.8/32, PROXY
-ip-cidr, 8.8.4.4/32, PROXY
-ip-cidr6, 2001:4860:4860::8888/128, PROXY
-ip-cidr6, 2001:4860:4860::8844/128, PROXY
