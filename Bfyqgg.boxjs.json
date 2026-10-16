@@ -1,0 +1,47 @@
+{
+  "id": "Xhy333_quantumultX_bfyqgg",
+  "name": "播放源去广告",
+  "author": "@Xhy333",
+  "icon": "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png",
+  "repo": "https://github.com/Xhy333/QuantumultX",
+  "apps": [
+    {
+      "id": "Xhy333_Bfyqgg",
+      "name": "播放源去广告 (Bfyqgg)",
+      "keys": [
+        "@Xhy333_Bfyqgg.enabled",
+        "@Xhy333_Bfyqgg.keywords",
+        "@Xhy333_Bfyqgg.api"
+      ],
+      "settings": [
+        {
+          "id": "@Xhy333_Bfyqgg.enabled",
+          "name": "启用去广告",
+          "val": true,
+          "type": "boolean",
+          "desc": "总开关；关闭后不改动任何播放列表"
+        },
+        {
+          "id": "@Xhy333_Bfyqgg.keywords",
+          "name": "广告关键词(逗号分隔)",
+          "val": "adjump",
+          "type": "text",
+          "desc": "分片URL含这些词即视为广告并删除；多个用逗号分隔，例如 adjump,ad"
+        },
+        {
+          "id": "@Xhy333_Bfyqgg.api",
+          "name": "接口兜底",
+          "val": true,
+          "type": "boolean",
+          "desc": "对常见片源域名再用广告区间接口补删(需联网，失败不影响)"
+        }
+      ],
+      "author": "@Xhy333",
+      "repo": "https://github.com/Xhy333/QuantumultX",
+      "script": "https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js",
+      "icons": [
+        "https://raw.githubusercontent.com/fmz200/wool_scripts/main/icons/apps/Quantumult_X.png"
+      ]
+    }
+  ]
+}
