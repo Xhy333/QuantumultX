@@ -33,6 +33,15 @@ WidgetMetadata = {
         { title: "启用(较慢)", value: "enabled" },
         { title: "禁用", value: "disabled" }
       ]
+    },
+    {
+      name: "jingpin",
+      title: "精品线路(外部解析)",
+      type: "enumeration",
+      enumOptions: [
+        { title: "启用", value: "enabled" },
+        { title: "禁用", value: "disabled" }
+      ]
     }
   ],
   modules: [
@@ -252,7 +261,8 @@ async function kkDetail(base, hash) {
     while ((m = re2.exec(html))) { var s2 = Number(m[1]); if (sids.indexOf(s2) < 0) sids.push(s2); }
     sids.sort(function (a, b) { return a - b; });
   }
-  var result = { sids: sids, names: names };
+  var dm = html.match(/"dmid":"?(\d+)"?/);
+  var result = { sids: sids, names: names, dmid: dm ? dm[1] : "" };
   _s.detailCache[hash] = result;
   return result;
 }
@@ -410,13 +420,72 @@ async function kkProbe(url, headers) {
   var start = Date.now(), result;
   try {
     if (!/^https?:\/\//i.test(url)) { result = { ok: false, reason: "无效地址" }; }
-    else if (/\.(mp4|mkv|mov)(?:[?#]|$)/i.test(url)) { await kkProbeBytes(url, headers, 32); result = { ok: true, latency: Date.now() - start }; }
+    else if (/\.(mp4|mkv|mov)(?:[?#]|$)/i.test(url) || /mime_type=video/i.test(url)) { await kkProbeBytes(url, headers, 32); result = { ok: true, latency: Date.now() - start }; }
     else { await kkProbeHLS(url, headers, 0); result = { ok: true, latency: Date.now() - start }; }
   } catch (e) {
     result = { ok: false, reason: e && e.message ? e.message : String(e) };
   }
   _s.probeCache[url] = result;
   return result;
+}
+
+// --- 精品(mp4)线路：解析 v2player 的 AES 加密地址 ---
+var KK_JP_KEY = "ABABEF777999CCCD";
+var kkSBox = (function () {
+  var p = 1, q = 1, s = [];
+  do {
+    p = (p ^ (p << 1) ^ ((p & 0x80) ? 0x1b : 0)) & 0xff;
+    q ^= q << 1; q &= 0xff; q ^= q << 2; q &= 0xff; q ^= q << 4; q &= 0xff;
+    if (q & 0x80) q ^= 0x09;
+    s[p] = (q ^ ((q << 1) | (q >>> 7)) ^ ((q << 2) | (q >>> 6)) ^ ((q << 3) | (q >>> 5)) ^ ((q << 4) | (q >>> 4)) ^ 0x63) & 0xff;
+  } while (p !== 1);
+  s[0] = 0x63; return s;
+})();
+var kkRSBox = (function () { var r = []; for (var i = 0; i < 256; i++) r[kkSBox[i]] = i; return r; })();
+var kkRcon = [0x00, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36];
+function kkGmul(a, b) { var p = 0; for (var i = 0; i < 8; i++) { if (b & 1) p ^= a; var hi = a & 0x80; a = (a << 1) & 0xff; if (hi) a ^= 0x1b; b >>= 1; } return p & 0xff; }
+function kkExpandKey(key) { var w = []; for (var i = 0; i < 4; i++) w[i] = ((key[4 * i] << 24) | (key[4 * i + 1] << 16) | (key[4 * i + 2] << 8) | key[4 * i + 3]) >>> 0; for (i = 4; i < 44; i++) { var t = w[i - 1]; if (i % 4 === 0) { t = ((t << 8) | (t >>> 24)) >>> 0; t = ((kkSBox[(t >>> 24) & 0xff] << 24) | (kkSBox[(t >>> 16) & 0xff] << 16) | (kkSBox[(t >>> 8) & 0xff] << 8) | kkSBox[t & 0xff]) >>> 0; t = (t ^ (kkRcon[i / 4] << 24)) >>> 0; } w[i] = (w[i - 4] ^ t) >>> 0; } return w; }
+function kkAddRK(s, w, r) { for (var c = 0; c < 4; c++) { var k = w[r * 4 + c]; s[4 * c] ^= (k >>> 24) & 0xff; s[4 * c + 1] ^= (k >>> 16) & 0xff; s[4 * c + 2] ^= (k >>> 8) & 0xff; s[4 * c + 3] ^= k & 0xff; } }
+function kkInvSub(s) { for (var i = 0; i < 16; i++) s[i] = kkRSBox[s[i]]; }
+function kkInvShift(s) { var t; t = s[13]; s[13] = s[9]; s[9] = s[5]; s[5] = s[1]; s[1] = t; t = s[2]; s[2] = s[10]; s[10] = t; t = s[6]; s[6] = s[14]; s[14] = t; t = s[3]; s[3] = s[7]; s[7] = s[11]; s[11] = s[15]; s[15] = t; }
+function kkInvMix(s) { for (var c = 0; c < 4; c++) { var i = 4 * c, a = s[i], b = s[i + 1], d = s[i + 2], e = s[i + 3]; s[i] = kkGmul(a, 14) ^ kkGmul(b, 11) ^ kkGmul(d, 13) ^ kkGmul(e, 9); s[i + 1] = kkGmul(a, 9) ^ kkGmul(b, 14) ^ kkGmul(d, 11) ^ kkGmul(e, 13); s[i + 2] = kkGmul(a, 13) ^ kkGmul(b, 9) ^ kkGmul(d, 14) ^ kkGmul(e, 11); s[i + 3] = kkGmul(a, 11) ^ kkGmul(b, 13) ^ kkGmul(d, 9) ^ kkGmul(e, 14); } }
+function kkB64ToBytes(b64) { var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", map = {}, out = [], buf = 0, bits = 0; for (var i = 0; i < 64; i++) map[chars.charAt(i)] = i; for (i = 0; i < b64.length; i++) { var ch = b64.charAt(i); if (ch === "=") break; var v = map[ch]; if (v === undefined) continue; buf = (buf << 6) | v; bits += 6; if (bits >= 8) { bits -= 8; out.push((buf >> bits) & 0xff); } } return out; }
+function kkUtf8Decode(bytes) { var s = "", i = 0; while (i < bytes.length) { var c = bytes[i++]; if (c < 0x80) s += String.fromCharCode(c); else if (c < 0xe0) s += String.fromCharCode(((c & 0x1f) << 6) | (bytes[i++] & 0x3f)); else if (c < 0xf0) s += String.fromCharCode(((c & 0xf) << 12) | ((bytes[i++] & 0x3f) << 6) | (bytes[i++] & 0x3f)); else { var cp = ((c & 0x7) << 18) | ((bytes[i++] & 0x3f) << 12) | ((bytes[i++] & 0x3f) << 6) | (bytes[i++] & 0x3f); cp -= 0x10000; s += String.fromCharCode(0xd800 + (cp >> 10), 0xdc00 + (cp & 0x3ff)); } } return s; }
+function kkAesDecrypt(b64, keyStr, ivHex) {
+  var ct = kkB64ToBytes(b64), key = [], iv = [];
+  for (var i = 0; i < keyStr.length; i++) key.push(keyStr.charCodeAt(i) & 0xff);
+  for (i = 0; i < ivHex.length; i += 2) iv.push(parseInt(ivHex.substr(i, 2), 16));
+  var w = kkExpandKey(key), prev = iv.slice(0, 16), out = [];
+  for (var o = 0; o < ct.length; o += 16) {
+    var blk = ct.slice(o, o + 16), s = blk.slice(0, 16);
+    kkAddRK(s, w, 10);
+    for (var r = 9; r >= 1; r--) { kkInvShift(s); kkInvSub(s); kkAddRK(s, w, r); kkInvMix(s); }
+    kkInvShift(s); kkInvSub(s); kkAddRK(s, w, 0);
+    for (var j = 0; j < 16; j++) out.push(s[j] ^ prev[j]);
+    prev = blk;
+  }
+  var pad = out[out.length - 1]; if (pad >= 1 && pad <= 16) out = out.slice(0, out.length - pad);
+  return kkUtf8Decode(out);
+}
+
+async function kkResolveJingpin(base, obj, dmid) {
+  var token = kkDecodeUrl(obj && obj.url);
+  if (!token || /^https?:\/\//i.test(token)) return "";
+  var vod = (obj && obj.vod_data) || {};
+  var q = "url=" + encodeURIComponent(token)
+    + "&dmid=" + encodeURIComponent(dmid || "")
+    + "&next=" + encodeURIComponent(kkText(obj.link_next))
+    + "&name=" + encodeURIComponent(kkText(vod.vod_name))
+    + "&nid=" + encodeURIComponent(String(obj.nid == null ? "1" : obj.nid))
+    + "&ph=" + encodeURIComponent("https://as.cfhls.top/")
+    + "&h=" + encodeURIComponent(base)
+    + "&pic=" + encodeURIComponent(kkText(vod.vod_pic));
+  var resp = await Widget.http.get("https://art.v2player.top:8989/player/?" + q, { headers: { "User-Agent": UA, "Referer": base + "/" } });
+  var html = kkBody(resp);
+  var m = html.match(/playData\('([^']*)'\s*,\s*'([^']*)'\)/);
+  if (!m) return "";
+  var url = kkAesDecrypt(m[1], KK_JP_KEY, m[2]);
+  return /^https?:\/\//i.test(url) ? url : "";
 }
 
 // --- 主入口 ---
@@ -447,7 +516,7 @@ async function loadResource(params) {
     if (!best || !best.hash) return [];
 
     var detail = await kkDetail(base, best.hash);
-    var sids = detail.sids.slice(0, maxLines);
+    var sids = detail.sids.slice(0, Math.max(maxLines, 8));
     if (!sids.length) return [];
 
     var headers = { "User-Agent": MEDIA_UA, "Referer": base + "/" };
@@ -455,10 +524,14 @@ async function loadResource(params) {
     var isMovie = /movie/i.test(String(params.type || params.mediaType || ""));
     var epLabel = isMovie ? "正片" : ("第" + episode + "集");
 
+    var jingpinEnabled = params.jingpin === "enabled";
+    var jingpinHit = null;
+
     var tasks = sids.map(async function (sid) {
       try {
         var obj = await kkLineInfo(base, best.hash, sid, episode);
         if (!obj) return null;
+        if (String(obj.from) === "mp4") { if (!jingpinHit) jingpinHit = { sid: sid, obj: obj }; return null; }
         if (obj.flag && obj.flag !== "play") return null;
         if (Number(obj.trysee) > 0 || Number(obj.points) > 0) return null;
         var raw = obj.url || obj.url_next || "";
@@ -482,16 +555,26 @@ async function loadResource(params) {
       } catch (e) { return null; }
     });
 
-    var lines = await Promise.all(tasks);
+    var lines = (await Promise.all(tasks)).filter(Boolean);
+
+    if (jingpinEnabled && jingpinHit) {
+      try {
+        var jpUrl = await kkResolveJingpin(base, jingpinHit.obj, detail.dmid);
+        if (jpUrl) {
+          var jpHeaders = { "User-Agent": MEDIA_UA };
+          var jpOk = true, jpT0 = Date.now();
+          if (doProbe) { var jpr = await kkProbe(jpUrl, jpHeaders); jpOk = jpr.ok; }
+          if (jpOk) { lines.push({ name: "精品 · " + epLabel, description: title + " " + epLabel + " · 精品 (外部解析)", url: jpUrl, customHeaders: jpHeaders, headers: jpHeaders, _latency: Date.now() - jpT0, _jing: true }); }
+          else { console.log("[233dm] 精品 不可播"); }
+        }
+      } catch (e) { console.log("[233dm] 精品线路失败: " + (e && e.message ? e.message : e)); }
+    }
+
     var seen = {};
-    return lines.filter(function (x) {
-      if (!x || seen[x.url]) return false;
-      seen[x.url] = true;
-      return true;
-    }).sort(function (a, b) { return a._latency - b._latency; }).map(function (x) {
-      delete x._latency;
-      return x;
-    });
+    var uniq = lines.filter(function (x) { if (!x || seen[x.url]) return false; seen[x.url] = true; return true; });
+    var direct = uniq.filter(function (x) { return !x._jing; }).sort(function (a, b) { return a._latency - b._latency; }).slice(0, maxLines);
+    var extra = uniq.filter(function (x) { return x._jing; });
+    return direct.concat(extra).map(function (x) { delete x._latency; delete x._jing; return x; });
   } catch (e) {
     console.log("[233dm] 失败: " + (e && e.message ? e.message : e));
     return [];
