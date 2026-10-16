@@ -1,12 +1,19 @@
 [filter_local]
-# 可可影视 + ZIP0 合并直连（含子域）
-host-suffix, kekys.com, direct
-host-suffix, ybsdkl.cn, direct
-host-suffix, shkjbd.com, direct
-host-suffix, srnffc.cn, direct
-host-suffix, mjrlin.cn, direct
-host-suffix, kekedh.com, direct
-host-suffix, dsmovie2019.tv, direct
-host-suffix, ddushe.com, direct
-host-suffix, zip0.com, direct
+#全部分流（含子域）
+host-suffix, kekys.com, PROXY
+host-suffix, ybsdkl.cn, PROXY
+host-suffix, shkjbd.com, PROXY
+host-suffix, srnffc.cn, PROXY
+host-suffix, mjrlin.cn, PROXY
+host-suffix, kekedh.com, PROXY
+host-suffix, dsmovie2019.tv, PROXY
+host-suffix, ddushe.com, PROXY
+host-suffix, zip0.com, PROXY
 
+# Google DNS / DoH 也全部分流
+host, dns.google, PROXY
+host-suffix, dns.google, PROXY
+ip-cidr, 8.8.8.8/32, PROXY
+ip-cidr, 8.8.4.4/32, PROXY
+ip6-cidr, 2001:4860:4860::8888/128, PROXY
+ip6-cidr, 2001:4860:4860::8844/128, PROXY
