@@ -2,7 +2,7 @@
 @Name：播放源去广告-诊断(边删边通知)
 诊断用：始终弹通知。规则可用 catch-all(见下)
 [rewrite_local]
-^https?:// url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad_debug.js
+^https?://[^/]*fengbao\d*\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@a80015a/ZDH/Bfyqgg_ad_debug.js
 [mitm]
 hostname = fengbao13.com
 **************************************/
