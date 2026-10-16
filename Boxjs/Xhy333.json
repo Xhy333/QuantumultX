@@ -380,49 +380,57 @@
           }
         ]
       },{
-  "id": "Xhy333_Bfyqgg",
-  "name": "播放源去广告",
-  "author": "@Xhy333",
-  "descs_html": [
-    "<h4 align=\"center\">m3u8 播放列表去广告</h4>",
-    "<br />",
-    "<p>删除含关键词(默认 <font color='#FF0000'>adjump</font>)的广告分片，适用于 233动漫等多线路播放源</p>"
-  ],
-  "icons": [
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Forward.png",
-    "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Forward.png"
-  ],
-  "keys": [
-    "@Xhy333_Bfyqgg.enabled",
-    "@Xhy333_Bfyqgg.keywords",
-    "@Xhy333_Bfyqgg.api"
-  ],
-  "settings": [
-    {
-      "id": "@Xhy333_Bfyqgg.enabled",
-      "name": "启用去广告",
-      "val": true,
-      "type": "boolean",
-      "desc": "总开关；关闭后不改动任何播放列表"
-    },
-    {
-      "id": "@Xhy333_Bfyqgg.keywords",
-      "name": "广告关键词(逗号分隔)",
-      "val": "adjump",
-      "type": "text",
-      "desc": "分片URL含这些词即视为广告并删除，例如 adjump,ad"
-    },
-    {
-      "id": "@Xhy333_Bfyqgg.api",
-      "name": "接口兜底",
-      "val": true,
-      "type": "boolean",
-      "desc": "对常见片源域名再用广告区间接口补删(需联网)"
-    }
-  ],
-  "repo": "https://github.com/Xhy333/QuantumultX",
-  "script": "https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js"
-},{
+        "id": "Xhy333_Bfyqgg",
+        "name": "播放源去广告",
+        "author": "@Xhy333",
+        "descs_html": [
+        "<h4 align=\"center\">m3u8 播放列表去广告</h4>",
+        "<br />",
+        "<p>删除含关键词(默认 <font color='#FF0000'>adjump</font>)的广告分片，适用于 233动漫等多线路播放源</p>"
+          ],
+        "icons": [
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Forward.png",
+          "https://raw.githubusercontent.com/Xhy333/QuantumultX/main/icon/Forward.png"
+         ],
+        "keys": [
+            "@Xhy333_Bfyqgg.enabled",
+            "@Xhy333_Bfyqgg.keywords",
+            "@Xhy333_Bfyqgg.api",
+            "@Xhy333_Bfyqgg.notify"
+         ],
+        "settings": [
+          {
+        "id": "@Xhy333_Bfyqgg.enabled",
+        "name": "启用去广告",
+        "val": true,
+        "type": "boolean",
+        "desc": "总开关；关闭后不改动任何播放列表"
+          },
+          {
+        "id": "@Xhy333_Bfyqgg.keywords",
+        "name": "广告关键词(逗号分隔)",
+        "val": "adjump",
+        "type": "text",
+        "desc": "分片URL含这些词即视为广告并删除，例如 adjump,ad"
+          },
+          {
+        "id": "@Xhy333_Bfyqgg.api",
+        "name": "接口兜底",
+        "val": true,
+        "type": "boolean",
+        "desc": "对常见片源域名再用广告区间接口补删(需联网)"
+          },
+          {
+        "id": "@Xhy333_Bfyqgg.notify",
+        "name": "通知",
+        "val": false,
+        "type": "boolean",
+        "desc": "开启后，真正删除广告分片时弹通知(默认关)"
+          }
+        ],
+        "repo": "https://github.com/Xhy333/QuantumultX",
+        "script": "https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js"
+      },{
         "id": "Xhy333_Sfsy",
         "name": "顺风速运",
         "author": "@Xhy333",
