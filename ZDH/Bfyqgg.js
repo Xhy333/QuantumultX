@@ -10,7 +10,7 @@ BoxJS 设置项：
 [rewrite_local]
 ^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js
 [mitm]
-hostname = *
+hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com, fengbao13.com
 **************************************/
 var KK_AD_API = "https://m3u8.web.sgzm.net:2087/ad_positions";
 var KK_AD_JSV = "stable-client-v3-normal-segment-whitelist-v2-blocks";
