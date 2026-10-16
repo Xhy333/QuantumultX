@@ -8,7 +8,7 @@ BoxJS 设置项：
   @Xhy333_Bfyqgg.notify    通知(默认关, 只在真删广告时弹)
 搭配(通用规则)：
 [rewrite_local]
-^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg1.js
+^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js
 [mitm]
 hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com, fengbao13.com
 **************************************/
