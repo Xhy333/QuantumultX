@@ -1,4 +1,4 @@
-/**************************************
+﻿/**************************************
 @Name：播放源去广告
 @Author：Xhy123
 @Date：2026-10-17 03:58:31
@@ -10,9 +10,9 @@ QuantumultX
 
 
 [rewrite_local]
-^https?://[^/]+\.dytt-(cinema|hot)\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
-^https?://[^/]+\.rrcdnbf\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
-^https?://[^/]+\.lz-cdn\d+\.com/.*\.m3u8 url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/Bfyqgg_ad.js
+^https?://[^/]+\.dytt-(cinema|hot)\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
+^https?://[^/]+\.rrcdnbf\d+\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
+^https?://[^/]+\.lz-cdn\d+\.com/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg_ad.js
 
 [mitm]
 hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.lz-cdn8.com
@@ -55,6 +55,8 @@ hostname = *.dytt-cinema.com, *.dytt-hot.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.
 
 var KK_AD_API = "https://m3u8.web.sgzm.net:2087/ad_positions";
 var KK_AD_JSV = "stable-client-v3-normal-segment-whitelist-v2-blocks";
+var KK_AD_DEBUG = false; // 改为 true 可收到触发/结果通知
+function kkNotify(t, s, b) { try { if (KK_AD_DEBUG && typeof $notify === "function") $notify(t, s, b); } catch (e) {} }
 
 function kkCountSeg(lines) {
   var n = 0;
@@ -86,19 +88,21 @@ function kkFilter(lines, ranges) {
     var url = ($request && $request.url) || "";
     var body = ($response && $response.body) || "";
     if (!body || body.indexOf("#EXTM3U") < 0) { $done({}); return; }
-    if (body.indexOf("#EXTINF") < 0) { $done({}); return; } // 主列表不改
+    if (body.indexOf("#EXTINF") < 0) { kkNotify("233dm去广告", "主列表放行", url.slice(0, 80)); $done({}); return; } // 主列表不改
     if (url.indexOf(".m3u8") < 0) { $done({}); return; }
     var lines = body.split(/\r?\n/);
     var total = kkCountSeg(lines);
     if (total < 2) { $done({}); return; }
+    kkNotify("233dm去广告", "命中m3u8", url.slice(0, 80) + "\n段数=" + total);
     var api = KK_AD_API + "?url=" + encodeURIComponent(url) + "&seen_total=" + total + "&lenfast=1&jsv=" + KK_AD_JSV + "&_ts=" + Date.now();
     $httpClient.get({ url: api, headers: { "User-Agent": "Mozilla/5.0" } }, function (err, resp, data) {
       if (err || !data) { $done({}); return; }
       var ranges = [];
       try { var j = JSON.parse(data); ranges = (j.ad_ranges || []).concat(j.ad_blocks || []); } catch (e) {}
-      if (!ranges.length) { $done({}); return; }
+      if (!ranges.length) { kkNotify("233dm去广告", "无广告区间", "段数=" + total); $done({}); return; }
       var out = kkFilter(lines, ranges);
       console.log("[233dm] 去广告 " + total + " -> " + kkCountSeg(out) + " 段 " + JSON.stringify(ranges));
+      kkNotify("233dm去广告", "已删除", total + " -> " + kkCountSeg(out) + " " + JSON.stringify(ranges));
       $done({ body: out.join("\n") });
     });
   } catch (e) {
