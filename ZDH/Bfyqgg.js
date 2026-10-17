@@ -61,7 +61,7 @@ function kkApiTry(url, total, lines, pat, attempt){
     if(!ranges.length && attempt < 3){ setTimeout(function(){ kkApiTry(url,total,lines,pat,attempt+1); }, 900); return; }
     var o2=kkFilter(lines,ranges,pat);
     if(kkCountSeg(o2) < total){ kkLog("[Bfyqgg] 去广告(接口) "+total+"->"+kkCountSeg(o2)+" "+JSON.stringify(ranges)); kkNote("已删广告(接口) "+total+"->"+kkCountSeg(o2), url.slice(0,80)); $done({body:o2.join("\n")}); }
-    else { kkLog("[Bfyqgg] 接口无区间 段="+total+" "+url.slice(0,80)); $done({}); }
+    else { kkLog("[Bfyqgg] 接口无区间 段="+total+" "+url.slice(0,80)); kkNote("接口无区间","段="+total+" "+url.slice(0,60)); $done({}); }
   }, function(){
     if(attempt < 2){ setTimeout(function(){ kkApiTry(url,total,lines,pat,attempt+1); }, 900); }
     else { $done({}); }
