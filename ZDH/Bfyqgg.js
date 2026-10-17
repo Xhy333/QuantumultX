@@ -35,22 +35,19 @@ function kkNote(sub,msg){ try{ if(kkBool(K_NOTIFY,false) && typeof $notify==="fu
 
 function kkCountSeg(l){ var n=0; for(var i=0;i<l.length;i++){ if(l[i].charAt(0)!=="#"&&l[i].length) n++; } return n; }
 function kkCollapse(l){ var o=[]; for(var i=0;i<l.length;i++){ var x=l[i]; if(x.indexOf("#EXT-X-DISCONTINUITY")===0&&o.length&&o[o.length-1].indexOf("#EXT-X-DISCONTINUITY")===0) continue; o.push(x); } return o; }
-function kkFilter(l,r,pat){
-  var ad={},i,k;
-  for(i=0;i<r.length;i++){ var s=r[i].start,e=r[i].end; if(typeof s!=="number"||typeof e!=="number") continue; for(k=s;k<e;k++) ad[k]=true; }
-  var out=[], pending=[], idx=0, adMode=false;
-  for(i=0;i<l.length;i++){
-    var ln=l[i];
-    if(ln.charAt(0)==="#"){ pending.push(ln); continue; }
-    var pj=pending.join("\n");
-    if(KK_AD_MARK.test(pj)) adMode=true;
-    else if(adMode && /#EXT-X-DISCONTINUITY/.test(pj)) adMode=false; // 广告块结束
-    var isAd = ad[idx] || pat.test(ln) || adMode;
-    if(isAd){ pending=[]; }
-    else { for(k=0;k<pending.length;k++) out.push(pending[k]); out.push(ln); pending=[]; }
-    idx++;
-  }
-  for(k=0;k<pending.length;k++) out.push(pending[k]);
+function kkFilter(l,ranges,pat){
+  var pend=[],recs=[],idx=-1,i,k,t;
+  for(i=0;i<l.length;i++){ var ln=l[i]; if(!ln) continue; if(ln.charAt(0)==="#"){ pend.push(ln); continue; } idx++; var disc=false,mark=false; for(t=0;t<pend.length;t++){ if(pend[t].indexOf("#EXT-X-DISCONTINUITY")===0) disc=true; if(typeof KK_AD_MARK!=="undefined" && KK_AD_MARK.test(pend[t])) mark=true; } recs.push({i:idx,disc:disc,mark:mark,u:ln}); pend=[]; }
+  var N=recs.length, bid=new Array(N), cur=-1;
+  for(k=0;k<N;k++){ if(k===0||recs[k].disc) cur++; bid[k]=cur; }
+  var bsize={}; for(k=0;k<N;k++) bsize[bid[k]]=(bsize[bid[k]]||0)+1;
+  var ad=new Array(N); for(k=0;k<N;k++) ad[k]=false;
+  for(var q=0;q<ranges.length;q++){ var s=ranges[q].start,e=ranges[q].end; if(typeof s!=="number"||typeof e!=="number") continue; var bl={}; for(k=s;k<e&&k<N;k++) bl[bid[k]]=true; for(var b in bl){ if(bsize[b]<=14){ for(k=0;k<N;k++) if(bid[k]==b) ad[k]=true; } } for(k=s;k<e&&k<N;k++) ad[k]=true; }
+  var mb={}; for(k=0;k<N;k++) if(recs[k].mark) mb[bid[k]]=true; for(var b2 in mb){ if(bsize[b2]<=30){ for(k=0;k<N;k++) if(bid[k]==b2) ad[k]=true; } }
+  for(k=0;k<N;k++) if(pat.test(recs[k].u)) ad[k]=true;
+  var out=[],pending2=[],si=0;
+  for(i=0;i<l.length;i++){ var ln2=l[i]; if(!ln2) continue; if(ln2.charAt(0)==="#"){ pending2.push(ln2); continue; } if(ad[si]){ pending2=[]; } else { for(t=0;t<pending2.length;t++) out.push(pending2[t]); out.push(ln2); pending2=[]; } si++; }
+  for(t=0;t<pending2.length;t++) out.push(pending2[t]);
   return kkCollapse(out);
 }
 
