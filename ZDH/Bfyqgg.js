@@ -12,7 +12,8 @@ BoxJS：
   @Xhy333_Bfyqgg.notify    通知(默认关)
 规则：
 [rewrite_local]
-^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@main/ZDH/Bfyqgg.js
+^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@b13d0ba/ZDH/Bfyqgg.js
+
 [mitm]
 hostname = *
 **************************************/
