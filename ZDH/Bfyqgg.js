@@ -12,7 +12,7 @@ BoxJS：
   @Xhy333_Bfyqgg.notify    通知(默认关)
 规则：
 [rewrite_local]
-^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@b13d0ba/ZDH/Bfyqgg.js
+^https?://[^/]+/.*\.m3u8 url script-response-body https://cdn.jsdelivr.net/gh/Xhy333/QuantumultX@18ee6c6/ZDH/Bfyqgg.js
 
 [mitm]
 hostname = *.dytt-cinema.com, *.dytt-hot.com, *.dytt-tvs.com, *.lz-cdn8.com, *.cdnlz21.com, *.rrcdnbf1.com, *.rrcdnbf2.com, *.rrcdnbf6.com, *.ddbbffcdn.com, fengbao13.com
