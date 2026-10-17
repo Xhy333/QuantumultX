@@ -78,7 +78,7 @@ function kkApiTry(url, total, lines, pat, attempt){
     var lines=body.split(/\r?\n/); var total=kkCountSeg(lines);
     var out=kkFilter(lines,[],pat);
     if(kkCountSeg(out)<total){ kkLog("[Bfyqgg] 去广告 "+total+"->"+kkCountSeg(out)); kkNote("已删广告 "+total+"->"+kkCountSeg(out), url.slice(0,80)); $done({body:out.join("\n")}); return; }
-    if(kkBool(K_API,true) && KK_AD_API_HOSTS.test(url) && typeof $task!=="undefined" && $task && typeof $task.fetch==="function"){
+    if(kkBool(K_API,true) && typeof $task!=="undefined" && $task && typeof $task.fetch==="function"){
       kkApiTry(url, total, lines, pat, 0);
       return;
     }
