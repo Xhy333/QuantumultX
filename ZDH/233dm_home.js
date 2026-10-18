@@ -466,9 +466,9 @@ async function loadResource(params) {
   params = params || {};
   if (params.multiSource === "disabled") return [];
   var _link = String(params.link || "");
-  var _hash = "", _linkTitle = "";
-  if (_link.indexOf("|") >= 0) { _hash = _link.split("|")[0]; try { _linkTitle = decodeURIComponent(_link.split("|")[1]); } catch (e) { _linkTitle = _link.split("|")[1]; } }
-  else if (/^[a-f0-9]{24}$/i.test(_link)) { _hash = _link; }
+  var _hm = _link.match(/([a-f0-9]{24})/i); if (!_hm && params.id != null) _hm = String(params.id).match(/([a-f0-9]{24})/i);
+  var _hash = _hm ? _hm[1] : "";
+  var _linkTitle = ""; var _bar = _link.indexOf("|"); if (_bar >= 0) { try { _linkTitle = decodeURIComponent(_link.slice(_bar + 1)); } catch (e) { _linkTitle = _link.slice(_bar + 1); } }
   var seriesName = kkText(_linkTitle || params.seriesName || params.title || "");
   if (!_hash && !seriesName) return [];
 
@@ -609,17 +609,18 @@ async function search(params){
   try{ var base=await kkResolveBase(); var html=await kkGet(base+"/search/"+encodeURIComponent(kw)+"-------------.html"); return kkParseHtml(html); }catch(e){ return []; }
 }
 async function loadDetail(link){
-  var s=String(link||""), hash="", title=""; var bar=s.indexOf("|");
-  if(bar>=0){ hash=s.slice(0,bar); try{ title=decodeURIComponent(s.slice(bar+1)); }catch(e){ title=s.slice(bar+1); } }
-  else { hash=s; }
-  if(!hash) return null;
-  try{
-    var base=await kkResolveBase(); var html=await kkGet(base+"/anime/"+hash+".html");
-    if(!title){ var mt=html.match(/<h1[^>]*>([^<]+)<\/h1>/i); if(mt) title=kkT(mt[1]); }
-    var maxN=0, re=/\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html/ig, m;
-    while((m=re.exec(html))){ var ep=Number(m[2]); if(ep>maxN) maxN=ep; }
-    var eps=[]; for(var e=1;e<=maxN;e++){ eps.push({ id: hash+"-"+e, type: "url", episode: e, title: "第"+e+"集" }); }
-    var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
-    return { id: hash, type: "url", title: title, posterPath: poster, description: "", link: link, mediaType: "tv", episodeItems: eps };
-  }catch(e){ return null; }
+  var s = String(link || ""), hash = "", title = "";
+  var hm = s.match(/([a-f0-9]{24})/i); if (hm) hash = hm[1];
+  var bar = s.indexOf("|"); if (bar >= 0) { try { title = decodeURIComponent(s.slice(bar + 1)); } catch (e) { title = s.slice(bar + 1); } }
+  if (!hash) return null;
+  try {
+    var base = await kkResolveBase();
+    var html = await kkGet(base + "/anime/" + hash + ".html");
+    if (!title) { var tm = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i); if (tm) title = kkT(tm[1]); if (!title) { var tt = html.match(/<title>([\s\S]*?)<\/title>/i); if (tt) title = kkT(tt[1]).replace(/[-_|].*$/, "").trim(); } }
+    var maxN = 0, re = /\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html/ig, m;
+    while ((m = re.exec(html))) { var ep = Number(m[2]); if (ep > maxN) maxN = ep; }
+    var eps = []; for (var e = 1; e <= maxN; e++) { eps.push({ id: hash + "-" + e, type: "url", episode: e, title: "第" + e + "集" }); }
+    var poster = ""; var mp = html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if (mp) poster = mp[1];
+    return { id: hash, type: "url", title: title, posterPath: poster, description: "", link: hash + "|" + encodeURIComponent(title), mediaType: "tv", episodeItems: eps };
+  } catch (e) { return null; }
 }
