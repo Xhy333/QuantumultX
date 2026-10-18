@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.1",
+  version: "1.3.2",
   requiredVersion: "0.0.1",
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
