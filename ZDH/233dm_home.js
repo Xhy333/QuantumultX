@@ -451,96 +451,36 @@ async function kkResolveJingpin(base, obj, dmid) {
 }
 
 // --- 主入口 ---
-async function loadResource(params) {
+async function loadResource(params){
   params = params || {};
-  if (params.multiSource === "disabled") return [];
   var seriesName = kkText(params.seriesName || params.title || "");
   if (!seriesName) return [];
-
-  var episode = Number(params.episode || params.ep || 1);
-  if (!isFinite(episode) || episode < 1 || Math.floor(episode) !== episode) episode = 1;
-  var maxLines = Number(params.maxLines);
-  if (!isFinite(maxLines) || maxLines < 1) maxLines = 6;
-  maxLines = Math.min(8, Math.floor(maxLines));
-  var doProbe = params.probe !== "disabled";
-
+  var ep = Number(params.episode || 1); if (!(ep >= 1)) ep = 1;
+  var maxLines = Number(params.maxLines); if (!(maxLines >= 1)) maxLines = 6; if (maxLines > 8) maxLines = 8;
   try {
     var base = await kkResolveBase();
-    await kkSession(base, false);
-
     var season = kkSeason(seriesName);
     var list = await kkSearch(base, seriesName);
-    var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
-      .filter(function (e) { return e.score > 0; })
-      .sort(function (a, b) { return b.score - a.score; });
-    if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
-    var best = scored[0].it;
-    if (!best || !best.hash) return [];
-
+    var scored = list.map(function(it){ return { it: it, score: kkScore(it.title, seriesName, season) }; })
+      .filter(function(e){ return e.score > 0; }).sort(function(a,b){ return b.score - a.score; });
+    if (!scored.length) return [];
+    var best = scored[0].it; if (!best || !best.hash) return [];
     var detail = await kkDetail(base, best.hash);
-    var sids = detail.sids.slice(0, Math.max(maxLines, 8));
-    if (!sids.length) return [];
-
-    var headers = { "User-Agent": MEDIA_UA, "Referer": base + "/" };
-    var title = best.title || seriesName;
-    var isMovie = /movie/i.test(String(params.type || params.mediaType || ""));
-    var epLabel = isMovie ? "正片" : ("第" + episode + "集");
-
-    var jingpinEnabled = params.jingpin === "enabled";
-    var jingpinHit = null;
-
-    var tasks = sids.map(async function (sid) {
-      try {
-        var obj = await kkLineInfo(base, best.hash, sid, episode);
-        if (!obj) return null;
-        if (String(obj.from) === "mp4") { if (!jingpinHit) jingpinHit = { sid: sid, obj: obj }; return null; }
-        if (obj.flag && obj.flag !== "play") return null;
-        if (Number(obj.trysee) > 0 || Number(obj.points) > 0) return null;
-        var raw = obj.url || obj.url_next || "";
-        if (!raw) return null;
-        var playUrl = kkDecodeUrl(raw);
-        if (!/^https?:\/\//i.test(playUrl)) return null;
-        var name = detail.names[sid] || kkText(obj.from) || ("线路" + sid);
-        var start = Date.now();
-        if (doProbe) {
-          var pr = await kkProbe(playUrl, headers);
-          if (!pr.ok) { console.log("[233dm] " + name + " 不可播(" + pr.reason + ")"); return null; }
-        }
-        return {
-          name: name + " · " + epLabel,
-          description: title + " " + epLabel + " · " + name + (obj.from ? " (" + kkText(obj.from) + ")" : ""),
-          url: playUrl,
-          customHeaders: headers,
-          headers: headers,
-          _latency: Date.now() - start
-        };
-      } catch (e) { return null; }
-    });
-
-    var lines = (await Promise.all(tasks)).filter(Boolean);
-
-    if (jingpinEnabled && jingpinHit) {
-      try {
-        var jpUrl = await kkResolveJingpin(base, jingpinHit.obj, detail.dmid);
-        if (jpUrl) {
-          var jpHeaders = { "User-Agent": MEDIA_UA };
-          var jpOk = true, jpT0 = Date.now();
-          if (doProbe) { var jpr = await kkProbe(jpUrl, jpHeaders); jpOk = jpr.ok; }
-          if (jpOk) { lines.push({ name: "精品 · " + epLabel, description: title + " " + epLabel + " · 精品 (外部解析)", url: jpUrl, customHeaders: jpHeaders, headers: jpHeaders, _latency: Date.now() - jpT0, _jing: true }); }
-          else { console.log("[233dm] 精品 不可播"); }
-        }
-      } catch (e) { console.log("[233dm] 精品线路失败: " + (e && e.message ? e.message : e)); }
+    var sids = (detail.sids || []).slice(0, Math.max(maxLines, 8));
+    var headers = { "User-Agent": UA };
+    var out = [];
+    for (var i = 0; i < sids.length && out.length < maxLines; i++) {
+      var sid = sids[i];
+      var obj = await kkLineInfo(base, best.hash, sid, ep);
+      if (!obj) continue;
+      if (Number(obj.trysee) > 0 || Number(obj.points) > 0) continue;
+      var u = kkDecodeUrl(obj.url || "");
+      if (!/^https?:\/\//i.test(u)) continue;
+      var nm = detail.names[sid] || kkText(obj.from) || ("线路" + sid);
+      out.push({ name: nm + " · 第" + ep + "集", description: seriesName + " 第" + ep + "集 · " + nm, url: u, headers: headers, customHeaders: headers });
     }
-
-    var seen = {};
-    var uniq = lines.filter(function (x) { if (!x || seen[x.url]) return false; seen[x.url] = true; return true; });
-    var direct = uniq.filter(function (x) { return !x._jing; }).sort(function (a, b) { return a._latency - b._latency; }).slice(0, maxLines);
-    var extra = uniq.filter(function (x) { return x._jing; });
-    return direct.concat(extra).map(function (x) { delete x._latency; delete x._jing; return x; });
-  } catch (e) {
-    console.log("[233dm] 失败: " + (e && e.message ? e.message : e));
-    return [];
-  }
+    return out;
+  } catch (e) { return []; }
 }
 
 // ================= 首页/分类/搜索/选集（内容侧） =================
