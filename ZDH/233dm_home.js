@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.4.4",
+  version: "1.4.5",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   globalParams: [
@@ -601,15 +601,22 @@ function kkT(v){ return String(v==null?"":v).replace(/<[^>]*>/g,"").replace(/&am
 function kkNum(h){ return parseInt(String(h||'').slice(0,13),16) || 1; }
 function kkLink(hash){ return (_s.base||BASE_DOMAINS[0])+"/anime/"+hash+".html"; }
 function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: kkNum(hash), type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: kkLink(hash) }; }
+function kkCardMeta(inner){
+  var list=[], re=/<b[^>]*>([\s\S]*?)<\/b>/ig, m;
+  while((m=re.exec(inner||""))){ var v=kkT(m[1]); if(v) list.push(v); }
+  if(!list.length) return "";
+  return list.length>1 ? list[0]+" · "+list[list.length-1] : list[0];
+}
 function kkParseHtml(html){
   var out=[], seen={};
-  var re=/<a\b[^>]*href="\/anime\/([a-f0-9]{24})\.html"[^>]*>/ig, m;
+  var re=/<a\b[^>]*href="\/anime\/([a-f0-9]{24})\.html"[^>]*>([\s\S]*?)<\/a>/ig, m;
   while((m=re.exec(html))){
-    var tag=m[0], hash=m[1], t=/title="([^"]*)"/i.exec(tag), p=/(?:data-original|data-src|src)="([^"]*)"/i.exec(tag);
-    var title=t?kkT(t[1]):"";
-    if(seen[hash]){ if(title && !seen[hash].title) seen[hash].title=title; if(p&&!seen[hash].posterPath) seen[hash].posterPath=p[1]; continue; }
+    var tag=m[0], hash=m[1], inner=m[2]||"";
+    var t=/title="([^"]*)"/i.exec(tag), p=/(?:data-original|data-src|src)="([^"]*)"/i.exec(tag)||/(?:data-original|data-src|src)="([^"]*)"/i.exec(inner);
+    var title=t?kkT(t[1]):"", meta=kkCardMeta(inner);
+    if(seen[hash]){ if(title && !seen[hash].title) seen[hash].title=title; if(p&&!seen[hash].posterPath) seen[hash].posterPath=p[1]; if(meta&&!seen[hash].description) seen[hash].description=meta; continue; }
     if(!title) continue;
-    var it=kkItem(hash,title,p?p[1]:"",""); seen[hash]=it; out.push(it);
+    var it=kkItem(hash,title,p?p[1]:"",meta); seen[hash]=it; out.push(it);
   }
   return out;
 }
@@ -655,9 +662,17 @@ async function loadDetail(link){
   try{
     var base=await kkResolveBase(); var html=await kkGet(base+"/anime/"+hash+".html");
     if(!title){ var mt=html.match(/<h1[^>]*>([^<]+)<\/h1>/i); if(mt) title=kkT(mt[1]); }
-    var maxN=0, re=/\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html/ig, m;
-    while((m=re.exec(html))){ var ep=Number(m[2]); if(ep>maxN) maxN=ep; }
-    var eps=[]; for(var e=1;e<=maxN;e++){ eps.push({ id: e, type: "url", episode: e, title: "第"+e+"集" }); }
+    var maxN=0, epSeen={}, eps=[], re=/<a\b[^>]*href="\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html"[^>]*>/ig, m;
+    while((m=re.exec(html))){
+      var ep=Number(m[2]); if(!(ep>0)) continue;
+      if(ep>maxN) maxN=ep;
+      if(epSeen[ep]) continue;
+      epSeen[ep]=1;
+      var tt=/title="([^"]*)"/i.exec(m[0]);
+      eps.push({ id: ep, type: "url", episode: ep, title: kkT(tt?tt[1]:("第"+ep+"集")) });
+    }
+    if(!eps.length){ for(var e=1;e<=maxN;e++){ eps.push({ id: e, type: "url", episode: e, title: "第"+e+"集" }); } }
+    eps.sort(function(a,b){ return a.episode-b.episode; });
     var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
     var infoLine = kkT((html.match(/类型：([\s\S]*?)<\/p>/i)||[])[1]||"");
     var st = kkT((html.match(/状态：(?:<span[^>]*>)?([^<]+)/)||[])[1]||"");
