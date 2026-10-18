@@ -5,8 +5,9 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.4.1",
+  version: "1.4.3",
   requiredVersion: "0.0.1",
+  detailCacheDuration: 60,
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
     { name: "maxLines", title: "最大线路数(1-8)", type: "input", value: "6" },
@@ -566,7 +567,8 @@ async function loadResource(params) {
 // ================= 首页/分类/搜索/选集（内容侧） =================
 function kkT(v){ return String(v==null?"":v).replace(/<[^>]*>/g,"").replace(/&amp;/g,"&").replace(/&nbsp;/g," ").replace(/&#39;/g,"'").replace(/&quot;/g,'"').trim(); }
 function kkNum(h){ return parseInt(String(h||'').slice(0,13),16) || 1; }
-function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: kkNum(hash), type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: hash+"|"+encodeURIComponent(kkT(title)) }; }
+function kkLink(hash){ return (_s.base||BASE_DOMAINS[0])+"/anime/"+hash+".html"; }
+function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: kkNum(hash), type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: kkLink(hash) }; }
 function kkParseHtml(html){
   var out=[], seen={};
   var re=/<a\b[^>]*href="\/anime\/([a-f0-9]{24})\.html"[^>]*>/ig, m;
@@ -612,7 +614,11 @@ async function search(params){
 async function loadDetail(link){
   var s=String(link||""), hash="", title=""; var bar=s.indexOf("|");
   if(bar>=0){ hash=s.slice(0,bar); try{ title=decodeURIComponent(s.slice(bar+1)); }catch(e){ title=s.slice(bar+1); } }
-  else { hash=s; }
+  else {
+    var mh=s.match(/\/anime\/([a-f0-9]{24})\.html/i);
+    if(mh) hash=mh[1];
+    else if(/^[a-f0-9]{24}$/i.test(s)) hash=s;
+  }
   if(!hash) return null;
   try{
     var base=await kkResolveBase(); var html=await kkGet(base+"/anime/"+hash+".html");
@@ -621,6 +627,14 @@ async function loadDetail(link){
     while((m=re.exec(html))){ var ep=Number(m[2]); if(ep>maxN) maxN=ep; }
     var eps=[]; for(var e=1;e<=maxN;e++){ eps.push({ id: e, type: "url", episode: e, title: "第"+e+"集" }); }
     var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
-    return { id: kkNum(hash), type: "url", title: title, posterPath: poster, description: "", link: link, mediaType: "tv", episodeItems: eps };
+    var infoLine = kkT((html.match(/类型：([\s\S]*?)<\/p>/i)||[])[1]||"");
+    var st = kkT((html.match(/状态：(?:<span[^>]*>)?([^<]+)/)||[])[1]||"");
+    var dirc = kkT((html.match(/导演：([\s\S]*?)<\/p>/i)||[])[1]||"");
+    var actr = kkT((html.match(/声优：([\s\S]*?)<\/p>/i)||[])[1]||"");
+    var upd  = kkT((html.match(/更新：([^<]+)/i)||[])[1]||"");
+    var intro = kkT((html.match(/class="detail-content"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"") || kkT((html.match(/class="detail-sketch"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"");
+    if(intro.length>260) intro=intro.slice(0,260)+"…";
+    var desc=[infoLine, st?("状态："+st):"", dirc?("导演："+dirc):"", actr?("声优："+actr):"", upd?("更新："+upd):"", intro?("简介："+intro):""].filter(Boolean).join("\n");
+    return { id: kkNum(hash), type: "url", title: title, posterPath: poster, description: desc, link: kkLink(hash), mediaType: "tv", episodeItems: eps };
   }catch(e){ return null; }
 }
