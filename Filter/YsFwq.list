@@ -1,8 +1,7 @@
 # >Emby服
 # 1. 强制 Emby 域名直连（防止被其他远程规则误代理）
-HOST-SUFFIX, suil.dpdns.org, DIRECT
-HOST, emby-cf.suil.dpdns.org, DIRECT
-HOST, emby-media.suil.dpdns.org, DIRECT
+HOST-SUFFIX, emby-cf.suil.dpdns.org, DIRECT
+
 
 
 
