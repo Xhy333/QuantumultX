@@ -1,8 +1,8 @@
 # >Emby服
 # 1. 强制 Emby 域名直连（防止被其他远程规则误代理）
-HOST-SUFFIX, suil.dpdns.org
-HOST-SUFFIX, emby-cf.suil.dpdns.org
-HOST-SUFFIX, emby-media.suil.dpdns.org
+HOST-SUFFIX, suil.dpdns.org, DIRECT
+HOST, emby-cf.suil.dpdns.org, DIRECT
+HOST, emby-media.suil.dpdns.org, DIRECT
 
 # 强制之前解析到的美国 IP 直连，并禁止 DNS 解析（解决卡顿核心）
 IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
@@ -15,6 +15,6 @@ IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
 #server = /115cdn.com/223.5.5.5
 
 # 2. 强制 115 网盘视频流直连
-HOST-SUFFIX, 115.com
-HOST-SUFFIX, 115cdn.com
+HOST-SUFFIX, 115.com, DIRECT
+HOST-SUFFIX, 115cdn.com, DIRECT
 
