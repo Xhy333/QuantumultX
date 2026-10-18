@@ -1,5 +1,13 @@
 # >Emby服
-ip-cidr, 152.70.110.194/32
-ip-cidr, 207.56.228.178/32
-ip-cidr, 216.144.234.247/32
-host, emby-cf.suil.dpdns.org
+# 1. 强制 Emby 域名直连（防止被其他远程规则误代理）
+HOST-SUFFIX, suil.dpdns.org,
+HOST-SUFFIX, emby-cf.suil.dpdns.org,
+HOST-SUFFIX, emby-media.suil.dpdns.org,
+
+# 2. 强制之前解析卡顿的IP 直连，并禁止 DNS 解析
+IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
+
+# 3. 强制 115 网盘视频流直连
+HOST-SUFFIX, 115.com,
+HOST-SUFFIX, 115cdn.com,
+
