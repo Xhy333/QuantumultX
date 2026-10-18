@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.5.0",
+  version: "1.5.1",
   requiredVersion: "0.0.1",
   detailCacheDuration: 60,
   globalParams: [
@@ -13,7 +13,8 @@ WidgetMetadata = {
     { name: "maxLines", title: "最大线路数(1-8)", type: "input", value: "6" },
     { name: "probe", title: "过滤不可播放线路", type: "enumeration", enumOptions: [ { title: "启用(较慢)", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
     { name: "jingpin", title: "精品线路(外部解析)", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
-    { name: "detailMode", title: "详情页模式", type: "enumeration", value: "tmdb", enumOptions: [ { title: "TMDB内置详情(兼容1.3.13)", value: "tmdb" }, { title: "233原生详情", value: "native" } ] }
+    { name: "detailMode", title: "详情页模式", type: "enumeration", value: "tmdb", enumOptions: [ { title: "TMDB内置详情(兼容1.3.13)", value: "tmdb" }, { title: "233原生详情", value: "native" } ] },
+    { name: "detailInfo", title: "预加载233详情简介", type: "enumeration", value: "enabled", enumOptions: [ { title: "启用(首次稍慢)", value: "enabled" }, { title: "禁用", value: "disabled" } ] }
   ],
   modules: [
     { id: "latest", title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, functionName: "loadLatest", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
@@ -665,11 +666,42 @@ async function kkTmdbBind(item, mediaType){
   try{ await Widget.storage.set(ck, out, 604800); }catch(e){}
   return out;
 }
-function kkMarkedItem(it,bind){
+function kkParseDetailHtml(html){
+  var title="", mt=html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i); if(mt) title=kkT(mt[1]);
+  var infoLine = kkT((html.match(/类型：([\s\S]*?)<\/p>/i)||[])[1]||"");
+  var st = kkT((html.match(/状态：(?:<span[^>]*>)?([^<]+)/)||[])[1]||"");
+  var dirc = kkT((html.match(/导演：([\s\S]*?)<\/p>/i)||[])[1]||"");
+  var actr = kkT((html.match(/声优：([\s\S]*?)<\/p>/i)||[])[1]||"");
+  var upd  = kkT((html.match(/更新：([^<]+)/i)||[])[1]||"");
+  var intro = kkT((html.match(/class="detail-content"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"") || kkT((html.match(/class="detail-sketch"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"");
+  if(intro.length>300) intro=intro.slice(0,300)+"…";
+  var desc=[infoLine, st?("状态："+st):"", dirc?("导演："+dirc):"", actr?("声优："+actr):"", upd?("更新："+upd):"", intro?("简介："+intro):""].filter(Boolean).join("\n");
+  var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
+  return { title: title, desc: desc, poster: poster };
+}
+var _kkInfoCache={};
+async function kkInfo(hash){
+  if(!hash) return null;
+  if(_kkInfoCache[hash]!==undefined) return _kkInfoCache[hash];
+  var ck="kk233.info.v1."+hash;
+  try{
+    var saved=await Widget.storage.get(ck);
+    if(saved){ var obj=typeof saved==="string"?JSON.parse(saved):saved; if(obj && obj.desc){ _kkInfoCache[hash]=obj; return obj; } }
+  }catch(e){}
+  try{
+    var base=await kkResolveBase();
+    var html=await kkGet(base+"/anime/"+hash+".html");
+    var info=kkParseDetailHtml(html);
+    if(info && info.desc){ _kkInfoCache[hash]=info; try{ await Widget.storage.set(ck, info, 604800); }catch(e){} return info; }
+  }catch(e){}
+  _kkInfoCache[hash]=null;
+  return null;
+}
+function kkMarkedItem(it,bind,info){
   var hash=String(it.link||"").replace(/^kk-/,"");
   return {
-    id: bind.id, type: "tmdb", mediaType: bind.mediaType, title: it.title,
-    posterPath: it.posterPath, coverUrl: it.coverUrl, description: it.description,
+    id: bind.id, type: "tmdb", mediaType: bind.mediaType, title: (info&&info.title)||it.title,
+    posterPath: (info&&info.poster)||it.posterPath, coverUrl: (info&&info.poster)||it.coverUrl, description: (info&&info.desc)||it.description,
     releaseDate: it.releaseDate,
     genreTitle: (it.description?it.description+" ":"")+"[KK h="+hash+"]"
   };
@@ -678,10 +710,19 @@ async function kkEnrich(items, mediaType, params){
   if(!items || !items.length) return items||[];
   if(String((params&&params.detailMode)||"tmdb")==="native") return items;
   var out=[], batch=6;
+  var infoEnabled=String((params&&params.detailInfo)||"enabled")!=="disabled";
   for(var i=0;i<items.length;i+=batch){
     var chunk=items.slice(i,i+batch);
-    var binds=await Promise.all(chunk.map(function(it){ return kkTmdbBind(it, mediaType); }));
-    for(var j=0;j<chunk.length;j++) out.push(binds[j] ? kkMarkedItem(chunk[j],binds[j]) : chunk[j]);
+    var prepared=await Promise.all(chunk.map(async function(it){
+      var bind=await kkTmdbBind(it, mediaType);
+      if(!bind) return { it: it };
+      var info=infoEnabled ? await kkInfo(String(it.link||"").replace(/^kk-/,"")) : null;
+      return { it: it, bind: bind, info: info };
+    }));
+    for(var j=0;j<prepared.length;j++){
+      var p=prepared[j];
+      out.push(p.bind ? kkMarkedItem(p.it,p.bind,p.info) : p.it);
+    }
   }
   return out;
 }
@@ -727,7 +768,8 @@ async function loadDetail(link){
   if(!hash) return null;
   try{
     var base=await kkResolveBase(); var html=await kkGet(base+"/anime/"+hash+".html");
-    if(!title){ var mt=html.match(/<h1[^>]*>([^<]+)<\/h1>/i); if(mt) title=kkT(mt[1]); }
+    var info=kkParseDetailHtml(html);
+    if(!title) title=info.title;
     var maxN=0, epSeen={}, eps=[], re=/<a\b[^>]*href="\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html"[^>]*>/ig, m;
     while((m=re.exec(html))){
       var ep=Number(m[2]); if(!(ep>0)) continue;
@@ -739,15 +781,7 @@ async function loadDetail(link){
     }
     if(!eps.length){ for(var e=1;e<=maxN;e++){ eps.push({ id: e, type: "url", episode: e, title: "第"+e+"集" }); } }
     eps.sort(function(a,b){ return a.episode-b.episode; });
-    var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
-    var infoLine = kkT((html.match(/类型：([\s\S]*?)<\/p>/i)||[])[1]||"");
-    var st = kkT((html.match(/状态：(?:<span[^>]*>)?([^<]+)/)||[])[1]||"");
-    var dirc = kkT((html.match(/导演：([\s\S]*?)<\/p>/i)||[])[1]||"");
-    var actr = kkT((html.match(/声优：([\s\S]*?)<\/p>/i)||[])[1]||"");
-    var upd  = kkT((html.match(/更新：([^<]+)/i)||[])[1]||"");
-    var intro = kkT((html.match(/class="detail-content"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"") || kkT((html.match(/class="detail-sketch"[^>]*>([\s\S]*?)<\/span>/i)||[])[1]||"");
-    if(intro.length>260) intro=intro.slice(0,260)+"…";
-    var desc=[infoLine, st?("状态："+st):"", dirc?("导演："+dirc):"", actr?("声优："+actr):"", upd?("更新："+upd):"", intro?("简介："+intro):""].filter(Boolean).join("\n");
+    var poster=info.poster, desc=info.desc, infoLine=(desc.split("\n")[0]||"");
     var mediaType = (/剧场版|电影/.test(infoLine) || eps.length<=1) ? "movie" : "tv";
     return { id: kkNum(hash), type: "url", title: title, posterPath: poster, coverUrl: poster, backdropPath: poster, description: desc, link: kkLink(hash), mediaType: mediaType, episodeItems: eps };
   }catch(e){ return null; }
