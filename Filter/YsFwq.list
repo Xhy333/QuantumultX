@@ -4,10 +4,15 @@ HOST-SUFFIX, suil.dpdns.org
 HOST-SUFFIX, emby-cf.suil.dpdns.org
 HOST-SUFFIX, emby-media.suil.dpdns.org
 
-# 2. 强制之前解析卡顿的IP 直连，并禁止 DNS 解析
-IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
+IP-CIDR, 152.70.110.194/32
+# 这里可能原本有你其他的 dns 或 doh-server 配置，保留它们
+# 加入你需要的精准解析规则
+server = /emby-cf.suil.dpdns.org/223.5.5.5
+server = /emby-media.suil.dpdns.org/223.5.5.5
+server = /115.com/223.5.5.5
+server = /115cdn.com/223.5.5.5
 
-# 3. 强制 115 网盘视频流直连
+# 2. 强制 115 网盘视频流直连
 HOST-SUFFIX, 115.com
 HOST-SUFFIX, 115cdn.com
 
