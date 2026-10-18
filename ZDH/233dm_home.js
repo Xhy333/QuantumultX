@@ -2,11 +2,17 @@
 WidgetMetadata = {
   id: "https://cn.233dm.com",
   title: "233动漫",
-  description: "233动漫 最新/分类/选集 + 播放源(天堂/暴风/量子 + 精品/去广告)",
+  description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.2.1",
+  version: "1.3.0",
   requiredVersion: "0.0.1",
+  globalParams: [
+    { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
+    { name: "maxLines", title: "最大线路数(1-8)", type: "input", value: "6" },
+    { name: "probe", title: "过滤不可播放线路", type: "enumeration", enumOptions: [ { title: "启用(较慢)", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
+    { name: "jingpin", title: "精品线路(外部解析)", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] }
+  ],
   modules: [
     { title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, functionName: "loadLatest", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
     { title: "日漫", description: "日漫", requiresWebView: false, functionName: "loadRiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
@@ -16,8 +22,13 @@ WidgetMetadata = {
     { title: "特摄", description: "特摄", requiresWebView: false, functionName: "loadTeji", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
     { title: "美漫", description: "美漫", requiresWebView: false, functionName: "loadMeiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
     { id: "loadResource", title: "加载资源", description: "233动漫 多线路播放源", functionName: "loadResource", type: "stream", cacheDuration: 0, params: [] }
-  ]
-};
+  ],
+  search: {
+    title: "搜索233动漫",
+    functionName: "search",
+    params: [{ name: "keyword", title: "关键词", type: "input" }, { name: "page", title: "页码", type: "page" }]
+  }
+};;
 const BASE_DOMAINS = ["https://cn.233dm.com", "https://www.233dm.com", "https://233dm.com"];
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
 const MEDIA_UA = "AppleCoreMedia/1.0.0.21F90 (iPhone; U; CPU OS 17_5 like Mac OS X; zh_cn)";
@@ -451,36 +462,96 @@ async function kkResolveJingpin(base, obj, dmid) {
 }
 
 // --- 主入口 ---
-async function loadResource(params){
+async function loadResource(params) {
   params = params || {};
+  if (params.multiSource === "disabled") return [];
   var seriesName = kkText(params.seriesName || params.title || "");
   if (!seriesName) return [];
-  var ep = Number(params.episode || 1); if (!(ep >= 1)) ep = 1;
-  var maxLines = Number(params.maxLines); if (!(maxLines >= 1)) maxLines = 6; if (maxLines > 8) maxLines = 8;
+
+  var episode = Number(params.episode || params.ep || 1);
+  if (!isFinite(episode) || episode < 1 || Math.floor(episode) !== episode) episode = 1;
+  var maxLines = Number(params.maxLines);
+  if (!isFinite(maxLines) || maxLines < 1) maxLines = 6;
+  maxLines = Math.min(8, Math.floor(maxLines));
+  var doProbe = params.probe !== "disabled";
+
   try {
     var base = await kkResolveBase();
+    await kkSession(base, false);
+
     var season = kkSeason(seriesName);
     var list = await kkSearch(base, seriesName);
-    var scored = list.map(function(it){ return { it: it, score: kkScore(it.title, seriesName, season) }; })
-      .filter(function(e){ return e.score > 0; }).sort(function(a,b){ return b.score - a.score; });
-    if (!scored.length) return [];
-    var best = scored[0].it; if (!best || !best.hash) return [];
+    var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
+      .filter(function (e) { return e.score > 0; })
+      .sort(function (a, b) { return b.score - a.score; });
+    if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
+    var best = scored[0].it;
+    if (!best || !best.hash) return [];
+
     var detail = await kkDetail(base, best.hash);
-    var sids = (detail.sids || []).slice(0, Math.max(maxLines, 8));
-    var headers = { "User-Agent": UA };
-    var out = [];
-    for (var i = 0; i < sids.length && out.length < maxLines; i++) {
-      var sid = sids[i];
-      var obj = await kkLineInfo(base, best.hash, sid, ep);
-      if (!obj) continue;
-      if (Number(obj.trysee) > 0 || Number(obj.points) > 0) continue;
-      var u = kkDecodeUrl(obj.url || "");
-      if (!/^https?:\/\//i.test(u)) continue;
-      var nm = detail.names[sid] || kkText(obj.from) || ("线路" + sid);
-      out.push({ name: nm + " · 第" + ep + "集", description: seriesName + " 第" + ep + "集 · " + nm, url: u, headers: headers, customHeaders: headers });
+    var sids = detail.sids.slice(0, Math.max(maxLines, 8));
+    if (!sids.length) return [];
+
+    var headers = { "User-Agent": MEDIA_UA, "Referer": base + "/" };
+    var title = best.title || seriesName;
+    var isMovie = /movie/i.test(String(params.type || params.mediaType || ""));
+    var epLabel = isMovie ? "正片" : ("第" + episode + "集");
+
+    var jingpinEnabled = params.jingpin === "enabled";
+    var jingpinHit = null;
+
+    var tasks = sids.map(async function (sid) {
+      try {
+        var obj = await kkLineInfo(base, best.hash, sid, episode);
+        if (!obj) return null;
+        if (String(obj.from) === "mp4") { if (!jingpinHit) jingpinHit = { sid: sid, obj: obj }; return null; }
+        if (obj.flag && obj.flag !== "play") return null;
+        if (Number(obj.trysee) > 0 || Number(obj.points) > 0) return null;
+        var raw = obj.url || obj.url_next || "";
+        if (!raw) return null;
+        var playUrl = kkDecodeUrl(raw);
+        if (!/^https?:\/\//i.test(playUrl)) return null;
+        var name = detail.names[sid] || kkText(obj.from) || ("线路" + sid);
+        var start = Date.now();
+        if (doProbe) {
+          var pr = await kkProbe(playUrl, headers);
+          if (!pr.ok) { console.log("[233dm] " + name + " 不可播(" + pr.reason + ")"); return null; }
+        }
+        return {
+          name: name + " · " + epLabel,
+          description: title + " " + epLabel + " · " + name + (obj.from ? " (" + kkText(obj.from) + ")" : ""),
+          url: playUrl,
+          customHeaders: headers,
+          headers: headers,
+          _latency: Date.now() - start
+        };
+      } catch (e) { return null; }
+    });
+
+    var lines = (await Promise.all(tasks)).filter(Boolean);
+
+    if (jingpinEnabled && jingpinHit) {
+      try {
+        var jpUrl = await kkResolveJingpin(base, jingpinHit.obj, detail.dmid);
+        if (jpUrl) {
+          var jpHeaders = { "User-Agent": MEDIA_UA };
+          var jpOk = true, jpT0 = Date.now();
+          if (doProbe) { var jpr = await kkProbe(jpUrl, jpHeaders); jpOk = jpr.ok; }
+          if (jpOk) { lines.push({ name: "精品 · " + epLabel, description: title + " " + epLabel + " · 精品 (外部解析)", url: jpUrl, customHeaders: jpHeaders, headers: jpHeaders, _latency: Date.now() - jpT0, _jing: true }); }
+          else { console.log("[233dm] 精品 不可播"); }
+        }
+      } catch (e) { console.log("[233dm] 精品线路失败: " + (e && e.message ? e.message : e)); }
     }
-    return out;
-  } catch (e) { return []; }
+
+    var seen = {};
+    var uniq = lines.filter(function (x) { if (!x || seen[x.url]) return false; seen[x.url] = true; return true; });
+    var direct = uniq.filter(function (x) { return !x._jing; }).sort(function (a, b) { return a._latency - b._latency; }).slice(0, maxLines);
+    var extra = uniq.filter(function (x) { return x._jing; });
+    return direct.concat(extra).map(function (x) { delete x._latency; delete x._jing; return x; });
+  } catch (e) {
+    console.log("[233dm] 失败: " + (e && e.message ? e.message : e));
+    return [];
+  }
 }
 
 // ================= 首页/分类/搜索/选集（内容侧） =================
@@ -505,8 +576,12 @@ function kkParseAjax(txt){
   return out;
 }
 async function loadLatest(params){
-  params=params||{}; var page=Number(params.page||1); if(!(page>=1)) page=1;
-  try{ var base=await kkResolveBase(); var txt=await kkGet(base+"/index.php/ajax/data?mid=1&page="+page+"&limit=24&by=time", null, { "X-Requested-With": "XMLHttpRequest" }); return kkParseAjax(txt); }catch(e){ return []; }
+  params = params || {}; var page = Number(params.page || 1); if (!(page >= 1)) page = 1;
+  var base = await kkResolveBase();
+  if (page <= 1) {
+    try { var html = await kkGet(base + "/"); var items = kkParseHtml(html); if (items.length) return items; } catch (e) {}
+  }
+  try { var txt = await kkGet(base + "/index.php/ajax/data?mid=1&page=" + page + "&limit=24&by=time", null, { "X-Requested-With": "XMLHttpRequest" }); return kkParseAjax(txt); } catch (e) { return []; }
 }
 async function kkCategory(params, tid){
   params=params||{}; var page=Number(params.page||1); if(!(page>=1)) page=1; if(!tid) return [];
