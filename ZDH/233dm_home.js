@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.2",
+  version: "1.3.2d",
   requiredVersion: "0.0.1",
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
@@ -462,7 +462,7 @@ async function kkResolveJingpin(base, obj, dmid) {
 }
 
 // --- 主入口 ---
-async function loadResource(params) {
+async function _loadResourceCore(params) {
   params = params || {};
   if (params.multiSource === "disabled") return [];
   var _link = String(params.link || "");
@@ -621,6 +621,12 @@ async function loadDetail(link){
     while ((m = re.exec(html))) { var ep = Number(m[2]); if (ep > maxN) maxN = ep; }
     var eps = []; for (var e = 1; e <= maxN; e++) { eps.push({ id: hash + "-" + e, type: "url", episode: e, title: "第" + e + "集" }); }
     var poster = ""; var mp = html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if (mp) poster = mp[1];
-    return { id: hash, type: "url", title: title, posterPath: poster, description: "", link: hash + "|" + encodeURIComponent(title), mediaType: "tv", episodeItems: eps };
+    var _desc = (maxN > 0) ? ("共" + maxN + "集") : ("解析0集 link=" + s.slice(0,40) + " hl=" + html.length + ((/系统安全验证/.test(html)) ? " [验证页]" : ""));
+    return { id: hash, type: "url", title: title, posterPath: poster, description: _desc, link: hash + "|" + encodeURIComponent(title), mediaType: "tv", episodeItems: eps };
   } catch (e) { return null; }
+}
+async function loadResource(params){
+  try { var r = await _loadResourceCore(params || {}); if (r && r.length) return r; } catch (e) {}
+  var d = { id: (params && params.id) || "", link: (params && params.link) || "", episode: (params && params.episode) || "", type: (params && params.type) || "", seriesName: (params && params.seriesName) || "", title: (params && params.title) || "", mediaType: (params && params.mediaType) || "" };
+  return [{ name: "调试(无数据)", description: "params=" + JSON.stringify(d).slice(0, 230), url: "https://cn.233dm.com/dbg.m3u8", headers: { "User-Agent": "x" }, customHeaders: { "User-Agent": "x" } }];
 }
