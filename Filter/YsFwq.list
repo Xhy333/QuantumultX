@@ -4,8 +4,7 @@ HOST-SUFFIX, suil.dpdns.org, DIRECT
 HOST, emby-cf.suil.dpdns.org, DIRECT
 HOST, emby-media.suil.dpdns.org, DIRECT
 
-# 强制之前解析到的美国 IP 直连，并禁止 DNS 解析（解决卡顿核心）
-IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
+
 
 # 这里可能原本有你其他的 dns 或 doh-server 配置，保留它们
 # 加入你需要的精准解析规则
