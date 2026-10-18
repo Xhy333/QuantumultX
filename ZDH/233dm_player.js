@@ -7,7 +7,7 @@ WidgetMetadata = {
   description: "从233动漫搜索正片、按集取流，自动刷新匿名会话与动态域名，过滤不可播放线路。仅使用无需登录会员及加速权限的片源。",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.1",
+  version: "1.3.2",
   requiredVersion: "0.0.1",
   globalParams: [
     {
@@ -525,7 +525,12 @@ async function loadResource(params) {
   params = params || {};
   if (params.multiSource === "disabled") return [];
   var seriesName = kkText(params.seriesName || params.title || "");
-  if (!seriesName) return [];
+  var lockHash = "";
+  var _link = String(params.link || "");
+  if (/^[a-f0-9]{24}$/i.test(_link)) lockHash = _link;
+  else if (/^kk-([a-f0-9]{24})$/i.test(_link)) lockHash = _link.slice(3);
+  if (!lockHash) { var _mk = String(params.genreTitle || "").match(/\[KK\s+h=([a-f0-9]{24})\]/i); if (_mk) lockHash = _mk[1]; }
+  if (!lockHash && !seriesName) return [];
 
   var episode = Number(params.episode || params.ep || 1);
   if (!isFinite(episode) || episode < 1 || Math.floor(episode) !== episode) episode = 1;
@@ -538,13 +543,16 @@ async function loadResource(params) {
     var base = await kkResolveBase();
     await kkSession(base, false);
 
-    var season = kkSeason(seriesName);
-    var list = await kkSearch(base, seriesName);
-    var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
-      .filter(function (e) { return e.score > 0; })
-      .sort(function (a, b) { return b.score - a.score; });
-    if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
-    var best = scored[0].it;
+    var best = lockHash ? { hash: lockHash, title: seriesName } : null;
+    if (!best) {
+      var season = kkSeason(seriesName);
+      var list = await kkSearch(base, seriesName);
+      var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
+        .filter(function (e) { return e.score > 0; })
+        .sort(function (a, b) { return b.score - a.score; });
+      if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
+      best = scored[0].it;
+    }
     if (!best || !best.hash) return [];
 
     var detail = await kkDetail(base, best.hash);
