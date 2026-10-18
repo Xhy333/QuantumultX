@@ -7,7 +7,7 @@ WidgetMetadata = {
   description: "从233动漫搜索正片、按集取流，自动刷新匿名会话与动态域名，过滤不可播放线路。仅使用无需登录会员及加速权限的片源。",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.0",
+  version: "1.3.1",
   requiredVersion: "0.0.1",
   globalParams: [
     {
@@ -64,6 +64,7 @@ const CHINESE_NUM = { "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5
 
 var _s = {
   base: null,
+  cookie: "",
   verified: {},
   searchCache: {},
   detailCache: {},
@@ -95,6 +96,21 @@ function kkHeader(headers, name) {
     return true;
   });
   return out;
+}
+
+function kkSaveCookie(resp) {
+  var raw = kkHeader(resp && resp.headers, "set-cookie");
+  if (!raw) return;
+  var list = Array.isArray(raw) ? raw : String(raw).split(/,(?=[^;,]+=)/);
+  for (var i = 0; i < list.length; i++) {
+    var m = String(list[i]).match(/(?:^|;\s*)PHPSESSID=([^;]+)/i);
+    if (m) { _s.cookie = "PHPSESSID=" + m[1]; return; }
+  }
+}
+
+function kkCookieHeader(headers) {
+  if (_s.cookie) headers.Cookie = _s.cookie;
+  return headers;
 }
 
 function kkIsVerify(html) {
@@ -143,6 +159,7 @@ async function kkResolveBase() {
   for (var i = 0; i < candidates.length; i++) {
     try {
       var resp = await Widget.http.get(candidates[i] + "/", { headers: { "User-Agent": UA } });
+      kkSaveCookie(resp);
       var html = kkBody(resp);
       if (kkStatus(resp) === 200 && /233动漫/.test(html)) {
         _s.base = candidates[i];
@@ -157,17 +174,26 @@ async function kkResolveBase() {
   return _s.base;
 }
 
-async function kkSession(base, force) {
-  if (!force && _s.verified[base]) return;
+function kkVerifyType(url) {
+  return /\/search\//i.test(String(url || "")) ? "search" : "show";
+}
+
+async function kkSession(base, force, type) {
+  type = type || "search";
+  var key = base + "|" + type;
+  if (!force && _s.verified[key]) return;
   try {
-    await Widget.http.get(base + "/", { headers: { "User-Agent": UA } });
-    await Widget.http.post(base + "/index.php/ajax/verify_check?type=search", "i=" + encodeURIComponent(kkToken()), {
-      headers: {
+    var pre = await Widget.http.get(base + "/", { headers: kkCookieHeader({ "User-Agent": UA }) });
+    kkSaveCookie(pre);
+    var resp = await Widget.http.post(base + "/index.php/ajax/verify_check?type=" + type, "i=" + encodeURIComponent(kkToken()), {
+      headers: kkCookieHeader({
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         "User-Agent": UA, "X-Requested-With": "XMLHttpRequest", "Referer": base + "/"
-      }
+      })
     });
-    _s.verified[base] = true;
+    kkSaveCookie(resp);
+    var body = kkBody(resp);
+    if (/"code"\s*:\s*1/.test(body) || /"msg"\s*:\s*"ok"/i.test(body)) _s.verified[key] = true;
   } catch (e) {
     console.log("[233dm] 会话刷新失败: " + (e && e.message ? e.message : e));
   }
@@ -175,13 +201,19 @@ async function kkSession(base, force) {
 
 async function kkGet(url, referer) {
   var base = await kkResolveBase();
-  var headers = { "User-Agent": UA, "Referer": referer || (base + "/") };
+  var headers = kkCookieHeader({ "User-Agent": UA, "Referer": referer || (base + "/") });
   var resp = await Widget.http.get(url, { headers: headers });
+  kkSaveCookie(resp);
   var html = kkBody(resp);
   if (kkIsVerify(html)) {
-    await kkSession(base, true);
-    resp = await Widget.http.get(url, { headers: headers });
-    html = kkBody(resp);
+    var types = [kkVerifyType(url), "show", "search"];
+    for (var i = 0; i < types.length && kkIsVerify(html); i++) {
+      if (i > 0 && types[i] === types[i - 1]) continue;
+      await kkSession(base, true, types[i]);
+      resp = await Widget.http.get(url, { headers: kkCookieHeader(headers) });
+      kkSaveCookie(resp);
+      html = kkBody(resp);
+    }
   }
   return html;
 }
