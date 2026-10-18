@@ -2,7 +2,7 @@
 # 1. 强制 Emby 域名直连（防止被其他远程规则误代理）
 HOST-SUFFIX, emby-cf.suil.dpdns.org, DIRECT
 
-IP-CIDR, 152.70.110.194/32, DIRECT, no-resolve
+
 
 
 # 这里可能原本有你其他的 dns 或 doh-server 配置，保留它们
