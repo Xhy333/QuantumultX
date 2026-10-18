@@ -2,32 +2,21 @@
 WidgetMetadata = {
   id: "https://cn.233dm.com",
   title: "233动漫",
-  description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品/去广告)",
+  description: "233动漫 最新/分类/选集 + 播放源(天堂/暴风/量子 + 精品/去广告)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.2.0",
+  version: "1.2.1",
   requiredVersion: "0.0.1",
-  globalParams: [
-    { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
-    { name: "maxLines", title: "最大线路数(1-8)", type: "input", value: "6" },
-    { name: "probe", title: "过滤不可播放线路", type: "enumeration", enumOptions: [ { title: "启用(较慢)", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
-    { name: "jingpin", title: "精品线路(外部解析)", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] }
-  ],
   modules: [
-    { id: "latest", type: "list", title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, cacheDuration: 0, functionName: "loadLatest", params: [{ name: "page", type: "page" }] },
-    { id: "riman", type: "list", title: "日漫", description: "日漫", requiresWebView: false, cacheDuration: 0, functionName: "loadRiman", params: [{ name: "page", type: "page" }] },
-    { id: "guoman", type: "list", title: "国漫", description: "国漫", requiresWebView: false, cacheDuration: 0, functionName: "loadGuoman", params: [{ name: "page", type: "page" }] },
-    { id: "donghua", type: "list", title: "动画", description: "动画", requiresWebView: false, cacheDuration: 0, functionName: "loadDonghua", params: [{ name: "page", type: "page" }] },
-    { id: "juchang", type: "list", title: "剧场", description: "剧场版", requiresWebView: false, cacheDuration: 0, functionName: "loadJuchang", params: [{ name: "page", type: "page" }] },
-    { id: "teji", type: "list", title: "特摄", description: "特摄", requiresWebView: false, cacheDuration: 0, functionName: "loadTeji", params: [{ name: "page", type: "page" }] },
-    { id: "meiman", type: "list", title: "美漫", description: "美漫", requiresWebView: false, cacheDuration: 0, functionName: "loadMeiman", params: [{ name: "page", type: "page" }] },
+    { title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, functionName: "loadLatest", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "日漫", description: "日漫", requiresWebView: false, functionName: "loadRiman", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "国漫", description: "国漫", requiresWebView: false, functionName: "loadGuoman", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "动画", description: "动画", requiresWebView: false, functionName: "loadDonghua", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "剧场", description: "剧场版", requiresWebView: false, functionName: "loadJuchang", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "特摄", description: "特摄", requiresWebView: false, functionName: "loadTeji", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
+    { title: "美漫", description: "美漫", requiresWebView: false, functionName: "loadMeiman", cacheDuration: 120, params: [{ name: "page", type: "page" }] },
     { id: "loadResource", title: "加载资源", description: "233动漫 多线路播放源", functionName: "loadResource", type: "stream", cacheDuration: 0, params: [] }
-  ],
-  search: {
-    title: "搜索233动漫",
-    functionName: "search",
-    params: [{ name: "keyword", title: "关键词", type: "input" }, { name: "page", title: "页码", type: "page" }]
-  }
+  ]
 };
 const BASE_DOMAINS = ["https://cn.233dm.com", "https://www.233dm.com", "https://233dm.com"];
 const UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
