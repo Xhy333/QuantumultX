@@ -1,4 +1,0 @@
-# Emby 
-#注意：把下面的“影视服务器”确保在 QX 策略组里选的是你的代理节点，不要选 DIRECT。
-HOST-SUFFIX, emby-media.suil.dpdns.org
-HOST-SUFFIX, suil.dpdns.org
