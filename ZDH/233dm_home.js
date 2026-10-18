@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.4.0d",
+  version: "1.4.1",
   requiredVersion: "0.0.1",
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
@@ -462,7 +462,7 @@ async function kkResolveJingpin(base, obj, dmid) {
 }
 
 // --- 主入口 ---
-async function _loadResourceCore(params) {
+async function loadResource(params) {
   params = params || {};
   if (params.multiSource === "disabled") return [];
   var _link = String(params.link || "");
@@ -565,7 +565,8 @@ async function _loadResourceCore(params) {
 
 // ================= 首页/分类/搜索/选集（内容侧） =================
 function kkT(v){ return String(v==null?"":v).replace(/<[^>]*>/g,"").replace(/&amp;/g,"&").replace(/&nbsp;/g," ").replace(/&#39;/g,"'").replace(/&quot;/g,'"').trim(); }
-function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: hash, type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: hash+"|"+encodeURIComponent(kkT(title)) }; }
+function kkNum(h){ return parseInt(String(h||'').slice(0,13),16) || 1; }
+function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: kkNum(hash), type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: hash+"|"+encodeURIComponent(kkT(title)) }; }
 function kkParseHtml(html){
   var out=[], seen={};
   var re=/<a\b[^>]*href="\/anime\/([a-f0-9]{24})\.html"[^>]*>/ig, m;
@@ -618,16 +619,8 @@ async function loadDetail(link){
     if(!title){ var mt=html.match(/<h1[^>]*>([^<]+)<\/h1>/i); if(mt) title=kkT(mt[1]); }
     var maxN=0, re=/\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html/ig, m;
     while((m=re.exec(html))){ var ep=Number(m[2]); if(ep>maxN) maxN=ep; }
-    var eps=[]; for(var e=1;e<=maxN;e++){ eps.push({ id: hash+"-"+e, type: "url", episode: e, title: "第"+e+"集" }); }
+    var eps=[]; for(var e=1;e<=maxN;e++){ eps.push({ id: e, type: "url", episode: e, title: "第"+e+"集" }); }
     var poster=""; var mp=html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if(mp) poster=mp[1];
-    return { id: hash, type: "url", title: title, posterPath: poster, description: "", link: link, mediaType: "tv", episodeItems: eps };
+    return { id: kkNum(hash), type: "url", title: title, posterPath: poster, description: "", link: link, mediaType: "tv", episodeItems: eps };
   }catch(e){ return null; }
-}
-
-async function loadResource(params){
-  params = params || {};
-  var d = { id: params.id, link: params.link, episode: params.episode, season: params.season, type: params.type, mediaType: params.mediaType, seriesName: params.seriesName, title: params.title };
-  var diag = { name: "【诊断】播放源被调用", description: "params=" + JSON.stringify(d).slice(0,240), url: "https://cn.233dm.com/dbg.m3u8", headers: { "User-Agent": "x" }, customHeaders: { "User-Agent": "x" } };
-  try { var r = await _loadResourceCore(params); if (r && r.length) return [diag].concat(r); } catch (e) { diag.name = "【诊断】异常"; diag.description = String(e && e.message ? e.message : e); }
-  return [diag];
 }
