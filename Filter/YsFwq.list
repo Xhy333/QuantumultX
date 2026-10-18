@@ -12,7 +12,4 @@ HOST-SUFFIX, emby-cf.suil.dpdns.org, DIRECT
 #server = /115.com/223.5.5.5
 #server = /115cdn.com/223.5.5.5
 
-# 2. 强制 115 网盘视频流直连
-HOST-SUFFIX, 115.com, DIRECT
-HOST-SUFFIX, 115cdn.com, DIRECT
 
