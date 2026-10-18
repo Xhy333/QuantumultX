@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.3r",
+  version: "1.3.4d",
   requiredVersion: "0.0.1",
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
@@ -621,9 +621,9 @@ async function loadDetail(link){
     while ((m = re.exec(html))) { var ep = Number(m[2]); if (ep > maxN) maxN = ep; }
     var eps = []; for (var e = 1; e <= maxN; e++) { eps.push({ id: hash + "-" + e, type: "url", episode: e, title: "第" + e + "集" }); }
     var poster = ""; var mp = html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if (mp) poster = mp[1];
-    var _desc = (maxN > 0) ? ("共" + maxN + "集") : ("解析0集 link=" + s.slice(0,40) + " hl=" + html.length + ((/系统安全验证/.test(html)) ? " [验证页]" : ""));
+    var _desc = "DBG h=" + hash + " hl=" + html.length + " n=" + maxN + ((/系统安全验证/.test(html)) ? " VF" : "") + " link=" + s.slice(0,50);
     return { id: hash, type: "url", title: title, posterPath: poster, description: _desc, link: hash + "|" + encodeURIComponent(title), mediaType: "tv" };
-  } catch (e) { return null; }
+  } catch (e) { return { id: "0", type: "url", title: "调试异常", posterPath: "", description: "ERR " + String(e && e.message ? e.message : e) + " link=" + s.slice(0,60), link: s }; }
 }
 async function loadResource(params){
   try { var r = await _loadResourceCore(params || {}); if (r && r.length) return r; } catch (e) {}
