@@ -465,8 +465,12 @@ async function kkResolveJingpin(base, obj, dmid) {
 async function loadResource(params) {
   params = params || {};
   if (params.multiSource === "disabled") return [];
-  var seriesName = kkText(params.seriesName || params.title || "");
-  if (!seriesName) return [];
+  var _link = String(params.link || "");
+  var _hash = "", _linkTitle = "";
+  if (_link.indexOf("|") >= 0) { _hash = _link.split("|")[0]; try { _linkTitle = decodeURIComponent(_link.split("|")[1]); } catch (e) { _linkTitle = _link.split("|")[1]; } }
+  else if (/^[a-f0-9]{24}$/i.test(_link)) { _hash = _link; }
+  var seriesName = kkText(_linkTitle || params.seriesName || params.title || "");
+  if (!_hash && !seriesName) return [];
 
   var episode = Number(params.episode || params.ep || 1);
   if (!isFinite(episode) || episode < 1 || Math.floor(episode) !== episode) episode = 1;
@@ -479,21 +483,26 @@ async function loadResource(params) {
     var base = await kkResolveBase();
     await kkSession(base, false);
 
-    var season = kkSeason(seriesName);
-    var list = await kkSearch(base, seriesName);
-    var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
-      .filter(function (e) { return e.score > 0; })
-      .sort(function (a, b) { return b.score - a.score; });
-    if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
-    var best = scored[0].it;
-    if (!best || !best.hash) return [];
+    var bestHash = _hash;
+    var bestTitle = _linkTitle;
+    if (!bestHash) {
+      var season = kkSeason(seriesName);
+      var list = await kkSearch(base, seriesName);
+      var scored = list.map(function (it) { return { it: it, score: kkScore(it.title, seriesName, season) }; })
+        .filter(function (e) { return e.score > 0; })
+        .sort(function (a, b) { return b.score - a.score; });
+      if (!scored.length) { console.log("[233dm] 未匹配到正片: " + seriesName); return []; }
+      var best = scored[0].it;
+      if (!best || !best.hash) return [];
+      bestHash = best.hash; bestTitle = best.title;
+    }
 
-    var detail = await kkDetail(base, best.hash);
+    var detail = await kkDetail(base, bestHash);
     var sids = detail.sids.slice(0, Math.max(maxLines, 8));
     if (!sids.length) return [];
 
     var headers = { "User-Agent": MEDIA_UA, "Referer": base + "/" };
-    var title = best.title || seriesName;
+    var title = bestTitle || seriesName;
     var isMovie = /movie/i.test(String(params.type || params.mediaType || ""));
     var epLabel = isMovie ? "正片" : ("第" + episode + "集");
 
@@ -502,7 +511,7 @@ async function loadResource(params) {
 
     var tasks = sids.map(async function (sid) {
       try {
-        var obj = await kkLineInfo(base, best.hash, sid, episode);
+        var obj = await kkLineInfo(base, bestHash, sid, episode);
         if (!obj) return null;
         if (String(obj.from) === "mp4") { if (!jingpinHit) jingpinHit = { sid: sid, obj: obj }; return null; }
         if (obj.flag && obj.flag !== "play") return null;
