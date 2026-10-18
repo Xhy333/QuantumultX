@@ -5,7 +5,7 @@ WidgetMetadata = {
   description: "233动漫：最新/分类/搜索/选集 + 播放源(天堂/暴风/量子 + 精品)",
   author: "233",
   site: "https://cn.233dm.com",
-  version: "1.3.4d",
+  version: "1.3.5g",
   requiredVersion: "0.0.1",
   globalParams: [
     { name: "multiSource", title: "是否启用聚合搜索", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] },
@@ -14,13 +14,13 @@ WidgetMetadata = {
     { name: "jingpin", title: "精品线路(外部解析)", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] }
   ],
   modules: [
-    { title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, functionName: "loadLatest", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "日漫", description: "日漫", requiresWebView: false, functionName: "loadRiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "国漫", description: "国漫", requiresWebView: false, functionName: "loadGuoman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "动画", description: "动画", requiresWebView: false, functionName: "loadDonghua", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "剧场", description: "剧场版", requiresWebView: false, functionName: "loadJuchang", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "特摄", description: "特摄", requiresWebView: false, functionName: "loadTeji", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
-    { title: "美漫", description: "美漫", requiresWebView: false, functionName: "loadMeiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, functionName: "getLatest", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "日漫", description: "日漫", requiresWebView: false, functionName: "getRiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "国漫", description: "国漫", requiresWebView: false, functionName: "getGuoman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "动画", description: "动画", requiresWebView: false, functionName: "getDonghua", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "剧场", description: "剧场版", requiresWebView: false, functionName: "getJuchang", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "特摄", description: "特摄", requiresWebView: false, functionName: "getTeji", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
+    { title: "美漫", description: "美漫", requiresWebView: false, functionName: "getMeiman", cacheDuration: 120, params: [{ name: "page", title: "页码", type: "page" }] },
     { id: "loadResource", title: "加载资源", description: "233动漫 多线路播放源", functionName: "loadResource", type: "stream", cacheDuration: 0, params: [] }
   ],
   search: {
@@ -565,7 +565,7 @@ async function _loadResourceCore(params) {
 
 // ================= 首页/分类/搜索/选集（内容侧） =================
 function kkT(v){ return String(v==null?"":v).replace(/<[^>]*>/g,"").replace(/&amp;/g,"&").replace(/&nbsp;/g," ").replace(/&#39;/g,"'").replace(/&quot;/g,'"').trim(); }
-function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; return { id: hash, type: "url", title: kkT(title), posterPath: pic||"", description: kkT(remarks||""), link: hash+"|"+encodeURIComponent(kkT(title)) }; }
+function kkItem(hash,title,pic,remarks){ if(!hash||!title) return null; var p=pic||""; return { id: hash, type: "url", title: kkT(title), posterPath: p, backdropPath: p, description: kkT(remarks||""), mediaType: "tv", videoUrl: "", previewUrl: "", playerType: "system" }; }
 function kkParseHtml(html){
   var out=[], seen={};
   var re=/<a\b[^>]*href="\/anime\/([a-f0-9]{24})\.html"[^>]*>/ig, m;
@@ -584,7 +584,7 @@ function kkParseAjax(txt){
   for(var i=0;i<arr.length;i++){ var it=arr[i]; var mm=(it.detail_link||"").match(/\/anime\/([a-f0-9]{24})\.html/); if(!mm) continue; var o=kkItem(mm[1],it.vod_name,it.vod_pic,it.vod_remarks); if(o){ o.posterPath=it.vod_pic||""; out.push(o); } }
   return out;
 }
-async function loadLatest(params){
+async function getLatest(params){
   params = params || {}; var page = Number(params.page || 1); if (!(page >= 1)) page = 1;
   var base = await kkResolveBase();
   if (page <= 1) {
@@ -598,33 +598,17 @@ async function kkCategory(params, tid){
   var url = page<=1 ? (base+"/type/"+tid+".html") : (base+"/type/"+tid+"-"+page+".html");
   try{ var html=await kkGet(url); return kkParseHtml(html); }catch(e){ return []; }
 }
-async function loadRiman(p){ return kkCategory(p,"1"); }
-async function loadGuoman(p){ return kkCategory(p,"2"); }
-async function loadDonghua(p){ return kkCategory(p,"5"); }
-async function loadJuchang(p){ return kkCategory(p,"24"); }
-async function loadTeji(p){ return kkCategory(p,"4"); }
-async function loadMeiman(p){ return kkCategory(p,"3"); }
+async function getRiman(p){ return kkCategory(p,"1"); }
+async function getGuoman(p){ return kkCategory(p,"2"); }
+async function getDonghua(p){ return kkCategory(p,"5"); }
+async function getJuchang(p){ return kkCategory(p,"24"); }
+async function getTeji(p){ return kkCategory(p,"4"); }
+async function getMeiman(p){ return kkCategory(p,"3"); }
 async function search(params){
   params=params||{}; var kw=kkT(params.keyword||""); if(!kw) return [];
   try{ var base=await kkResolveBase(); var html=await kkGet(base+"/search/"+encodeURIComponent(kw)+"-------------.html"); return kkParseHtml(html); }catch(e){ return []; }
 }
-async function loadDetail(link){
-  var s = String(link || ""), hash = "", title = "";
-  var hm = s.match(/([a-f0-9]{24})/i); if (hm) hash = hm[1];
-  var bar = s.indexOf("|"); if (bar >= 0) { try { title = decodeURIComponent(s.slice(bar + 1)); } catch (e) { title = s.slice(bar + 1); } }
-  if (!hash) return null;
-  try {
-    var base = await kkResolveBase();
-    var html = await kkGet(base + "/anime/" + hash + ".html");
-    if (!title) { var tm = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i); if (tm) title = kkT(tm[1]); if (!title) { var tt = html.match(/<title>([\s\S]*?)<\/title>/i); if (tt) title = kkT(tt[1]).replace(/[-_|].*$/, "").trim(); } }
-    var maxN = 0, re = /\/anime\/[a-f0-9]{24}\/play\/(\d+)\/(\d+)\.html/ig, m;
-    while ((m = re.exec(html))) { var ep = Number(m[2]); if (ep > maxN) maxN = ep; }
-    var eps = []; for (var e = 1; e <= maxN; e++) { eps.push({ id: hash + "-" + e, type: "url", episode: e, title: "第" + e + "集" }); }
-    var poster = ""; var mp = html.match(/<a[^>]*class="[^"]*lazyload[^"]*"[^>]*href="\/anime\/[a-f0-9]{24}\.html"[^>]*data-original="([^"]*)"/i); if (mp) poster = mp[1];
-    var _desc = "DBG h=" + hash + " hl=" + html.length + " n=" + maxN + ((/系统安全验证/.test(html)) ? " VF" : "") + " link=" + s.slice(0,50);
-    return { id: hash, type: "url", title: title, posterPath: poster, description: _desc, link: hash + "|" + encodeURIComponent(title), mediaType: "tv" };
-  } catch (e) { return { id: "0", type: "url", title: "调试异常", posterPath: "", description: "ERR " + String(e && e.message ? e.message : e) + " link=" + s.slice(0,60), link: s }; }
-}
+
 async function loadResource(params){
   try { var r = await _loadResourceCore(params || {}); if (r && r.length) return r; } catch (e) {}
   var d = { id: (params && params.id) || "", link: (params && params.link) || "", episode: (params && params.episode) || "", type: (params && params.type) || "", seriesName: (params && params.seriesName) || "", title: (params && params.title) || "", mediaType: (params && params.mediaType) || "" };
