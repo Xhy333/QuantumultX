@@ -14,13 +14,13 @@ WidgetMetadata = {
     { name: "jingpin", title: "精品线路(外部解析)", type: "enumeration", enumOptions: [ { title: "启用", value: "enabled" }, { title: "禁用", value: "disabled" } ] }
   ],
   modules: [
-    { title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, cacheDuration: 0, functionName: "loadLatest", params: [{ name: "page", type: "page" }] },
-    { title: "日漫", description: "日漫", requiresWebView: false, cacheDuration: 0, functionName: "loadRiman", params: [{ name: "page", type: "page" }] },
-    { title: "国漫", description: "国漫", requiresWebView: false, cacheDuration: 0, functionName: "loadGuoman", params: [{ name: "page", type: "page" }] },
-    { title: "动画", description: "动画", requiresWebView: false, cacheDuration: 0, functionName: "loadDonghua", params: [{ name: "page", type: "page" }] },
-    { title: "剧场", description: "剧场版", requiresWebView: false, cacheDuration: 0, functionName: "loadJuchang", params: [{ name: "page", type: "page" }] },
-    { title: "特摄", description: "特摄", requiresWebView: false, cacheDuration: 0, functionName: "loadTeji", params: [{ name: "page", type: "page" }] },
-    { title: "美漫", description: "美漫", requiresWebView: false, cacheDuration: 0, functionName: "loadMeiman", params: [{ name: "page", type: "page" }] },
+    { id: "latest", title: "最新更新", description: "233动漫 最新更新", requiresWebView: false, cacheDuration: 0, functionName: "loadLatest", params: [{ name: "page", type: "page" }] },
+    { id: "riman", title: "日漫", description: "日漫", requiresWebView: false, cacheDuration: 0, functionName: "loadRiman", params: [{ name: "page", type: "page" }] },
+    { id: "guoman", title: "国漫", description: "国漫", requiresWebView: false, cacheDuration: 0, functionName: "loadGuoman", params: [{ name: "page", type: "page" }] },
+    { id: "donghua", title: "动画", description: "动画", requiresWebView: false, cacheDuration: 0, functionName: "loadDonghua", params: [{ name: "page", type: "page" }] },
+    { id: "juchang", title: "剧场", description: "剧场版", requiresWebView: false, cacheDuration: 0, functionName: "loadJuchang", params: [{ name: "page", type: "page" }] },
+    { id: "teji", title: "特摄", description: "特摄", requiresWebView: false, cacheDuration: 0, functionName: "loadTeji", params: [{ name: "page", type: "page" }] },
+    { id: "meiman", title: "美漫", description: "美漫", requiresWebView: false, cacheDuration: 0, functionName: "loadMeiman", params: [{ name: "page", type: "page" }] },
     { id: "loadResource", title: "加载资源", description: "233动漫 多线路播放源", functionName: "loadResource", type: "stream", cacheDuration: 0, params: [] }
   ],
   search: {
