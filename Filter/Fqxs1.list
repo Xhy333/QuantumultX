@@ -3,6 +3,12 @@
 DOMAIN-SUFFIX,amemv.com,DIRECT
 DOMAIN-SUFFIX,toutiaocloud.com,DIRECT
 HOST,lf-sourcecdn-tos.bytegecko.com,DIRECT
+# 番茄小说消息中心与 IM 放行
+HOST-SUFFIX,im.snssdk.com,DIRECT
+HOST-SUFFIX,ichannel.snssdk.com,DIRECT
+HOST-SUFFIX,vas.snssdk.com,DIRECT
+HOST-SUFFIX,message.snssdk.com,DIRECT
+
 
 # 2. 精确域名拦截
 HOST,p6-ad-sign.byteimg.com,REJECT
