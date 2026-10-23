@@ -36,7 +36,7 @@ DOMAIN-SUFFIX,bytedance.com,REJECT
 DOMAIN-SUFFIX,bytegecko.com,REJECT
 DOMAIN-SUFFIX,pangolin-sdk-toutiao.com,REJECT
 DOMAIN-SUFFIX,pangolin-sdk-toutiao-b.com,REJECT
-DOMAIN-SUFFIX,snssdk.com,REJECT
+#DOMAIN-SUFFIX,snssdk.com,REJECT
 DOMAIN-SUFFIX,ixigua.com,REJECT
 DOMAIN-SUFFIX,toutiao.com,REJECT
 
