@@ -1,0 +1,48 @@
+; ================== 番茄小说 · 重写 11 ==================
+; 与仓库里的 Fqxs.qxrewrite（原版）并存，文件名 Fqxs11.qxrewrite
+; QX：配置 → 引用 → 资源 → 添加 → 类型选「重写」
+; 依赖脚本：https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+; （脚本放在仓库 ZDH/ 目录下）
+;
+; 顺序很重要：pre_unlock / pendant_plan 的 reject-dict 必须排在
+; /reading/user/listen/ 的脚本改写之前 —— QX 取第一条命中的规则。
+
+[mitm]
+hostname = *.fqnovel.com, i.snssdk.com, ib.snssdk.com, reading.snssdk.com
+
+[rewrite_local]
+
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/my_tab\/plan\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/plan\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/new_category\/front\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/search\/tab\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/bookshelf\/recommend\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/bookshelf\/video\/info\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/reader\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/user\/listen\/pre_unlock\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/[a-zA-Z0-9]+\/v[0-9]+\/resource\/pendant_plan url reject-dict
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/user\/listen\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/activity\/list\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/bookapi\/biz_static_config\/get\/ url script-response-body https://raw.githubusercontent.com/Xhy333/QuantumultX/main/ZDH/fqnovel-clean.js
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/sign_in\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/getLoginRewardInfo url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/get_ad_info url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/excitation_ad_right\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/treasure_task\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/meal_v2\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/sleep\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/alarm_clock\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/split_coin_activity_detail url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/user\/gold_box_page url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/unify\/bookshelf_sign_in\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/done\/ url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/(v[0-9]+\/)?task\/scene url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/task\/single url reject-dict
+^https?:\/\/[a-zA-Z0-9.\-]*\.(?:fqnovel|snssdk)\.com\/luckycat\/novel\/v[0-9]+\/consume\/ url reject-dict
+^https?:\/\/api[0-9]?[-a-zA-Z0-9]*\.fqnovel\.com\/reading\/commerceapi\/(commerce\/statistics|report)\/ url reject-dict
+
+; ---------- 说明 ----------
+; 1. 只改「数据」：删卡片 / 删模块 / 挡听书限时，不伪造请求。
+; 2. 商城不碰：commerceapi 只精确匹配 statistics、report 两个上报路径。
+; 3. 听书保留：只挡 pre_unlock（看广告解锁）与 pendant_plan（金币挂件）。
+; 4. 需要 MitM 证书；装好并信任后生效。

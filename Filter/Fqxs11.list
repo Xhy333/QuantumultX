@@ -1,0 +1,72 @@
+#!name = 番茄小说 · 分流 11
+#!desc = 只挡广告 SDK 与埋点域名，不挡 snssdk / bytedance / fqnovelvod / bytegecko / 商城域名
+#!author = Xhy333
+#!update = 2026-10-28
+#
+# Quantumult X：配置 → 引用 → 资源 → 添加 → 类型选「过滤器」
+# 本文件用 QX 原生写法（host-suffix / host / reject）。
+# 若还要在 Surge / Loon 用：host-suffix→DOMAIN-SUFFIX，host→DOMAIN，reject→REJECT。
+#
+# ⚠️ 刻意【不】拦截的域名（拦了会坏功能）：
+#   snssdk.com / bytedance.com / toutiao.com  → 登录、账号、抖音授权
+#   fqnovelvod.com                            → 听书音频、短剧视频
+#   bytegecko.com / zijieapi.com              → 界面资源、评论
+#   jd.com / baidu.com / uc.cn / amap.com     → 抖音商城、地图、下载
+
+# ---------- 穿山甲 / Pangle ----------
+# 穿山甲主域
+host-suffix, pangolin-sdk-toutiao.com, reject
+# 穿山甲备用
+host-suffix, pangolin-sdk-toutiao-b.com, reject
+# 穿山甲统计
+host-suffix, pglstatp-toutiao.com, reject
+
+# ---------- 巨量引擎 ----------
+# 巨量引擎（含 ad.oceanengine.com）
+host-suffix, oceanengine.com, reject
+
+# ---------- 广点通 / 国内其它联盟 ----------
+# 广点通 / 优量汇
+host-suffix, gdt.qq.com, reject
+# Sigmob
+host-suffix, sigmob.cn, reject
+# Mintegral
+host-suffix, mintegral.com, reject
+# 快手联盟
+host-suffix, adkwai.com, reject
+# 倍孜
+host-suffix, beizi.biz, reject
+# 百度联盟
+host, mobads.baidu.com, reject
+# 百度联盟日志
+host, mobads-logs.baidu.com, reject
+# 阿里 Tanx
+host-suffix, tanx.com, reject
+# 阿里妈妈
+host-suffix, alimama.com, reject
+
+# ---------- 海外广告 SDK ----------
+# Google
+host-suffix, doubleclick.net, reject
+# Google
+host-suffix, googlesyndication.com, reject
+# Google
+host-suffix, googleadservices.com, reject
+# AppLovin
+host-suffix, applovin.com, reject
+# UnityAds
+host-suffix, unityads.unity3d.com, reject
+# Vungle
+host-suffix, vungle.com, reject
+# Chartboost
+host-suffix, chartboost.com, reject
+# InMobi
+host-suffix, inmobi.com, reject
+
+# ---------- 埋点统计 ----------
+# 字节埋点
+host-suffix, dig.bdurl.net, reject
+# GA
+host-suffix, google-analytics.com, reject
+# GTM
+host-suffix, googletagmanager.com, reject
