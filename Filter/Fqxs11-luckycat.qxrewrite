@@ -1,0 +1,49 @@
+; ===== 番茄小说 · 福利接口精确拦截（只 MitM 一台主机）=====
+; 背景：网络活动里大量 N/A，说明 MitM 后 TLS 没握手成功 —— 番茄对核心 API 主机
+;       （api*.fqnovel.com，登录/书城/短剧/我的都走它）做了证书校验，不能碰。
+;
+; 但是 luckycat（金币福利体系）挂在【另一台主机】api.fqnovel.com 上，
+; 这台是否也校验，需要单独验一次。本文件只对 api.fqnovel.com 开 MitM，
+; 而且只用 reject-dict 挡路径，不动任何响应内容（不需要脚本）。
+;
+; 怎么判断成败：
+;   开 MitM 后 → QX → 网络活动 → 找 api.fqnovel.com 的请求
+;     · 显示 200 / 412 之类状态  → 成功，这台没校验，用本文件即可（最精细）
+;     · 一堆 N/A                 → 这台也校验，放弃 MitM，改用 Fqxs11-ug.list 整机拒
+;
+; 与 Fqxs11-ug.list 的区别：
+;   ug.list  = host, api.fqnovel.com, reject   → 整台拒，resource_plan 也拿不到（我的页会掉卡片）
+;   本文件    = 只拒 luckycat 的福利路径        → resource_plan 照常，我的页卡片不掉
+;
+; 注意：本文件不要和 Fqxs11.qxrewrite 同时启用，两个都改 [mitm] 会打架。
+
+[mitm]
+hostname = api.fqnovel.com
+
+[rewrite_local]
+
+; ---------- 签到 ----------
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/sign_in\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/getLoginRewardInfo url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/get_ad_info url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/excitation_ad_right\/ url reject-dict
+
+; ---------- 宝箱 ----------
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/treasure_task\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/user\/gold_box_page url reject-dict
+
+; ---------- 提现 / 金币 ----------
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/split_coin_activity_detail url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/consume\/ url reject-dict
+
+; ---------- 任务 / 活动 / 弹窗 ----------
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/scene url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/single url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/done\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/meal_v2\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/sleep\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/task\/alarm_clock\/ url reject-dict
+^https?:\/\/api\.fqnovel\.com\/luckycat\/novel\/v[0-9]+\/unify\/bookshelf_sign_in\/ url reject-dict
+
+; ---------- 听书金币挂件 ----------
+^https?:\/\/api\.fqnovel\.com\/luckycat\/[a-zA-Z0-9]+\/v[0-9]+\/resource\/pendant_plan url reject-dict
