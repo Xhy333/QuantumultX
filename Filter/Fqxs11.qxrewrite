@@ -1,21 +1,5 @@
 ; ===== 番茄小说 · 福利接口精确拦截（只 MitM 一台主机）=====
-; 背景：网络活动里大量 N/A，说明 MitM 后 TLS 没握手成功 —— 番茄对核心 API 主机
-;       （api*.fqnovel.com，登录/书城/短剧/我的都走它）做了证书校验，不能碰。
-;
-; 但是 luckycat（金币福利体系）挂在【另一台主机】api.fqnovel.com 上，
-; 这台是否也校验，需要单独验一次。本文件只对 api.fqnovel.com 开 MitM，
-; 而且只用 reject-dict 挡路径，不动任何响应内容（不需要脚本）。
-;
-; 怎么判断成败：
-;   开 MitM 后 → QX → 网络活动 → 找 api.fqnovel.com 的请求
-;     · 显示 200 / 412 之类状态  → 成功，这台没校验，用本文件即可（最精细）
-;     · 一堆 N/A                 → 这台也校验，放弃 MitM，改用 Fqxs11-ug.list 整机拒
-;
-; 与 Fqxs11-ug.list 的区别：
-;   ug.list  = host, api.fqnovel.com, reject   → 整台拒，resource_plan 也拿不到（我的页会掉卡片）
-;   本文件    = 只拒 luckycat 的福利路径        → resource_plan 照常，我的页卡片不掉
-;
-; 注意：本文件不要和 Fqxs11.qxrewrite 同时启用，两个都改 [mitm] 会打架。
+;只用 reject-dict 挡路径，不动任何响应内容（不需要脚本）。
 
 [mitm]
 hostname = api.fqnovel.com
