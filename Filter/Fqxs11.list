@@ -70,3 +70,13 @@ host-suffix, dig.bdurl.net, reject
 host-suffix, google-analytics.com, reject
 # GTM
 host-suffix, googletagmanager.com, reject
+
+# ---------- 字节广告位 / 落地页（从原 zqzess 规则里挑的安全子集） ----------
+# 广告图签名位 6
+host, p6-ad-sign.byteimg.com, reject
+# 广告图签名位 9
+host, p9-ad-sign.byteimg.com, reject
+# 腾讯广告投放
+host, api.iegadp.qq.com, reject
+# 微信登录广告位
+host, apd-pcdnwxlogin.teg.tencent-cloud.net, reject
